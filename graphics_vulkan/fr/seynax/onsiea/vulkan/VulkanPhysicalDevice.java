@@ -7,7 +7,6 @@ import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.vulkan.KHRSwapchain;
 import org.lwjgl.vulkan.VK10;
 import org.lwjgl.vulkan.VkExtensionProperties;
-import org.lwjgl.vulkan.VkInstance;
 import org.lwjgl.vulkan.VkPhysicalDevice;
 import org.lwjgl.vulkan.VkPhysicalDeviceFeatures;
 import org.lwjgl.vulkan.VkPhysicalDeviceMemoryProperties;
@@ -30,8 +29,99 @@ public class VulkanPhysicalDevice
 
 	// Constructor
 
-	public VulkanPhysicalDevice()
+	private VulkanPhysicalDevice(final VulkanInstance vulkanInstanceIn)
 	{
+		// Device
+
+		final var	instance				= vulkanInstanceIn.getInstance();
+
+		final var	pPhysicalDeviceCount	= MemoryUtil.memAllocInt(1);
+		var			err						= VK10.vkEnumeratePhysicalDevices(instance, pPhysicalDeviceCount, null);
+
+		if (err != VK10.VK_SUCCESS)
+		{
+			throw new AssertionError("Failed to get number of physical devices: " + VKUtil.translateVulkanResult(err));
+		}
+
+		final var	physicalDeviceCount	= pPhysicalDeviceCount.get(0);
+
+		final var	pPhysicalDevices	= MemoryUtil.memAllocPointer(physicalDeviceCount);
+
+		err = VK10.vkEnumeratePhysicalDevices(instance, pPhysicalDeviceCount, pPhysicalDevices);
+
+		MemoryUtil.memFree(pPhysicalDeviceCount);
+
+		if (err != VK10.VK_SUCCESS)
+		{
+			throw new AssertionError("Failed to get physical devices: " + VKUtil.translateVulkanResult(err));
+		}
+
+		// Device extensions and choose the GPU
+
+		final var							requiredExtensions						= new String[] {
+				KHRSwapchain.VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+
+		VkPhysicalDevice					chosenPhysicalDevice					= null;
+		VkPhysicalDeviceProperties			chosenPhysicalDeviceProperties			= null;
+		VkPhysicalDeviceFeatures			chosenPhysicalDeviceFeatures			= null;
+		VkPhysicalDeviceMemoryProperties	chosenPhysicalDeviceMemoryProperties	= null;
+		var									chosenQueueFamilyIndex					= -1;
+
+		for (var i = 0; i < physicalDeviceCount; i++)
+		{
+			final var physicalDevice = new VkPhysicalDevice(pPhysicalDevices.get(0), instance);
+
+			if (this.hasRequiredExtensions(physicalDevice, requiredExtensions, requiredExtensions.length))
+			{
+				final var queueFamilyIndex = this.getQueueFamilly(physicalDevice, VK10.VK_QUEUE_GRAPHICS_BIT);
+
+				if (queueFamilyIndex >= 0)
+				{
+					final var physicalDeviceProperties = VkPhysicalDeviceProperties.mallocStack();
+
+					VK10.vkGetPhysicalDeviceProperties(physicalDevice, physicalDeviceProperties);
+
+					final var physicalDeviceFeatures = VkPhysicalDeviceFeatures.mallocStack();
+
+					VK10.vkGetPhysicalDeviceFeatures(physicalDevice, physicalDeviceFeatures);
+
+					final var physicalDeviceMemoryProperties = VkPhysicalDeviceMemoryProperties.mallocStack();
+
+					VK10.vkGetPhysicalDeviceMemoryProperties(physicalDevice, physicalDeviceMemoryProperties);
+
+					if (chosenPhysicalDevice == null
+							|| physicalDeviceProperties.deviceType() == VK10.VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
+					{
+						chosenPhysicalDevice					= physicalDevice;
+						chosenPhysicalDeviceProperties			= physicalDeviceProperties;
+						chosenPhysicalDeviceFeatures			= physicalDeviceFeatures;
+						chosenPhysicalDeviceMemoryProperties	= physicalDeviceMemoryProperties;
+						chosenQueueFamilyIndex					= queueFamilyIndex;
+					}
+				}
+			}
+		}
+		MemoryUtil.memFree(pPhysicalDevices);
+
+		if (chosenPhysicalDevice == null)
+		{
+			throw new RuntimeException("Failed to choose physical device !");
+		}
+
+		this.setDevice(chosenPhysicalDevice);
+		this.setDeviceProperties(chosenPhysicalDeviceProperties);
+		this.setDeviceFeatures(chosenPhysicalDeviceFeatures);
+		this.setDeviceMemoryProperties(chosenPhysicalDeviceMemoryProperties);
+		this.setQueueFamilyIndex(chosenQueueFamilyIndex);
+		this.setEnabledExtensionCount(requiredExtensions.length);
+		this.setEnabledExtensionNames(requiredExtensions);
+	}
+
+	// Static methods
+
+	public final static VulkanPhysicalDevice createPhysicalDevice(final VulkanInstance vulkanInstanceIn)
+	{
+		return new VulkanPhysicalDevice(vulkanInstanceIn);
 	}
 
 	// Methods
@@ -146,94 +236,9 @@ public class VulkanPhysicalDevice
 		return -1;
 	}
 
-	public void initialization(final VkInstance instanceIn)
+	public VulkanDevice createLogicalDevice()
 	{
-		// Device
-
-		final var	pPhysicalDeviceCount	= MemoryUtil.memAllocInt(1);
-		var			err						= VK10.vkEnumeratePhysicalDevices(instanceIn, pPhysicalDeviceCount, null);
-
-		if (err != VK10.VK_SUCCESS)
-		{
-			throw new AssertionError("Failed to get number of physical devices: " + VKUtil.translateVulkanResult(err));
-		}
-
-		final var	physicalDeviceCount	= pPhysicalDeviceCount.get(0);
-
-		final var	pPhysicalDevices	= MemoryUtil.memAllocPointer(physicalDeviceCount);
-
-		err = VK10.vkEnumeratePhysicalDevices(instanceIn, pPhysicalDeviceCount, pPhysicalDevices);
-
-		MemoryUtil.memFree(pPhysicalDeviceCount);
-
-		if (err != VK10.VK_SUCCESS)
-		{
-			throw new AssertionError("Failed to get physical devices: " + VKUtil.translateVulkanResult(err));
-		}
-
-		// Device extensions and choose the GPU
-
-		final var							requiredExtensions						= new String[] {
-				KHRSwapchain.VK_KHR_SWAPCHAIN_EXTENSION_NAME };
-
-		VkPhysicalDevice					chosenPhysicalDevice					= null;
-		VkPhysicalDeviceProperties			chosenPhysicalDeviceProperties			= null;
-		VkPhysicalDeviceFeatures			chosenPhysicalDeviceFeatures			= null;
-		VkPhysicalDeviceMemoryProperties	chosenPhysicalDeviceMemoryProperties	= null;
-		var									chosenQueueFamilyIndex					= -1;
-
-		for (var i = 0; i < physicalDeviceCount; i++)
-		{
-			final var physicalDevice = new VkPhysicalDevice(pPhysicalDevices.get(0), instanceIn);
-
-			if (this.hasRequiredExtensions(physicalDevice, requiredExtensions, requiredExtensions.length))
-			{
-				final var queueFamilyIndex = this.getQueueFamilly(physicalDevice, VK10.VK_QUEUE_GRAPHICS_BIT);
-
-				if (queueFamilyIndex >= 0)
-				{
-					final var physicalDeviceProperties = VkPhysicalDeviceProperties.mallocStack();
-
-					VK10.vkGetPhysicalDeviceProperties(physicalDevice, physicalDeviceProperties);
-
-					final var physicalDeviceFeatures = VkPhysicalDeviceFeatures.mallocStack();
-
-					VK10.vkGetPhysicalDeviceFeatures(physicalDevice, physicalDeviceFeatures);
-
-					final var physicalDeviceMemoryProperties = VkPhysicalDeviceMemoryProperties.mallocStack();
-
-					VK10.vkGetPhysicalDeviceMemoryProperties(physicalDevice, physicalDeviceMemoryProperties);
-
-					if (chosenPhysicalDevice == null
-							|| physicalDeviceProperties.deviceType() == VK10.VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
-					{
-						chosenPhysicalDevice					= physicalDevice;
-						chosenPhysicalDeviceProperties			= physicalDeviceProperties;
-						chosenPhysicalDeviceFeatures			= physicalDeviceFeatures;
-						chosenPhysicalDeviceMemoryProperties	= physicalDeviceMemoryProperties;
-						chosenQueueFamilyIndex					= queueFamilyIndex;
-					}
-				}
-			}
-		}
-		MemoryUtil.memFree(pPhysicalDevices);
-
-		if (chosenPhysicalDevice == null)
-		{
-			throw new RuntimeException("Failed to choose physical device !");
-		}
-
-		this.setDevice(chosenPhysicalDevice);
-		this.setDeviceProperties(chosenPhysicalDeviceProperties);
-		this.setDeviceFeatures(chosenPhysicalDeviceFeatures);
-		this.setDeviceMemoryProperties(chosenPhysicalDeviceMemoryProperties);
-		this.setQueueFamilyIndex(chosenQueueFamilyIndex);
-		this.setEnabledExtensionCount(requiredExtensions.length);
-		this.setEnabledExtensionNames(requiredExtensions);
-	}
-
-	public void cleanup()
-	{
+		return VulkanDevice.createLogicalDevice(this);
 	}
 
 	// Getter | Setter

@@ -17,16 +17,31 @@ import fr.seynax.onsiea.vulkan.utils.DisallowVKUtil;
 
 public class VulkanInstance
 {
-	private String	applicationName;
-	private String	engineName;
+	// Variables
+
+	private String		applicationName;
+	private String		engineName;
+
+	private VkInstance	instance;
+
+	// Constructor
 
 	public VulkanInstance(final String applicationNameIn, final String engineNameIn)
 	{
 		this.setApplicationName(applicationNameIn);
 		this.setEngineName(engineNameIn);
+
+		this.setInstance(VulkanInstance.initialization(this.getApplicationName(), this.getEngineName()));
 	}
 
-	public VkInstance initialization()
+	// Static methods
+
+	public final static VulkanInstance createInstance(final String applicationNameIn, final String engineNameIn)
+	{
+		return new VulkanInstance(applicationNameIn, engineNameIn);
+	}
+
+	public final static VkInstance initialization(final String applicationNameIn, final String engineNameIn)
 	{
 		// Enabled layers
 
@@ -78,8 +93,8 @@ public class VulkanInstance
 		final var applicationInfo = VkApplicationInfo.calloc().sType(VK10.VK_STRUCTURE_TYPE_APPLICATION_INFO)
 				.apiVersion(VK10.VK_API_VERSION_1_0);
 
-		applicationInfo.pApplicationName(MemoryUtil.memUTF8(this.getApplicationName()));
-		applicationInfo.pEngineName(MemoryUtil.memUTF8(this.getEngineName()));
+		applicationInfo.pApplicationName(MemoryUtil.memUTF8(applicationNameIn));
+		applicationInfo.pEngineName(MemoryUtil.memUTF8(engineNameIn));
 		applicationInfo.engineVersion(1);
 		applicationInfo.applicationVersion(1);
 
@@ -124,9 +139,16 @@ public class VulkanInstance
 		return instance;
 	}
 
+	// Methods
+
+	public VulkanPhysicalDevice createPhysicalDevice()
+	{
+		return VulkanPhysicalDevice.createPhysicalDevice(this);
+	}
+
 	// Getter | Setter
 
-	private String getApplicationName()
+	public String getApplicationName()
 	{
 		return this.applicationName;
 	}
@@ -136,7 +158,7 @@ public class VulkanInstance
 		this.applicationName = applicationNameIn;
 	}
 
-	private String getEngineName()
+	public String getEngineName()
 	{
 		return this.engineName;
 	}
@@ -144,5 +166,15 @@ public class VulkanInstance
 	private void setEngineName(final String engineNameIn)
 	{
 		this.engineName = engineNameIn;
+	}
+
+	public VkInstance getInstance()
+	{
+		return this.instance;
+	}
+
+	private void setInstance(final VkInstance instanceIn)
+	{
+		this.instance = instanceIn;
 	}
 }

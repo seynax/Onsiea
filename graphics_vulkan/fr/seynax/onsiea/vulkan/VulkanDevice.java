@@ -13,22 +13,20 @@ public class VulkanDevice
 {
 	// Variables
 
-	private VkDevice device;
+	private VkDevice				device;
+
+	private VulkanPhysicalDevice	physicalDevice;
 
 	// Constructor
 
-	public VulkanDevice()
+	private VulkanDevice(final VulkanPhysicalDevice vulkanPhysicalDeviceIn)
 	{
-	}
+		this.setPhysicalDevice(vulkanPhysicalDeviceIn);
 
-	// Methods
-
-	public void initiallization(final VulkanPhysicalDevice vulkanPhysicalDeviceIn)
-	{
 		final var queueCreateInfo = VkDeviceQueueCreateInfo.calloc();
 
 		queueCreateInfo.sType(VK10.VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO);
-		queueCreateInfo.queueFamilyIndex(vulkanPhysicalDeviceIn.getQueueFamilyIndex());
+		queueCreateInfo.queueFamilyIndex(this.getPhysicalDevice().getQueueFamilyIndex());
 
 		final var priorities = BufferUtils.createFloatBuffer(1);
 		priorities.put(1.0f);
@@ -43,14 +41,14 @@ public class VulkanDevice
 		final var deviceCreateInfo = VkDeviceCreateInfo.calloc();
 		deviceCreateInfo.sType(VK10.VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO);
 		deviceCreateInfo.pQueueCreateInfos(buffer);
-		deviceCreateInfo.pEnabledFeatures(vulkanPhysicalDeviceIn.getDeviceFeatures());
+		deviceCreateInfo.pEnabledFeatures(this.getPhysicalDevice().getDeviceFeatures());
 
 		final var	passDevicePointer	= MemoryUtil.memAllocPointer(1);
 
-		final var	err					= VK10.vkCreateDevice(vulkanPhysicalDeviceIn.getDevice(), deviceCreateInfo,
+		final var	err					= VK10.vkCreateDevice(this.getPhysicalDevice().getDevice(), deviceCreateInfo,
 				null, passDevicePointer);
 
-		this.setDevice(new VkDevice(passDevicePointer.get(0), vulkanPhysicalDeviceIn.getDevice(), deviceCreateInfo));
+		this.setDevice(new VkDevice(passDevicePointer.get(0), this.getPhysicalDevice().getDevice(), deviceCreateInfo));
 
 		if (err != VK10.VK_SUCCESS)
 		{
@@ -62,6 +60,25 @@ public class VulkanDevice
 		buffer.free();
 	}
 
+	// Static methods
+
+	public final static VulkanDevice createLogicalDevice(final VulkanPhysicalDevice vulkanPhysicalDeviceIn)
+	{
+		return new VulkanDevice(vulkanPhysicalDeviceIn);
+	}
+
+	// Methods
+
+	public VulkanCommandPool createCommandPool()
+	{
+		return VulkanCommandPool.createCommandPool(this.getPhysicalDevice(), this);
+	}
+
+	public VulkanBuffer createBuffer(final int[] dataIn)
+	{
+		return VulkanBuffer.createBuffer(this.getPhysicalDevice(), this, dataIn);
+	}
+
 	public void cleanup()
 	{
 		VK10.vkDestroyDevice(this.getDevice(), null);
@@ -69,7 +86,7 @@ public class VulkanDevice
 
 	// Device
 
-	VkDevice getDevice()
+	public VkDevice getDevice()
 	{
 		return this.device;
 	}
@@ -77,5 +94,15 @@ public class VulkanDevice
 	private void setDevice(final VkDevice deviceIn)
 	{
 		this.device = deviceIn;
+	}
+
+	public VulkanPhysicalDevice getPhysicalDevice()
+	{
+		return this.physicalDevice;
+	}
+
+	private void setPhysicalDevice(final VulkanPhysicalDevice physicalDeviceIn)
+	{
+		this.physicalDevice = physicalDeviceIn;
 	}
 }

@@ -3,7 +3,6 @@ package fr.seynax.onsiea;
 import org.lwjgl.glfw.GLFW;
 
 import fr.seynax.onsiea.graphics.IWindow;
-import fr.seynax.onsiea.vulkan.Pipeline;
 import fr.seynax.onsiea.vulkan.VulkanBuffer;
 import fr.seynax.onsiea.vulkan.VulkanCommandPool;
 import fr.seynax.onsiea.vulkan.VulkanDevice;
@@ -22,7 +21,7 @@ public class VulkanEngine implements Runnable
 
 	// Variables ; pipeline
 
-	private Pipeline				pipeline;
+	private VulkanInstance			instance;
 	private VulkanPhysicalDevice	physicalDevice;
 	private VulkanDevice			device;
 	private VulkanCommandPool		commandPool;
@@ -59,28 +58,25 @@ public class VulkanEngine implements Runnable
 
 		// Vulkan ; instance
 
-		final var	vulkanInstance	= new VulkanInstance("Aeison", "Onsiea");
-		final var	instance		= vulkanInstance.initialization();
+		this.setInstance(VulkanInstance.createInstance("Aeison", "Onsiea"));
 
 		// Vulkan ; physical device
 
-		this.setPhysicalDevice(new VulkanPhysicalDevice());
-
-		this.getPhysicalDevice().initialization(instance);
+		this.setPhysicalDevice(this.getInstance().createPhysicalDevice());
 
 		// Vulkan ; device
 
-		this.setDevice(new VulkanDevice());
-
-		this.getDevice().initiallization(this.getPhysicalDevice());
+		this.setDevice(this.getPhysicalDevice().createLogicalDevice());
 
 		// Vulkan ; command pool
 
-		this.setCommandPool(new VulkanCommandPool());
-
-		this.getCommandPool().initialization(this.getPhysicalDevice(), this.getDevice());
+		this.setCommandPool(this.getDevice().createCommandPool());
 
 		// Vulkan ; buffer
+
+		/**
+		 * Example Data
+		 */
 
 		final var data = new int[64];
 
@@ -89,14 +85,11 @@ public class VulkanEngine implements Runnable
 			data[i] = i;
 		}
 
-		this.setVulkanBuffer(new VulkanBuffer());
+		/**
+		 *
+		 */
 
-		this.getVulkanBuffer().initialization(this.getPhysicalDevice(), this.getDevice(), data);
-
-		// Vulkan ; Pipeline
-
-		this.setPipeline(
-				new Pipeline("resources/shaders/SPIRV/base.vert.spv", "resources/shaders/SPIRV/base.frag.spv"));
+		this.setVulkanBuffer(this.getDevice().createBuffer(data));
 	}
 
 	public void start()
@@ -183,7 +176,6 @@ public class VulkanEngine implements Runnable
 		this.getVulkanBuffer().cleanup(this.getDevice());
 		this.getCommandPool().cleanup(this.getDevice());
 		this.getDevice().cleanup();
-		this.getPhysicalDevice().cleanup();
 	}
 
 	// Getter | Setter
@@ -238,54 +230,54 @@ public class VulkanEngine implements Runnable
 		this.isRunning = isRunningIn;
 	}
 
-	// Getter | Setter ; pipeline
+	// Getter | Setter ; Vulkan
 
-	Pipeline getPipeline()
+	public VulkanInstance getInstance()
 	{
-		return this.pipeline;
+		return this.instance;
 	}
 
-	private void setPipeline(final Pipeline pipelineIn)
+	public void setInstance(final VulkanInstance instanceIn)
 	{
-		this.pipeline = pipelineIn;
+		this.instance = instanceIn;
 	}
 
-	private VulkanPhysicalDevice getPhysicalDevice()
+	public VulkanPhysicalDevice getPhysicalDevice()
 	{
 		return this.physicalDevice;
 	}
 
-	private void setPhysicalDevice(final VulkanPhysicalDevice physicalDeviceIn)
+	public void setPhysicalDevice(final VulkanPhysicalDevice physicalDeviceIn)
 	{
 		this.physicalDevice = physicalDeviceIn;
 	}
 
-	private VulkanDevice getDevice()
+	public VulkanDevice getDevice()
 	{
 		return this.device;
 	}
 
-	private void setDevice(final VulkanDevice deviceIn)
+	public void setDevice(final VulkanDevice deviceIn)
 	{
 		this.device = deviceIn;
 	}
 
-	private VulkanCommandPool getCommandPool()
+	public VulkanCommandPool getCommandPool()
 	{
 		return this.commandPool;
 	}
 
-	private void setCommandPool(final VulkanCommandPool commandPoolIn)
+	public void setCommandPool(final VulkanCommandPool commandPoolIn)
 	{
 		this.commandPool = commandPoolIn;
 	}
 
-	private VulkanBuffer getVulkanBuffer()
+	public VulkanBuffer getVulkanBuffer()
 	{
 		return this.vulkanBuffer;
 	}
 
-	private void setVulkanBuffer(final VulkanBuffer vulkanBufferIn)
+	public void setVulkanBuffer(final VulkanBuffer vulkanBufferIn)
 	{
 		this.vulkanBuffer = vulkanBufferIn;
 	}

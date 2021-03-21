@@ -18,32 +18,7 @@ public class VulkanBuffer
 
 	// Constructor
 
-	public VulkanBuffer()
-	{
-	}
-
-	// Methods
-
-	public int findMemoryType(final int typeFilterIn, final int memoryPropertyFlagsIn,
-			final VulkanPhysicalDevice physicalDeviceIn)
-	{
-		for (var i = 0; i < physicalDeviceIn.getDeviceMemoryProperties().memoryTypeCount(); i++)
-		{
-			// à vérifier
-
-			if ((typeFilterIn & 1 << i) == 1 << i
-					&& (physicalDeviceIn.getDeviceMemoryProperties().memoryTypes(i).propertyFlags()
-							& memoryPropertyFlagsIn) == memoryPropertyFlagsIn)
-			{
-				return i;
-			}
-		}
-
-		return -1;
-	}
-
-	public void initialization(final VulkanPhysicalDevice physicalDeviceIn, final VulkanDevice deviceIn,
-			final int[] dataIn)
+	private VulkanBuffer(final VulkanPhysicalDevice physicalDeviceIn, final VulkanDevice deviceIn, final int[] dataIn)
 	{
 		final long	size					= Integer.BYTES * dataIn.length;
 
@@ -122,6 +97,34 @@ public class VulkanBuffer
 		MemoryUtil.memCopy(MemoryUtil.memAddress(dataBuffer), mappedMemory, dataBuffer.remaining());
 		MemoryUtil.memFree(dataBuffer);
 		VK10.vkUnmapMemory(deviceIn.getDevice(), this.getAllocateMemory());
+	}
+
+	// Static methods
+
+	public final static VulkanBuffer createBuffer(final VulkanPhysicalDevice physicalDeviceIn,
+			final VulkanDevice vulkanDeviceIn, final int[] dataIn)
+	{
+		return new VulkanBuffer(physicalDeviceIn, vulkanDeviceIn, dataIn);
+	}
+
+	// Methods
+
+	public int findMemoryType(final int typeFilterIn, final int memoryPropertyFlagsIn,
+			final VulkanPhysicalDevice physicalDeviceIn)
+	{
+		for (var i = 0; i < physicalDeviceIn.getDeviceMemoryProperties().memoryTypeCount(); i++)
+		{
+			// à vérifier
+
+			if ((typeFilterIn & 1 << i) == 1 << i
+					&& (physicalDeviceIn.getDeviceMemoryProperties().memoryTypes(i).propertyFlags()
+							& memoryPropertyFlagsIn) == memoryPropertyFlagsIn)
+			{
+				return i;
+			}
+		}
+
+		return -1;
 	}
 
 	public void cleanup(final VulkanDevice deviceIn)
