@@ -130,6 +130,7 @@ public class VulkanEngine implements Runnable
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void gameLoop()
 	{
 		while (this.isRunning() && !this.getWindow().windowShouldClose())
@@ -185,6 +186,7 @@ public class VulkanEngine implements Runnable
 		return this.window;
 	}
 
+	@SuppressWarnings("unused")
 	private void setWindow(final IWindow windowIn)
 	{
 		this.window = windowIn;
