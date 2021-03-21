@@ -42,14 +42,15 @@ public class VulkanEngine implements Runnable
 		 * this.setWindow(new GenericWindow(1920, 1080, "Vulkan !", 60, true, 1, new
 		 * VulkanWindowCreator()));
 		 **/
+
 		this.setTargetUps(50);
 		this.setTargetUpsTiming(1.0f / this.getTargetUps());
+
 		// this.getWindow().initialization(this.getTargetUps());
+
+		if (!GLFW.glfwInit())
 		{
-			if (!GLFW.glfwInit())
-			{
-				throw new IllegalStateException("Unable to initialize GLFW");
-			}
+			throw new IllegalStateException("Unable to initialize GLFW");
 		}
 
 		/**
