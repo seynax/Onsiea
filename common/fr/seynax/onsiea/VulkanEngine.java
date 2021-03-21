@@ -91,6 +91,10 @@ public class VulkanEngine implements Runnable
 		 */
 
 		this.setVulkanBuffer(this.getDevice().createBuffer(data));
+
+		/**
+		 * Fin vulkan
+		 */
 	}
 
 	public void start()
