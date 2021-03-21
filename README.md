@@ -52,3 +52,7 @@ Here are some examples of tools:
  (help for creating and filling buffers under LWJGL)
 - FileUtils (read the content of a file and receive a String, or a List <String>)
 - ...
+
+### Game
+
+the "game" part is there to test the engine, this part is not part of the engine. It presents some examples of engine use. There can be multiple games.
