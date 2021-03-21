@@ -19,7 +19,7 @@ public class VulkanEngine implements Runnable
 	private Thread					gameLoopThread;
 	private boolean					isRunning;
 
-	// Variables ; pipeline
+	// Variables ; Vulkan
 
 	private VulkanInstance			instance;
 	private VulkanPhysicalDevice	physicalDevice;
