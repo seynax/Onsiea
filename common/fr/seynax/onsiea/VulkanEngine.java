@@ -9,6 +9,9 @@ import fr.seynax.onsiea.vulkan.VulkanDescriptor;
 import fr.seynax.onsiea.vulkan.VulkanDevice;
 import fr.seynax.onsiea.vulkan.VulkanInstance;
 import fr.seynax.onsiea.vulkan.VulkanPhysicalDevice;
+import fr.seynax.onsiea.vulkan.VulkanSwapChain;
+import fr.seynax.onsiea.vulkan.VulkanWindow;
+import fr.seynax.onsiea.vulkan.VulkanWindowSurface;
 
 public class VulkanEngine implements Runnable
 {
@@ -28,6 +31,8 @@ public class VulkanEngine implements Runnable
 	private VulkanCommandPool		commandPool;
 	private VulkanBuffer			vulkanBuffer;
 	private VulkanDescriptor		vulkanDescriptor;
+	private VulkanWindowSurface		vulkanWindowSurface;
+	private VulkanSwapChain			vulkanSwapChain;
 
 	// Constructor
 
@@ -40,15 +45,13 @@ public class VulkanEngine implements Runnable
 
 	private void initialization()
 	{
-		/**
-		 * this.setWindow(new GenericWindow(1920, 1080, "Vulkan !", 60, true, 1, new
-		 * VulkanWindowCreator()));
-		 **/
+
+		this.setWindow(new VulkanWindow(1920, 1080, "Vulkan !", 60, true, 1));
 
 		this.setTargetUps(50);
 		this.setTargetUpsTiming(1.0f / this.getTargetUps());
 
-		// this.getWindow().initialization(this.getTargetUps());
+		this.getWindow().initialization(this.getTargetUps());
 
 		if (!GLFW.glfwInit())
 		{
@@ -95,6 +98,8 @@ public class VulkanEngine implements Runnable
 		this.setVulkanBuffer(this.getDevice().createBuffer(data));
 
 		this.setVulkanDescriptor(this.getVulkanBuffer().createDescriptor());
+
+		this.setVulkanWindowSurface(this.getInstance().createVulkanWindowSurface(this.getWindow()));
 
 		/**
 		 * Fin vulkan
@@ -302,5 +307,25 @@ public class VulkanEngine implements Runnable
 	public void setVulkanDescriptor(final VulkanDescriptor vulkanDescriptorIn)
 	{
 		this.vulkanDescriptor = vulkanDescriptorIn;
+	}
+
+	public VulkanWindowSurface getVulkanWindowSurface()
+	{
+		return this.vulkanWindowSurface;
+	}
+
+	public void setVulkanWindowSurface(final VulkanWindowSurface vulkanWindowSurfaceIn)
+	{
+		this.vulkanWindowSurface = vulkanWindowSurfaceIn;
+	}
+
+	public VulkanSwapChain getVulkanSwapChain()
+	{
+		return this.vulkanSwapChain;
+	}
+
+	public void setVulkanSwapChain(final VulkanSwapChain vulkanSwapChainIn)
+	{
+		this.vulkanSwapChain = vulkanSwapChainIn;
 	}
 }

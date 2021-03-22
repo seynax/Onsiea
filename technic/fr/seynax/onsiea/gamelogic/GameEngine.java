@@ -1,13 +1,10 @@
 package fr.seynax.onsiea.gamelogic;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL31;
-
 import fr.seynax.onsiea.graphics.GenericWindow;
 import fr.seynax.onsiea.graphics.GraphicsConstants;
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.graphics.matter.Shapes;
-import fr.seynax.onsiea.opengl.OpenGLWindowCreator;
+import fr.seynax.onsiea.graphics.render.OpenGLInitializer;
 import fr.seynax.onsiea.utils.Timer;
 
 public class GameEngine implements Runnable
@@ -37,14 +34,12 @@ public class GameEngine implements Runnable
 	public GameEngine(final String windowTitleIn, final int widthIn, final int heightIn, final int framerateIn,
 			final boolean vSyncIn, final int syncIn, final IGameLogic gameLogicIn) throws Exception
 	{
-		this.setGameLoopThread(new Thread(this, "GAME_LOOP_THREAD"));
-
 		this.setWindow(new GenericWindow(widthIn, heightIn, windowTitleIn, framerateIn, vSyncIn, syncIn,
-				GraphicsConstants.isFullscreen(), new OpenGLWindowCreator()));
+				GraphicsConstants.isFullscreen()));
 
 		this.setGameLogic(gameLogicIn);
 
-		this.setTimer(new Timer());
+		this.setGameLoopThread(new Thread(this, "GAME_LOOP_THREAD"));
 	}
 
 	// Methods
@@ -84,15 +79,17 @@ public class GameEngine implements Runnable
 
 	public void init() throws Exception
 	{
+		this.setTimer(new Timer());
+
 		this.getWindow().initialization(1.0D / GameEngine.getTargetUps());
+
+		OpenGLInitializer.initialize(this.getWindow());
 
 		this.getTimer().initialization();
 
 		Shapes.initialization();
 
 		this.getGameLogic().initialization(this.getWindow());
-		System.out.println(GL11.glGetInteger(GL31.GL_MAX_TEXTURE_BUFFER_SIZE));
-		System.out.println(GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE));
 
 		System.exit(0);
 	}

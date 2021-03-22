@@ -13,6 +13,7 @@ import org.lwjgl.vulkan.VkInstance;
 import org.lwjgl.vulkan.VkInstanceCreateInfo;
 import org.lwjgl.vulkan.VkLayerProperties;
 
+import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.vulkan.utils.DisallowVKUtil;
 
 public class VulkanInstance
@@ -144,6 +145,11 @@ public class VulkanInstance
 	public VulkanPhysicalDevice createPhysicalDevice()
 	{
 		return VulkanPhysicalDevice.createPhysicalDevice(this);
+	}
+
+	public VulkanWindowSurface createVulkanWindowSurface(final IWindow windowIn)
+	{
+		return new VulkanWindowSurface(this, windowIn);
 	}
 
 	// Getter | Setter

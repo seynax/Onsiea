@@ -1,6 +1,7 @@
 package fr.seynax.onsiea.graphics;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryUtil;
 
 import fr.seynax.onsiea.graphics.callbacks.GLFWEventManager;
@@ -23,8 +24,6 @@ public class GenericWindow implements IWindow
 
 	private boolean				isFullscreen;
 
-	private IWindowCreator		windowCreator;
-
 	// Variables
 
 	private GLFWEventManager	glfwEventManager;
@@ -32,25 +31,21 @@ public class GenericWindow implements IWindow
 	// Construtor
 
 	public GenericWindow(final int widthIn, final int heightIn, final String titleIn, final int framerateIn,
-			final boolean isSynchronizedIn, final int syncIn, final IWindowCreator windowCreatorIn)
+			final boolean isSynchronizedIn, final int syncIn)
 	{
-		this.verifyAndSetValue(widthIn, heightIn, titleIn, framerateIn, isSynchronizedIn, syncIn, true,
-				windowCreatorIn);
+		this.verifyAndSetValue(widthIn, heightIn, titleIn, framerateIn, isSynchronizedIn, syncIn, true);
 	}
 
 	public GenericWindow(final int widthIn, final int heightIn, final String titleIn, final int framerateIn,
-			final boolean isSynchronizedIn, final int syncIn, final boolean fullscreenIn,
-			final IWindowCreator windowCreatorIn)
+			final boolean isSynchronizedIn, final int syncIn, final boolean fullscreenIn)
 	{
-		this.verifyAndSetValue(widthIn, heightIn, titleIn, framerateIn, isSynchronizedIn, syncIn, fullscreenIn,
-				windowCreatorIn);
+		this.verifyAndSetValue(widthIn, heightIn, titleIn, framerateIn, isSynchronizedIn, syncIn, fullscreenIn);
 	}
 
 	// Methods
 
 	public void verifyAndSetValue(final int widthIn, final int heightIn, final String titleIn, final int framerateIn,
-			final boolean isSynchronizedIn, final int syncIn, final boolean isFullscreenIn,
-			final IWindowCreator windowCreatorIn)
+			final boolean isSynchronizedIn, final int syncIn, final boolean isFullscreenIn)
 	{
 		// Width
 
@@ -146,13 +141,6 @@ public class GenericWindow implements IWindow
 		// isFullscreen
 
 		this.setFullscreen(isFullscreenIn);
-
-		this.setWindowCreator(windowCreatorIn);
-
-		if (this.getWindowCreator() == null)
-		{
-			throw new RuntimeException("WindowCreator is null !");
-		}
 	}
 
 	@Override
@@ -169,33 +157,24 @@ public class GenericWindow implements IWindow
 
 		// WindowHint
 
-		GLFW.glfwDefaultWindowHints();
-		// GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_DEBUG_CONTEXT, GLFW.GLFW_TRUE);
-		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
-		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
-		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
-		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 2);
-		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
-		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GLFW.GLFW_TRUE);
+		this.initializeWindowHintsFirstPhase(false);
 
 		// Fullscreen
 
 		final var	primaryMonitor	= GLFW.glfwGetPrimaryMonitor();
 		final var	vidmode			= GLFW.glfwGetVideoMode(primaryMonitor);
 
+		this.initializeWindowHintsSecondPhase(vidmode);
+
 		if (this.isFullscreen())
 		{
-			GLFW.glfwWindowHint(GLFW.GLFW_RED_BITS, vidmode.redBits());
-			GLFW.glfwWindowHint(GLFW.GLFW_GREEN_BITS, vidmode.greenBits());
-			GLFW.glfwWindowHint(GLFW.GLFW_BLUE_BITS, vidmode.blueBits());
-			GLFW.glfwWindowHint(GLFW.GLFW_REFRESH_RATE, vidmode.refreshRate());
 
-			this.getWindowCreator().create(this.getWidth(), this.getHeight(), this.getTitle(), primaryMonitor,
-					MemoryUtil.NULL);
+			this.setWindowHandle(GLFW.glfwCreateWindow(this.getWidth(), this.getHeight(), this.getTitle(),
+					primaryMonitor, MemoryUtil.NULL));
 		}
 		else
 		{
-			this.setWindowHandle(this.getWindowCreator().create(this.getWidth(), this.getHeight(), this.getTitle(),
+			this.setWindowHandle(GLFW.glfwCreateWindow(this.getWidth(), this.getHeight(), this.getTitle(),
 					MemoryUtil.NULL, MemoryUtil.NULL));
 		}
 
@@ -208,9 +187,6 @@ public class GenericWindow implements IWindow
 		GLFW.glfwSetWindowPos(this.getWindowHandle(), (vidmode.width() - this.getWidth()) / 2,
 				(vidmode.height() - this.getHeight()) / 2);
 
-		// Make the OpenGL context current
-		GLFW.glfwMakeContextCurrent(this.getWindowHandle());
-
 		if (this.isSynchronized())
 		{
 			// Enable v-sync
@@ -218,18 +194,37 @@ public class GenericWindow implements IWindow
 			GLFW.glfwSwapInterval(1);
 		}
 
-		if (!this.getWindowCreator().initialization())
-		{
-			throw new RuntimeException("Failed to initialise renderer framework !");
-		}
-
 		this.getGlfwEventManager().initialization(intervalIn);
-
-		this.getWindowCreator().enableDebug();
 
 		GLFW.glfwShowWindow(this.getWindowHandle());
 
 		return this.getGlfwEventManager();
+	}
+
+	public void initializeWindowHintsFirstPhase(final boolean debugIsEnableIn)
+	{
+		GLFW.glfwDefaultWindowHints();
+		if (debugIsEnableIn)
+		{
+			GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_DEBUG_CONTEXT, GLFW.GLFW_TRUE);
+		}
+		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
+		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
+		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
+		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 2);
+		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
+		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GLFW.GLFW_TRUE);
+	}
+
+	public void initializeWindowHintsSecondPhase(final GLFWVidMode videoModeIn)
+	{
+		if (this.isFullscreen())
+		{
+			GLFW.glfwWindowHint(GLFW.GLFW_RED_BITS, videoModeIn.redBits());
+			GLFW.glfwWindowHint(GLFW.GLFW_GREEN_BITS, videoModeIn.greenBits());
+			GLFW.glfwWindowHint(GLFW.GLFW_BLUE_BITS, videoModeIn.blueBits());
+			GLFW.glfwWindowHint(GLFW.GLFW_REFRESH_RATE, videoModeIn.refreshRate());
+		}
 	}
 
 	@Override
@@ -371,16 +366,6 @@ public class GenericWindow implements IWindow
 	private void setFullscreen(final boolean isFullscreenIn)
 	{
 		this.isFullscreen = isFullscreenIn;
-	}
-
-	private IWindowCreator getWindowCreator()
-	{
-		return this.windowCreator;
-	}
-
-	private void setWindowCreator(final IWindowCreator windowCreatorIn)
-	{
-		this.windowCreator = windowCreatorIn;
 	}
 
 	// Variables
