@@ -5,6 +5,7 @@ import org.lwjgl.glfw.GLFW;
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.vulkan.VulkanBuffer;
 import fr.seynax.onsiea.vulkan.VulkanCommandPool;
+import fr.seynax.onsiea.vulkan.VulkanDescriptor;
 import fr.seynax.onsiea.vulkan.VulkanDevice;
 import fr.seynax.onsiea.vulkan.VulkanInstance;
 import fr.seynax.onsiea.vulkan.VulkanPhysicalDevice;
@@ -26,6 +27,7 @@ public class VulkanEngine implements Runnable
 	private VulkanDevice			device;
 	private VulkanCommandPool		commandPool;
 	private VulkanBuffer			vulkanBuffer;
+	private VulkanDescriptor		vulkanDescriptor;
 
 	// Constructor
 
@@ -91,6 +93,8 @@ public class VulkanEngine implements Runnable
 		 */
 
 		this.setVulkanBuffer(this.getDevice().createBuffer(data));
+
+		this.setVulkanDescriptor(this.getVulkanBuffer().createDescriptor());
 
 		/**
 		 * Fin vulkan
@@ -179,6 +183,7 @@ public class VulkanEngine implements Runnable
 
 	private void cleanup()
 	{
+		this.getVulkanDescriptor().cleanup(this.getDevice());
 		this.getVulkanBuffer().cleanup(this.getDevice());
 		this.getCommandPool().cleanup(this.getDevice());
 		this.getDevice().cleanup();
@@ -287,5 +292,15 @@ public class VulkanEngine implements Runnable
 	public void setVulkanBuffer(final VulkanBuffer vulkanBufferIn)
 	{
 		this.vulkanBuffer = vulkanBufferIn;
+	}
+
+	public VulkanDescriptor getVulkanDescriptor()
+	{
+		return this.vulkanDescriptor;
+	}
+
+	public void setVulkanDescriptor(final VulkanDescriptor vulkanDescriptorIn)
+	{
+		this.vulkanDescriptor = vulkanDescriptorIn;
 	}
 }

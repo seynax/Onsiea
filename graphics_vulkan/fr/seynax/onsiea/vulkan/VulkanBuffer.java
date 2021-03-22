@@ -12,21 +12,28 @@ public class VulkanBuffer
 {
 	// Variables
 
-	private long	buffer;
+	private long					buffer;
+	private long					bufferSize;
 
-	private long	allocateMemory;
+	private long					allocateMemory;
+
+	private VulkanPhysicalDevice	vulkanPhysicalDevice;
+	private VulkanDevice			vulkanDevice;
 
 	// Constructor
 
 	private VulkanBuffer(final VulkanPhysicalDevice physicalDeviceIn, final VulkanDevice deviceIn, final int[] dataIn)
 	{
-		final long	size					= Integer.BYTES * dataIn.length;
+		this.setVulkanPhysicalDevice(physicalDeviceIn);
+		this.setVulkanDevice(deviceIn);
+
+		this.setBufferSize(Integer.BYTES * dataIn.length);
 
 		final var	bufferMemoryProperties	= VK10.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
 
 		final var	bufferInfo				= VkBufferCreateInfo.calloc();
 		bufferInfo.sType(VK10.VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO);
-		bufferInfo.size(size);
+		bufferInfo.size(this.getBufferSize());
 		bufferInfo.usage(VK10.VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
 		bufferInfo.sharingMode(VK10.VK_SHARING_MODE_EXCLUSIVE);
 
@@ -54,7 +61,7 @@ public class VulkanBuffer
 
 		final var memoryAllocateInfo = VkMemoryAllocateInfo.calloc();
 		memoryAllocateInfo.sType(VK10.VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO);
-		memoryAllocateInfo.allocationSize(size);
+		memoryAllocateInfo.allocationSize(this.getBufferSize());
 		memoryAllocateInfo.memoryTypeIndex(memoryType);
 
 		final var passAllocateMemoryPointer = MemoryUtil.memAllocLong(1);
@@ -127,6 +134,11 @@ public class VulkanBuffer
 		return -1;
 	}
 
+	public VulkanDescriptor createDescriptor()
+	{
+		return VulkanDescriptor.create(this.getVulkanDevice(), this.getBuffer(), this.getBufferSize());
+	}
+
 	public void cleanup(final VulkanDevice deviceIn)
 	{
 		VK10.vkDestroyBuffer(deviceIn.getDevice(), this.getBuffer(), null);
@@ -145,6 +157,16 @@ public class VulkanBuffer
 		this.buffer = bufferIn;
 	}
 
+	public long getBufferSize()
+	{
+		return this.bufferSize;
+	}
+
+	public void setBufferSize(final long bufferSizeIn)
+	{
+		this.bufferSize = bufferSizeIn;
+	}
+
 	private long getAllocateMemory()
 	{
 		return this.allocateMemory;
@@ -153,5 +175,25 @@ public class VulkanBuffer
 	private void setAllocateMemory(final long allocateMemoryIn)
 	{
 		this.allocateMemory = allocateMemoryIn;
+	}
+
+	public VulkanPhysicalDevice getVulkanPhysicalDevice()
+	{
+		return this.vulkanPhysicalDevice;
+	}
+
+	public void setVulkanPhysicalDevice(final VulkanPhysicalDevice vulkanPhysicalDeviceIn)
+	{
+		this.vulkanPhysicalDevice = vulkanPhysicalDeviceIn;
+	}
+
+	public VulkanDevice getVulkanDevice()
+	{
+		return this.vulkanDevice;
+	}
+
+	public void setVulkanDevice(final VulkanDevice vulkanDeviceIn)
+	{
+		this.vulkanDevice = vulkanDeviceIn;
 	}
 }
