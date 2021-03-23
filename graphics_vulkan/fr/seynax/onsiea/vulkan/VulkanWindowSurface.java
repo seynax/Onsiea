@@ -197,14 +197,10 @@ public class VulkanWindowSurface
 			swapchainCreateInfo.imageUsage(swapchainCreateInfo.imageUsage() | VK10.VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
 		}
 
-		final var passSwapchainPointer = MemoryUtil.memAllocLong(1);
+		final var	passSwapchainPointer	= MemoryUtil.memAllocLong(1);
 
-		System.out.println(deviceIn);
-		System.out.println(swapchainCreateInfo);
-		System.out.println(passSwapchainPointer);
-
-		System.out.println(deviceIn.getCapabilities().vkCreateSwapchainKHR);
-		final var err = KHRSwapchain.vkCreateSwapchainKHR(deviceIn, swapchainCreateInfo, null, passSwapchainPointer);
+		final var	err						= KHRSwapchain.vkCreateSwapchainKHR(deviceIn, swapchainCreateInfo, null,
+				passSwapchainPointer);
 
 		if (err != VK10.VK_SUCCESS)
 		{

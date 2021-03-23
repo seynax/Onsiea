@@ -81,6 +81,7 @@ public class VulkanInstance
 		final var	ppEnabledExtensionNames	= MemoryUtil.memAllocPointer(requiredExtension.remaining() + 1);
 		ppEnabledExtensionNames.put(requiredExtension);
 		final var VK_EXT_DEBUG_REPORT_EXTENSION = MemoryUtil.memUTF8(EXTDebugReport.VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+		ppEnabledExtensionNames.put(VK_EXT_DEBUG_REPORT_EXTENSION);
 		ppEnabledExtensionNames.flip();
 
 		// ApplicationInfo

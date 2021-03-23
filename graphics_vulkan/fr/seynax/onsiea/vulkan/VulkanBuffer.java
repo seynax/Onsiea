@@ -6,6 +6,7 @@ import org.lwjgl.vulkan.VkBufferCreateInfo;
 import org.lwjgl.vulkan.VkMemoryAllocateInfo;
 import org.lwjgl.vulkan.VkMemoryRequirements;
 
+import fr.seynax.onsiea.utils.BufferHelper;
 import fr.seynax.onsiea.vulkan.utils.VKUtil;
 
 public class VulkanBuffer
@@ -97,9 +98,7 @@ public class VulkanBuffer
 		final var mappedMemory = pointerBuffer.get(0);
 		MemoryUtil.memFree(pointerBuffer);
 
-		final var dataBuffer = MemoryUtil.memAllocInt(dataIn.length);
-		dataBuffer.put(dataIn);
-		dataBuffer.flip();
+		final var dataBuffer = BufferHelper.createIntBuffer(dataIn);
 
 		MemoryUtil.memCopy(MemoryUtil.memAddress(dataBuffer), mappedMemory, dataBuffer.remaining());
 		MemoryUtil.memFree(dataBuffer);
