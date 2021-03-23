@@ -142,6 +142,11 @@ public class VulkanInstance
 		return instance;
 	}
 
+	public void cleanup()
+	{
+		VK10.vkDestroyInstance(this.getInstance(), null);
+	}
+
 	// Methods
 
 	public VulkanPhysicalDevice createPhysicalDevice(final String[] requiredExtensionsNameIn)

@@ -142,54 +142,43 @@ public class VulkanPhysicalDevice
 					"Failed to get device extensions properties count : " + VKUtil.translateVulkanResult(err));
 		}
 
-		final var						deviceExtensionCount	= passDeviceExtensionCount.get(0);
+		final var	deviceExtensionCount	= passDeviceExtensionCount.get(0);
 
-		VkExtensionProperties.Buffer	buffer					= null;
+		final var	buffer					= VkExtensionProperties.calloc(deviceExtensionCount);
 
-		try (var stack = MemoryStack.stackPush())
+		err = VK10.vkEnumerateDeviceExtensionProperties(physicalDeviceIn, (ByteBuffer) null, passDeviceExtensionCount,
+				buffer);
+
+		if (err != VK10.VK_SUCCESS)
 		{
-			buffer	= VkExtensionProperties.mallocStack(deviceExtensionCount, stack);
+			throw new AssertionError(
+					"Failed to get device extensions properties : " + VKUtil.translateVulkanResult(err));
+		}
 
-			err		= VK10.vkEnumerateDeviceExtensionProperties(physicalDeviceIn, (ByteBuffer) null,
-					passDeviceExtensionCount, buffer);
+		for (var i = 0; i < extensionCountIn; i++)
+		{
+			var extensionFound = false;
 
-			if (err != VK10.VK_SUCCESS)
+			for (var j = 0; j < deviceExtensionCount; j++)
 			{
-				throw new AssertionError(
-						"Failed to get device extensions properties : " + VKUtil.translateVulkanResult(err));
-			}
+				buffer.position(j);
 
-			for (var i = 0; i < extensionCountIn; i++)
-			{
-				var extensionFound = false;
-
-				for (var j = 0; j < deviceExtensionCount; j++)
+				if (buffer.extensionNameString().contentEquals(requiredExtensionsIn[i]))
 				{
-					buffer.position(j);
+					extensionFound = true;
 
-					if (buffer.extensionNameString().contentEquals(requiredExtensionsIn[i]))
-					{
-						extensionFound = true;
-
-						break;
-					}
-				}
-
-				if (!extensionFound)
-				{
-					return false;
+					break;
 				}
 			}
-		}
-		finally
-		{
-			MemoryUtil.memFree(passDeviceExtensionCount);
 
-			if (buffer != null)
+			if (!extensionFound)
 			{
-				buffer.free();
+				return false;
 			}
 		}
+
+		MemoryUtil.memFree(passDeviceExtensionCount);
+		MemoryUtil.memFree(buffer);
 
 		return true;
 	}

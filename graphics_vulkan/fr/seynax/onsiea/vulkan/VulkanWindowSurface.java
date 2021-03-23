@@ -5,15 +5,10 @@ import java.nio.IntBuffer;
 import org.lwjgl.glfw.GLFWVulkan;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.vulkan.KHRSurface;
-import org.lwjgl.vulkan.KHRSwapchain;
 import org.lwjgl.vulkan.VK10;
-import org.lwjgl.vulkan.VkDevice;
-import org.lwjgl.vulkan.VkExtent2D;
-import org.lwjgl.vulkan.VkPhysicalDevice;
 import org.lwjgl.vulkan.VkQueueFamilyProperties;
 import org.lwjgl.vulkan.VkSurfaceCapabilitiesKHR;
 import org.lwjgl.vulkan.VkSurfaceFormatKHR;
-import org.lwjgl.vulkan.VkSwapchainCreateInfoKHR;
 
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.vulkan.utils.VKUtil;
@@ -23,17 +18,33 @@ import fr.seynax.onsiea.vulkan.utils.VKUtil;
 
 public class VulkanWindowSurface
 {
+	// Constructor variables
+
+	private VulkanInstance				instance;
+	private VulkanDevice				device;
+	private VulkanPhysicalDevice		physicalDevice;
+
 	// Variables
 
-	private long	vulkanWindowSurface;
+	private long						vulkanWindowSurfaceHandle;
 
-	private long	swapchain;
+	private VkSurfaceCapabilitiesKHR	surfaceCapabilities;
+
+	private int							surfacePresentModeCount;
+	private IntBuffer					passSurfacePresentModeBuffer;
+
+	private int							surfaceFormatCount;
+	private VkSurfaceFormatKHR.Buffer	passSurfaceFormatBuffer;
 
 	// Constructor
 
 	VulkanWindowSurface(final VulkanInstance instanceIn, final VulkanPhysicalDevice physicalDeviceIn,
 			final VulkanDevice deviceIn, final IWindow windowIn)
 	{
+		this.setInstance(instanceIn);
+		this.setDevice(deviceIn);
+		this.setPhysicalDevice(physicalDeviceIn);
+
 		// Window surface
 
 		final var	passVulkanSurfacePointer	= MemoryUtil.memAllocLong(1);
@@ -46,14 +57,14 @@ public class VulkanWindowSurface
 			throw new AssertionError("Failed to create window surface : " + VKUtil.translateVulkanResult(err));
 		}
 
-		this.setVulkanWindowSurface(passVulkanSurfacePointer.get(0));
+		this.setVulkanWindowSurfaceHandle(passVulkanSurfacePointer.get(0));
 
 		// Surface capabilities
 
-		final var surfaceCapabilities = VkSurfaceCapabilitiesKHR.calloc();
+		this.setSurfaceCapabilities(VkSurfaceCapabilitiesKHR.calloc());
 
 		err = KHRSurface.vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDeviceIn.getDevice(),
-				this.getVulkanWindowSurface(), surfaceCapabilities);
+				this.getVulkanWindowSurfaceHandle(), this.getSurfaceCapabilities());
 
 		if (err != VK10.VK_SUCCESS)
 		{
@@ -66,7 +77,7 @@ public class VulkanWindowSurface
 		final var passSurfaceFormatCount = MemoryUtil.memAllocInt(1);
 
 		err = KHRSurface.vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDeviceIn.getDevice(),
-				this.getVulkanWindowSurface(), passSurfaceFormatCount, null);
+				this.getVulkanWindowSurfaceHandle(), passSurfaceFormatCount, null);
 
 		if (err != VK10.VK_SUCCESS)
 		{
@@ -74,12 +85,12 @@ public class VulkanWindowSurface
 					"Failted to get physical device surface formats count khr : " + VKUtil.translateVulkanResult(err));
 		}
 
-		final var	surfaceFormatCount		= passSurfaceFormatCount.get(0);
+		this.setSurfaceFormatCount(passSurfaceFormatCount.get(0));
 
-		final var	passSurfaceFormatBuffer	= VkSurfaceFormatKHR.calloc(surfaceFormatCount);
+		this.setPassSurfaceFormatBuffer(VkSurfaceFormatKHR.calloc(this.surfaceFormatCount));
 
 		err = KHRSurface.vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDeviceIn.getDevice(),
-				this.getVulkanWindowSurface(), passSurfaceFormatCount, passSurfaceFormatBuffer);
+				this.getVulkanWindowSurfaceHandle(), passSurfaceFormatCount, this.getPassSurfaceFormatBuffer());
 		MemoryUtil.memFree(passSurfaceFormatCount);
 
 		if (err != VK10.VK_SUCCESS)
@@ -93,7 +104,7 @@ public class VulkanWindowSurface
 		final var passSurfacePresentModeCount = MemoryUtil.memAllocInt(1);
 
 		err = KHRSurface.vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDeviceIn.getDevice(),
-				this.getVulkanWindowSurface(), passSurfaceFormatCount, null);
+				this.getVulkanWindowSurfaceHandle(), passSurfaceFormatCount, null);
 
 		if (err != VK10.VK_SUCCESS)
 		{
@@ -101,12 +112,12 @@ public class VulkanWindowSurface
 					"Failted to get physical device surface formats count khr : " + VKUtil.translateVulkanResult(err));
 		}
 
-		final var	surfacePresentModeCount			= passSurfacePresentModeCount.get(0);
+		this.setSurfacePresentModeCount(passSurfacePresentModeCount.get(0));
 
-		final var	passSurfacePresentModeBuffer	= MemoryUtil.memAllocInt(surfacePresentModeCount);
+		this.setPassSurfacePresentModeBuffer(MemoryUtil.memAllocInt(this.getSurfacePresentModeCount()));
 
 		err = KHRSurface.vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDeviceIn.getDevice(),
-				this.getVulkanWindowSurface(), passSurfacePresentModeCount, passSurfacePresentModeBuffer);
+				this.getVulkanWindowSurfaceHandle(), passSurfacePresentModeCount, this.passSurfacePresentModeBuffer);
 		MemoryUtil.memFree(passSurfacePresentModeCount);
 
 		if (err != VK10.VK_SUCCESS)
@@ -131,7 +142,7 @@ public class VulkanWindowSurface
 			{
 				supportsPresent.position(i);
 				err = KHRSurface.vkGetPhysicalDeviceSurfaceSupportKHR(physicalDeviceIn.getDevice(), i,
-						this.getVulkanWindowSurface(), supportsPresent);
+						this.getVulkanWindowSurfaceHandle(), supportsPresent);
 				if (err != VK10.VK_SUCCESS)
 				{
 					throw new AssertionError(
@@ -175,176 +186,117 @@ public class VulkanWindowSurface
 			}
 			MemoryUtil.memFree(supportsPresent);
 		}
-
-		final var hasSupport = this.checkSwapchainSupport(physicalDeviceIn.getDevice(), deviceIn.getDevice(),
-				windowIn.getWidth(), windowIn.getHeight(), this.getVulkanWindowSurface(), surfaceCapabilities,
-				passSurfaceFormatBuffer, surfaceFormatCount, passSurfacePresentModeBuffer, surfacePresentModeCount);
-
-		MemoryUtil.memFree(passSurfacePresentModeBuffer);
-		MemoryUtil.memFree(passSurfaceFormatBuffer);
-
-		if (!hasSupport)
-		{
-			throw new AssertionError("Failed to check swapchain support !");
-		}
 	}
 
 	// Methods
 
-	private boolean checkSwapchainSupport(final VkPhysicalDevice physicalDeviceIn, final VkDevice deviceIn,
-			final int screenWidthIn, final int screenHeightIn, final long windowSurfaceIn,
-			final VkSurfaceCapabilitiesKHR surfaceCapabilitiesIn, final VkSurfaceFormatKHR.Buffer passSurfaceFormatsIn,
-			final int surfaceFormatCountIn, final IntBuffer presentModesIn, final int presentModeCountIn)
+	public VulkanSwapchain createSwapchain(final IWindow windowIn)
 	{
-		final var choosenSurfaceFormat = this.chooseSwapChainSurfaceFormat(passSurfaceFormatsIn, surfaceFormatCountIn);
+		final var swapchain = new VulkanSwapchain(this.getDevice(), this.getPhysicalDevice(),
+				this.getVulkanWindowSurfaceHandle(), windowIn, this.getSurfaceCapabilities(),
+				this.getPassSurfaceFormatBuffer(), this.getSurfaceFormatCount(), this.getPassSurfacePresentModeBuffer(),
+				this.getSurfacePresentModeCount());
 
-		if (choosenSurfaceFormat == null)
-		{
-			throw new AssertionError("Failed to choose physical device surface format khr !");
-		}
+		MemoryUtil.memFree(this.getPassSurfacePresentModeBuffer());
+		MemoryUtil.memFree(this.getPassSurfaceFormatBuffer());
 
-		final var	choosenPresentMode	= this.chooseSwapChainPresentMode(presentModesIn, presentModeCountIn);
-
-		final var	extent				= this.chooseSwapchainExtent(surfaceCapabilitiesIn, screenWidthIn,
-				screenHeightIn);
-
-		var			imageCount			= surfaceCapabilitiesIn.minImageCount() + 1;
-
-		if (surfaceCapabilitiesIn.maxImageCount() > 0 && imageCount > surfaceCapabilitiesIn.maxImageCount())
-		{
-			imageCount = surfaceCapabilitiesIn.maxImageCount();
-		}
-
-		final var swapchainCreateInfo = VkSwapchainCreateInfoKHR.create();
-		swapchainCreateInfo.sType(KHRSwapchain.VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR);
-		swapchainCreateInfo.surface(this.getVulkanWindowSurface());
-		swapchainCreateInfo.minImageCount(imageCount);
-		swapchainCreateInfo.imageFormat(choosenSurfaceFormat.format());
-		swapchainCreateInfo.imageColorSpace(choosenSurfaceFormat.colorSpace());
-		swapchainCreateInfo.imageExtent(extent);
-		swapchainCreateInfo.imageArrayLayers(1);
-		swapchainCreateInfo.imageUsage(VK10.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
-		swapchainCreateInfo.presentMode(choosenPresentMode);
-		swapchainCreateInfo.clipped(true);
-		swapchainCreateInfo.oldSwapchain(VK10.VK_NULL_HANDLE);
-		swapchainCreateInfo.imageSharingMode(VK10.VK_SHARING_MODE_EXCLUSIVE);
-		swapchainCreateInfo.pQueueFamilyIndices(null);
-		swapchainCreateInfo.preTransform(surfaceCapabilitiesIn.currentTransform());
-		swapchainCreateInfo.compositeAlpha(KHRSurface.VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR);
-
-		if ((surfaceCapabilitiesIn.supportedUsageFlags()
-				& VK10.VK_IMAGE_USAGE_TRANSFER_DST_BIT) == VK10.VK_IMAGE_USAGE_TRANSFER_DST_BIT)
-		{
-			swapchainCreateInfo.imageUsage(swapchainCreateInfo.imageUsage() | VK10.VK_IMAGE_USAGE_TRANSFER_DST_BIT);
-		}
-
-		if ((surfaceCapabilitiesIn.supportedUsageFlags()
-				& VK10.VK_IMAGE_USAGE_TRANSFER_SRC_BIT) == VK10.VK_IMAGE_USAGE_TRANSFER_SRC_BIT)
-		{
-			swapchainCreateInfo.imageUsage(swapchainCreateInfo.imageUsage() | VK10.VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
-		}
-
-		final var	passSwapchainPointer	= MemoryUtil.memAllocLong(1);
-
-		final var	err						= KHRSwapchain.vkCreateSwapchainKHR(deviceIn, swapchainCreateInfo, null,
-				passSwapchainPointer);
-
-		if (err != VK10.VK_SUCCESS)
-		{
-			throw new AssertionError("Failted to create swap chain khr : " + VKUtil.translateVulkanResult(err));
-		}
-
-		this.setSwapchain(passSwapchainPointer.get(0));
-		MemoryUtil.memFree(passSwapchainPointer);
-		swapchainCreateInfo.free();
-
-		return true;
+		return swapchain;
 	}
 
-	private VkSurfaceFormatKHR chooseSwapChainSurfaceFormat(final VkSurfaceFormatKHR.Buffer surfaceFormatsIn,
-			final int formatCountIn)
+	public void cleanup()
 	{
-		for (var i = 0; i < formatCountIn; i++)
-		{
-			if (surfaceFormatsIn.get(i).format() == VK10.VK_FORMAT_B8G8R8A8_UNORM
-					&& surfaceFormatsIn.get(i).colorSpace() == KHRSurface.VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
-			{
-				return surfaceFormatsIn.get(i);
-			}
-		}
-
-		if (formatCountIn > 0)
-		{
-			return surfaceFormatsIn.get(0);
-		}
-
-		return null;
-	}
-
-	private int chooseSwapChainPresentMode(final IntBuffer modesBufferIn, final int modeCountIn)
-	{
-		for (var i = 0; i < modeCountIn; i++)
-		{
-			if (modesBufferIn.get(i) == KHRSurface.VK_PRESENT_MODE_MAILBOX_KHR)
-			{
-				return modesBufferIn.get(i);
-			}
-		}
-
-		return KHRSurface.VK_PRESENT_MODE_FIFO_KHR;
-	}
-
-	private VkExtent2D chooseSwapchainExtent(final VkSurfaceCapabilitiesKHR capabilitiesIn, final int screenWidthIn,
-			final int screenHeightIn)
-	{
-		if (capabilitiesIn.currentExtent().width() != 0xffffffff) // UINT32_MAX = 0xffffffff
-		{
-			return capabilitiesIn.currentExtent();
-		}
-
-		final var extent = VkExtent2D.calloc();
-		extent.width(screenWidthIn);
-		extent.height(screenHeightIn);
-
-		if (extent.width() > capabilitiesIn.maxImageExtent().width())
-		{
-			extent.width(capabilitiesIn.maxImageExtent().width());
-		}
-		if (extent.width() < capabilitiesIn.minImageExtent().width())
-		{
-			extent.width(capabilitiesIn.minImageExtent().width());
-		}
-		if (extent.height() > capabilitiesIn.maxImageExtent().height())
-		{
-			extent.height(capabilitiesIn.maxImageExtent().height());
-		}
-		if (extent.height() < capabilitiesIn.minImageExtent().height())
-		{
-			extent.height(capabilitiesIn.minImageExtent().height());
-		}
-
-		return extent;
+		KHRSurface.vkDestroySurfaceKHR(this.getInstance().getInstance(), this.getVulkanWindowSurfaceHandle(), null);
 	}
 
 	// Getter | Setter
 
-	long getVulkanWindowSurface()
+	public VulkanInstance getInstance()
 	{
-		return this.vulkanWindowSurface;
+		return this.instance;
 	}
 
-	private void setVulkanWindowSurface(final long vulkanWindowSurfaceIn)
+	public void setInstance(final VulkanInstance instanceIn)
 	{
-		this.vulkanWindowSurface = vulkanWindowSurfaceIn;
+		this.instance = instanceIn;
 	}
 
-	public long getSwapchain()
+	public VulkanDevice getDevice()
 	{
-		return this.swapchain;
+		return this.device;
 	}
 
-	public void setSwapchain(final long swapchainIn)
+	public void setDevice(final VulkanDevice deviceIn)
 	{
-		this.swapchain = swapchainIn;
+		this.device = deviceIn;
+	}
+
+	public VulkanPhysicalDevice getPhysicalDevice()
+	{
+		return this.physicalDevice;
+	}
+
+	public void setPhysicalDevice(final VulkanPhysicalDevice physicalDeviceIn)
+	{
+		this.physicalDevice = physicalDeviceIn;
+	}
+
+	public long getVulkanWindowSurfaceHandle()
+	{
+		return this.vulkanWindowSurfaceHandle;
+	}
+
+	public void setVulkanWindowSurfaceHandle(final long vulkanWindowSurfaceHandleIn)
+	{
+		this.vulkanWindowSurfaceHandle = vulkanWindowSurfaceHandleIn;
+	}
+
+	public VkSurfaceCapabilitiesKHR getSurfaceCapabilities()
+	{
+		return this.surfaceCapabilities;
+	}
+
+	public void setSurfaceCapabilities(final VkSurfaceCapabilitiesKHR surfaceCapabilitiesIn)
+	{
+		this.surfaceCapabilities = surfaceCapabilitiesIn;
+	}
+
+	public int getSurfacePresentModeCount()
+	{
+		return this.surfacePresentModeCount;
+	}
+
+	public void setSurfacePresentModeCount(final int surfacePresentModeCountIn)
+	{
+		this.surfacePresentModeCount = surfacePresentModeCountIn;
+	}
+
+	public IntBuffer getPassSurfacePresentModeBuffer()
+	{
+		return this.passSurfacePresentModeBuffer;
+	}
+
+	public void setPassSurfacePresentModeBuffer(final IntBuffer passSurfacePresentModeBufferIn)
+	{
+		this.passSurfacePresentModeBuffer = passSurfacePresentModeBufferIn;
+	}
+
+	public int getSurfaceFormatCount()
+	{
+		return this.surfaceFormatCount;
+	}
+
+	public void setSurfaceFormatCount(final int surfaceFormatCountIn)
+	{
+		this.surfaceFormatCount = surfaceFormatCountIn;
+	}
+
+	public VkSurfaceFormatKHR.Buffer getPassSurfaceFormatBuffer()
+	{
+		return this.passSurfaceFormatBuffer;
+	}
+
+	public void setPassSurfaceFormatBuffer(final VkSurfaceFormatKHR.Buffer passSurfaceFormatBufferIn)
+	{
+		this.passSurfaceFormatBuffer = passSurfaceFormatBufferIn;
 	}
 }

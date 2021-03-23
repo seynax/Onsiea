@@ -140,6 +140,7 @@ public class VulkanBuffer
 
 	public void cleanup(final VulkanDevice deviceIn)
 	{
+		// VK10.vkUnmapMemory(deviceIn.getDevice(), this.getAllocateMemory());
 		VK10.vkDestroyBuffer(deviceIn.getDevice(), this.getBuffer(), null);
 		VK10.vkFreeMemory(deviceIn.getDevice(), this.getAllocateMemory(), null);
 	}
