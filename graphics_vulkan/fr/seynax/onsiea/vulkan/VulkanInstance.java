@@ -36,11 +36,6 @@ public class VulkanInstance
 
 	// Static methods
 
-	public final static VulkanInstance createInstance(final String applicationNameIn, final String engineNameIn)
-	{
-		return new VulkanInstance(applicationNameIn, engineNameIn);
-	}
-
 	public final static VkInstance initialization(final String applicationNameIn, final String engineNameIn)
 	{
 		// Enabled layers

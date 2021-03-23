@@ -64,7 +64,7 @@ public class VulkanEngine implements Runnable
 
 		// Vulkan ; instance
 
-		this.setInstance(VulkanInstance.createInstance("Aeison", "Onsiea"));
+		this.setInstance(new VulkanInstance("Aeison", "Onsiea"));
 
 		// Vulkan ; physical device
 

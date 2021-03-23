@@ -21,7 +21,7 @@ public class VulkanDevice
 
 	// Constructor
 
-	public VulkanDevice(final VulkanPhysicalDevice vulkanPhysicalDeviceIn, final VulkanInstance instanceIn)
+	VulkanDevice(final VulkanPhysicalDevice vulkanPhysicalDeviceIn, final VulkanInstance instanceIn)
 	{
 		this.setPhysicalDevice(vulkanPhysicalDeviceIn);
 		this.setInstance(instanceIn);
@@ -67,7 +67,7 @@ public class VulkanDevice
 
 	public VulkanCommandPool createCommandPool()
 	{
-		return VulkanCommandPool.createCommandPool(this.getPhysicalDevice(), this);
+		return new VulkanCommandPool(this.getPhysicalDevice(), this);
 	}
 
 	public VulkanBuffer createBuffer(final int[] dataIn)

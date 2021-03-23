@@ -22,7 +22,7 @@ public class VulkanDescriptor
 
 	// Constructor
 
-	private VulkanDescriptor(final VulkanDevice vulkanDeviceIn, final long bufferPointerIn, final long bufferSizeIn)
+	VulkanDescriptor(final VulkanDevice vulkanDeviceIn, final long bufferPointerIn, final long bufferSizeIn)
 	{
 		// Descriptor pool
 
@@ -138,14 +138,6 @@ public class VulkanDescriptor
 			MemoryUtil.memFree(passDescriptorBufferInfo);
 			MemoryUtil.memFree(passWriteDescriptorSet);
 		}
-	}
-
-	// Static methods
-
-	public final static VulkanDescriptor create(final VulkanDevice vulkanDeviceIn, final long bufferPointerIn,
-			final long bufferSizeIn)
-	{
-		return new VulkanDescriptor(vulkanDeviceIn, bufferPointerIn, bufferSizeIn);
 	}
 
 	// Methods

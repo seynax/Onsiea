@@ -141,8 +141,6 @@ public class VulkanWindowSurface
 		 **/
 	}
 
-	// Static methods
-
 	// Methods
 
 	private boolean checkSwapchainSupport(final VkPhysicalDevice physicalDeviceIn, final VkDevice deviceIn,

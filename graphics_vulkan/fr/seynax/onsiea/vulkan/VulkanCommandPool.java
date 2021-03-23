@@ -11,9 +11,10 @@ public class VulkanCommandPool
 	// Variables
 
 	private long commandPool;
+
 	// Constructor
 
-	private VulkanCommandPool(final VulkanPhysicalDevice physicalDeviceIn, final VulkanDevice vulkanDeviceIn)
+	VulkanCommandPool(final VulkanPhysicalDevice physicalDeviceIn, final VulkanDevice vulkanDeviceIn)
 	{
 		final var commandPoolCreateInfo = VkCommandPoolCreateInfo.calloc();
 
@@ -32,14 +33,6 @@ public class VulkanCommandPool
 		}
 		this.setCommandPool(passCommandPoolPointer.get(0));
 		MemoryUtil.memFree(passCommandPoolPointer);
-	}
-
-	// Static methods
-
-	public final static VulkanCommandPool createCommandPool(final VulkanPhysicalDevice physicalDeviceIn,
-			final VulkanDevice vulkanDeviceIn)
-	{
-		return new VulkanCommandPool(physicalDeviceIn, vulkanDeviceIn);
 	}
 
 	// Methods

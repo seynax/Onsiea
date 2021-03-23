@@ -136,7 +136,7 @@ public class VulkanBuffer
 
 	public VulkanDescriptor createDescriptor()
 	{
-		return VulkanDescriptor.create(this.getVulkanDevice(), this.getBuffer(), this.getBufferSize());
+		return new VulkanDescriptor(this.getVulkanDevice(), this.getBuffer(), this.getBufferSize());
 	}
 
 	public void cleanup(final VulkanDevice deviceIn)
