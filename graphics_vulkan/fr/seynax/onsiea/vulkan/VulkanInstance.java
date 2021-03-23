@@ -13,6 +13,7 @@ import org.lwjgl.vulkan.VkInstance;
 import org.lwjgl.vulkan.VkInstanceCreateInfo;
 import org.lwjgl.vulkan.VkLayerProperties;
 
+import fr.seynax.onsiea.utils.BufferHelper;
 import fr.seynax.onsiea.vulkan.utils.DisallowVKUtil;
 
 public class VulkanInstance
@@ -76,17 +77,18 @@ public class VulkanInstance
 
 		// Enabled extensions
 
-		final var	requiredExtension		= GLFWVulkan.glfwGetRequiredInstanceExtensions();
+		final var	requiredExtension				= GLFWVulkan.glfwGetRequiredInstanceExtensions();
 
-		final var	ppEnabledExtensionNames	= MemoryUtil.memAllocPointer(requiredExtension.remaining() + 1);
-		ppEnabledExtensionNames.put(requiredExtension);
-		final var VK_EXT_DEBUG_REPORT_EXTENSION = MemoryUtil.memUTF8(EXTDebugReport.VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
-		ppEnabledExtensionNames.flip();
+		final var	VK_EXT_DEBUG_REPORT_EXTENSION	= MemoryUtil
+				.memUTF8(EXTDebugReport.VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+
+		final var	ppEnabledExtensionNames			= BufferHelper.createPointerBuffer(requiredExtension,
+				VK_EXT_DEBUG_REPORT_EXTENSION);
 
 		// ApplicationInfo
 
-		final var applicationInfo = VkApplicationInfo.calloc().sType(VK10.VK_STRUCTURE_TYPE_APPLICATION_INFO)
-				.apiVersion(VK10.VK_API_VERSION_1_0);
+		final var	applicationInfo					= VkApplicationInfo.calloc()
+				.sType(VK10.VK_STRUCTURE_TYPE_APPLICATION_INFO).apiVersion(VK10.VK_API_VERSION_1_0);
 
 		applicationInfo.pApplicationName(MemoryUtil.memUTF8(applicationNameIn));
 		applicationInfo.pEngineName(MemoryUtil.memUTF8(engineNameIn));
