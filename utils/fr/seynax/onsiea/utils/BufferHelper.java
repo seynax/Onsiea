@@ -59,4 +59,11 @@ public class BufferHelper
 		return MemoryUtil.memAllocPointer(pointerBufferIn.remaining() + otherPointersIn.length).put(pointerBufferIn)
 				.put(otherPointersIn).flip();
 	}
+
+	public final static PointerBuffer createPointerBuffer(final PointerBuffer pointerBufferIn,
+			final ByteBuffer otherPointersIn)
+	{
+		return MemoryUtil.memAllocPointer(pointerBufferIn.remaining() + otherPointersIn.remaining())
+				.put(pointerBufferIn).put(otherPointersIn).flip();
+	}
 }
