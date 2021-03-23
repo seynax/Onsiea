@@ -3,6 +3,7 @@ package fr.seynax.onsiea.utils;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 import java.nio.ShortBuffer;
 
@@ -19,6 +20,11 @@ public class BufferHelper
 	public final static ShortBuffer createShortBuffer(final short... contentsIn)
 	{
 		return MemoryUtil.memAllocShort(contentsIn.length).put(contentsIn).flip();
+	}
+
+	public static IntBuffer createIntBuffer(final int... contentsIn)
+	{
+		return MemoryUtil.memAllocInt(contentsIn.length).put(contentsIn).flip();
 	}
 
 	public final static FloatBuffer createFloatBuffer(final float... contentsIn)
