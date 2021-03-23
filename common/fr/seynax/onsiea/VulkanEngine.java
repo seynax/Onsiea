@@ -99,7 +99,7 @@ public class VulkanEngine implements Runnable
 
 		this.setVulkanDescriptor(this.getVulkanBuffer().createDescriptor());
 
-		this.setVulkanWindowSurface(this.getInstance().createVulkanWindowSurface(this.getWindow()));
+		this.setVulkanWindowSurface(this.getDevice().createVulkanWindowSurface(this.getWindow()));
 
 		/**
 		 * Fin vulkan

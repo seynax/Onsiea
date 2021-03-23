@@ -8,7 +8,6 @@ public class VulkanSwapChain
 
 	public VulkanSwapChain()
 	{
-
 	}
 
 	// Static methods

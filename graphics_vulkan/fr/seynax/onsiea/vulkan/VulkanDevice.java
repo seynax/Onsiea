@@ -7,6 +7,7 @@ import org.lwjgl.vulkan.VkDevice;
 import org.lwjgl.vulkan.VkDeviceCreateInfo;
 import org.lwjgl.vulkan.VkDeviceQueueCreateInfo;
 
+import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.vulkan.utils.VKUtil;
 
 public class VulkanDevice
@@ -15,13 +16,15 @@ public class VulkanDevice
 
 	private VkDevice				device;
 
+	private VulkanInstance			instance;
 	private VulkanPhysicalDevice	physicalDevice;
 
 	// Constructor
 
-	private VulkanDevice(final VulkanPhysicalDevice vulkanPhysicalDeviceIn)
+	public VulkanDevice(final VulkanPhysicalDevice vulkanPhysicalDeviceIn, final VulkanInstance instanceIn)
 	{
 		this.setPhysicalDevice(vulkanPhysicalDeviceIn);
+		this.setInstance(instanceIn);
 
 		final var queueCreateInfo = VkDeviceQueueCreateInfo.calloc();
 
@@ -60,13 +63,6 @@ public class VulkanDevice
 		buffer.free();
 	}
 
-	// Static methods
-
-	public final static VulkanDevice createLogicalDevice(final VulkanPhysicalDevice vulkanPhysicalDeviceIn)
-	{
-		return new VulkanDevice(vulkanPhysicalDeviceIn);
-	}
-
 	// Methods
 
 	public VulkanCommandPool createCommandPool()
@@ -77,6 +73,11 @@ public class VulkanDevice
 	public VulkanBuffer createBuffer(final int[] dataIn)
 	{
 		return VulkanBuffer.createBuffer(this.getPhysicalDevice(), this, dataIn);
+	}
+
+	public VulkanWindowSurface createVulkanWindowSurface(final IWindow windowIn)
+	{
+		return new VulkanWindowSurface(this.getInstance(), this.getPhysicalDevice(), this, windowIn);
 	}
 
 	public void cleanup()
@@ -104,5 +105,15 @@ public class VulkanDevice
 	private void setPhysicalDevice(final VulkanPhysicalDevice physicalDeviceIn)
 	{
 		this.physicalDevice = physicalDeviceIn;
+	}
+
+	public VulkanInstance getInstance()
+	{
+		return this.instance;
+	}
+
+	public void setInstance(final VulkanInstance instanceIn)
+	{
+		this.instance = instanceIn;
 	}
 }

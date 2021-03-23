@@ -17,6 +17,10 @@ import fr.seynax.onsiea.vulkan.utils.VKUtil;
 
 public class VulkanPhysicalDevice
 {
+	// Constructor variables
+
+	private VulkanInstance						instance;
+
 	// Variables
 
 	private VkPhysicalDevice					device;
@@ -29,8 +33,10 @@ public class VulkanPhysicalDevice
 
 	// Constructor
 
-	private VulkanPhysicalDevice(final VulkanInstance vulkanInstanceIn)
+	VulkanPhysicalDevice(final VulkanInstance vulkanInstanceIn)
 	{
+		this.setInstance(vulkanInstanceIn);
+
 		// Device
 
 		final var	instance				= vulkanInstanceIn.getInstance();
@@ -115,13 +121,6 @@ public class VulkanPhysicalDevice
 		this.setQueueFamilyIndex(chosenQueueFamilyIndex);
 		this.setEnabledExtensionCount(requiredExtensions.length);
 		this.setEnabledExtensionNames(requiredExtensions);
-	}
-
-	// Static methods
-
-	public final static VulkanPhysicalDevice createPhysicalDevice(final VulkanInstance vulkanInstanceIn)
-	{
-		return new VulkanPhysicalDevice(vulkanInstanceIn);
 	}
 
 	// Methods
@@ -238,47 +237,57 @@ public class VulkanPhysicalDevice
 
 	public VulkanDevice createLogicalDevice()
 	{
-		return VulkanDevice.createLogicalDevice(this);
+		return new VulkanDevice(this, this.getInstance());
 	}
 
 	// Getter | Setter
 
-	VkPhysicalDevice getDevice()
+	VulkanInstance getInstance()
+	{
+		return this.instance;
+	}
+
+	private void setInstance(final VulkanInstance instanceIn)
+	{
+		this.instance = instanceIn;
+	}
+
+	public VkPhysicalDevice getDevice()
 	{
 		return this.device;
 	}
 
-	private void setDevice(final VkPhysicalDevice deviceIn)
+	public void setDevice(final VkPhysicalDevice deviceIn)
 	{
 		this.device = deviceIn;
 	}
 
-	VkPhysicalDeviceProperties getDeviceProperties()
+	public VkPhysicalDeviceProperties getDeviceProperties()
 	{
 		return this.deviceProperties;
 	}
 
-	private void setDeviceProperties(final VkPhysicalDeviceProperties devicePropertiesIn)
+	public void setDeviceProperties(final VkPhysicalDeviceProperties devicePropertiesIn)
 	{
 		this.deviceProperties = devicePropertiesIn;
 	}
 
-	VkPhysicalDeviceFeatures getDeviceFeatures()
+	public VkPhysicalDeviceFeatures getDeviceFeatures()
 	{
 		return this.deviceFeatures;
 	}
 
-	private void setDeviceFeatures(final VkPhysicalDeviceFeatures deviceFeaturesIn)
+	public void setDeviceFeatures(final VkPhysicalDeviceFeatures deviceFeaturesIn)
 	{
 		this.deviceFeatures = deviceFeaturesIn;
 	}
 
-	VkPhysicalDeviceMemoryProperties getDeviceMemoryProperties()
+	public VkPhysicalDeviceMemoryProperties getDeviceMemoryProperties()
 	{
 		return this.deviceMemoryProperties;
 	}
 
-	private void setDeviceMemoryProperties(final VkPhysicalDeviceMemoryProperties deviceMemoryPropertiesIn)
+	public void setDeviceMemoryProperties(final VkPhysicalDeviceMemoryProperties deviceMemoryPropertiesIn)
 	{
 		this.deviceMemoryProperties = deviceMemoryPropertiesIn;
 	}
