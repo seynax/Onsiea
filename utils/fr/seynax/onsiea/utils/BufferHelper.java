@@ -8,6 +8,7 @@ import java.nio.LongBuffer;
 import java.nio.ShortBuffer;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryUtil;
 
 public class BufferHelper
@@ -40,5 +41,22 @@ public class BufferHelper
 	public final static LongBuffer createFloatBuffer(final long... contentsIn)
 	{
 		return MemoryUtil.memAllocLong(contentsIn.length).put(contentsIn).flip();
+	}
+
+	public final static PointerBuffer createPointerBuffer(final long... pointersIn)
+	{
+		return MemoryUtil.memAllocPointer(pointersIn.length).put(pointersIn).flip();
+	}
+
+	public final static PointerBuffer createPointerBuffer(final PointerBuffer pointerBufferIn)
+	{
+		return MemoryUtil.memAllocPointer(pointerBufferIn.remaining()).put(pointerBufferIn).flip();
+	}
+
+	public final static PointerBuffer createPointerBuffer(final PointerBuffer pointerBufferIn,
+			final long... otherPointersIn)
+	{
+		return MemoryUtil.memAllocPointer(pointerBufferIn.remaining() + otherPointersIn.length).put(pointerBufferIn)
+				.put(otherPointersIn).flip();
 	}
 }
