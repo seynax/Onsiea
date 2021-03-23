@@ -53,17 +53,58 @@ public class BufferHelper
 		return MemoryUtil.memAllocPointer(pointerBufferIn.remaining()).put(pointerBufferIn).flip();
 	}
 
-	public final static PointerBuffer createPointerBuffer(final PointerBuffer pointerBufferIn,
+	public final static PointerBuffer createPointerBuffer(final PointerBuffer basePointerBufferIn,
 			final long... otherPointersIn)
 	{
-		return MemoryUtil.memAllocPointer(pointerBufferIn.remaining() + otherPointersIn.length).put(pointerBufferIn)
-				.put(otherPointersIn).flip();
+		return MemoryUtil.memAllocPointer(basePointerBufferIn.remaining() + otherPointersIn.length)
+				.put(basePointerBufferIn).put(otherPointersIn).flip();
 	}
 
-	public final static PointerBuffer createPointerBuffer(final PointerBuffer pointerBufferIn,
+	public final static PointerBuffer createPointerBuffer(final PointerBuffer basePointerBufferIn,
 			final ByteBuffer otherPointersIn)
 	{
-		return MemoryUtil.memAllocPointer(pointerBufferIn.remaining() + otherPointersIn.remaining())
-				.put(pointerBufferIn).put(otherPointersIn).flip();
+		return MemoryUtil.memAllocPointer(basePointerBufferIn.remaining() + otherPointersIn.remaining())
+				.put(basePointerBufferIn).put(otherPointersIn).flip();
+	}
+
+	public final static PointerBuffer createPointerBuffer(final PointerBuffer basePointerBufferIn,
+			final ByteBuffer... otherPointersBytesIn)
+	{
+		var size = basePointerBufferIn.remaining();
+
+		for (final ByteBuffer element : otherPointersBytesIn)
+		{
+			size += element.remaining();
+		}
+
+		final var buffer = MemoryUtil.memAllocPointer(size);
+
+		buffer.put(basePointerBufferIn);
+
+		for (final ByteBuffer element : otherPointersBytesIn)
+		{
+			buffer.put(element);
+		}
+
+		buffer.flip();
+
+		return buffer;
+	}
+
+	public final static PointerBuffer createPointerBuffer(final PointerBuffer basePointerBufferIn, final int sizeIn,
+			final ByteBuffer... otherPointersBytesIn)
+	{
+		final var buffer = MemoryUtil.memAllocPointer(sizeIn);
+
+		buffer.put(basePointerBufferIn);
+
+		for (final ByteBuffer element : otherPointersBytesIn)
+		{
+			buffer.put(element);
+		}
+
+		buffer.flip();
+
+		return buffer;
 	}
 }
