@@ -87,7 +87,7 @@ public class VulkanWindowSurface
 
 		this.setSurfaceFormatCount(passSurfaceFormatCount.get(0));
 
-		this.setPassSurfaceFormatBuffer(VkSurfaceFormatKHR.calloc(this.surfaceFormatCount));
+		this.setPassSurfaceFormatBuffer(VkSurfaceFormatKHR.calloc(this.getSurfaceFormatCount()));
 
 		err = KHRSurface.vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDeviceIn.getDevice(),
 				this.getVulkanWindowSurfaceHandle(), passSurfaceFormatCount, this.getPassSurfaceFormatBuffer());
@@ -117,7 +117,8 @@ public class VulkanWindowSurface
 		this.setPassSurfacePresentModeBuffer(MemoryUtil.memAllocInt(this.getSurfacePresentModeCount()));
 
 		err = KHRSurface.vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDeviceIn.getDevice(),
-				this.getVulkanWindowSurfaceHandle(), passSurfacePresentModeCount, this.passSurfacePresentModeBuffer);
+				this.getVulkanWindowSurfaceHandle(), passSurfacePresentModeCount,
+				this.getPassSurfacePresentModeBuffer());
 		MemoryUtil.memFree(passSurfacePresentModeCount);
 
 		if (err != VK10.VK_SUCCESS)
