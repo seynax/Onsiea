@@ -125,20 +125,6 @@ public class VulkanWindowSurface
 		{
 			throw new AssertionError("Failed to check swapchain support !");
 		}
-
-		/**
-		 * final VkSurfaceCapabilitiesKHR surfaceCapabilities = null; final
-		 * VkSurfaceFormatKHR surfaceFormats = null; final var surfaceFormatCount = 0;
-		 * final int[] presentModes = null; final var presentModeCount = 0;
-		 *
-		 * final var hasSupport = this.checkSwapchainSupport(
-		 * vulkanPhysicalDeviceIn.getDevice(), this.getVulkanWindowSurface(),
-		 * surfaceCapabilities, surfaceFormats, surfaceFormatCount, presentModes,
-		 * presentModeCount);
-		 *
-		 * if (!hasSupport) { throw new RuntimeException("Has not swap chain support
-		 * !"); }
-		 **/
 	}
 
 	// Methods

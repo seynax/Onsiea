@@ -1,5 +1,6 @@
 package fr.seynax.onsiea.vulkan;
 
+import java.nio.ByteBuffer;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -77,18 +78,18 @@ public class VulkanInstance
 
 		// Enabled extensions
 
-		final var	requiredExtension				= GLFWVulkan.glfwGetRequiredInstanceExtensions();
+		final var	requiredExtension		= GLFWVulkan.glfwGetRequiredInstanceExtensions();
 
-		final var	VK_EXT_DEBUG_REPORT_EXTENSION	= MemoryUtil
-				.memUTF8(EXTDebugReport.VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+		final var	extensionsAddition		= new ByteBuffer[] {
+				MemoryUtil.memUTF8(EXTDebugReport.VK_EXT_DEBUG_REPORT_EXTENSION_NAME) };
 
-		final var	ppEnabledExtensionNames			= BufferHelper.createPointerBuffer(requiredExtension,
-				VK_EXT_DEBUG_REPORT_EXTENSION);
+		final var	ppEnabledExtensionNames	= BufferHelper.createPointerBuffer(requiredExtension,
+				requiredExtension.remaining() + extensionsAddition.length, extensionsAddition);
 
 		// ApplicationInfo
 
-		final var	applicationInfo					= VkApplicationInfo.calloc()
-				.sType(VK10.VK_STRUCTURE_TYPE_APPLICATION_INFO).apiVersion(VK10.VK_API_VERSION_1_0);
+		final var	applicationInfo			= VkApplicationInfo.calloc().sType(VK10.VK_STRUCTURE_TYPE_APPLICATION_INFO)
+				.apiVersion(VK10.VK_API_VERSION_1_0);
 
 		applicationInfo.pApplicationName(MemoryUtil.memUTF8(applicationNameIn));
 		applicationInfo.pEngineName(MemoryUtil.memUTF8(engineNameIn));
@@ -127,7 +128,12 @@ public class VulkanInstance
 		{
 			MemoryUtil.memFree(ppEnabledLayerNames);
 		}
-		MemoryUtil.memFree(VK_EXT_DEBUG_REPORT_EXTENSION);
+
+		for (final ByteBuffer extensionAddition : extensionsAddition)
+		{
+			MemoryUtil.memFree(extensionAddition);
+		}
+
 		MemoryUtil.memFree(ppEnabledExtensionNames);
 		MemoryUtil.memFree(applicationInfo.pApplicationName());
 		MemoryUtil.memFree(applicationInfo.pEngineName());
@@ -138,9 +144,9 @@ public class VulkanInstance
 
 	// Methods
 
-	public VulkanPhysicalDevice createPhysicalDevice()
+	public VulkanPhysicalDevice createPhysicalDevice(final String[] requiredExtensionsNameIn)
 	{
-		return new VulkanPhysicalDevice(this);
+		return new VulkanPhysicalDevice(this, requiredExtensionsNameIn);
 	}
 
 	// Getter | Setter

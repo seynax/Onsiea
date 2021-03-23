@@ -107,4 +107,18 @@ public class BufferHelper
 
 		return buffer;
 	}
+
+	public static PointerBuffer createPointerBuffer(final String... requiredExtensionsIn)
+	{
+		final var buffer = MemoryUtil.memAllocPointer(requiredExtensionsIn.length);
+
+		for (final String requiredExtension : requiredExtensionsIn)
+		{
+			buffer.put(MemoryUtil.memUTF8(requiredExtension));
+		}
+
+		buffer.flip();
+
+		return buffer;
+	}
 }

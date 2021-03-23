@@ -1,6 +1,7 @@
 package fr.seynax.onsiea.vulkan;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.vulkan.VK10;
 import org.lwjgl.vulkan.VkDevice;
@@ -8,6 +9,7 @@ import org.lwjgl.vulkan.VkDeviceCreateInfo;
 import org.lwjgl.vulkan.VkDeviceQueueCreateInfo;
 
 import fr.seynax.onsiea.graphics.IWindow;
+import fr.seynax.onsiea.utils.BufferHelper;
 import fr.seynax.onsiea.vulkan.utils.VKUtil;
 
 public class VulkanDevice
@@ -21,7 +23,8 @@ public class VulkanDevice
 
 	// Constructor
 
-	VulkanDevice(final VulkanPhysicalDevice vulkanPhysicalDeviceIn, final VulkanInstance instanceIn)
+	VulkanDevice(final VulkanPhysicalDevice vulkanPhysicalDeviceIn, final VulkanInstance instanceIn,
+			final String[] requiredExtensionIn)
 	{
 		this.setPhysicalDevice(vulkanPhysicalDeviceIn);
 		this.setInstance(instanceIn);
@@ -45,6 +48,10 @@ public class VulkanDevice
 		deviceCreateInfo.sType(VK10.VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO);
 		deviceCreateInfo.pQueueCreateInfos(buffer);
 		deviceCreateInfo.pEnabledFeatures(this.getPhysicalDevice().getDeviceFeatures());
+
+		final var requiredExtensionsBuffer = BufferHelper.createPointerBuffer(requiredExtensionIn);
+
+		deviceCreateInfo.ppEnabledExtensionNames(requiredExtensionsBuffer);
 
 		final var	passDevicePointer	= MemoryUtil.memAllocPointer(1);
 

@@ -1,6 +1,7 @@
 package fr.seynax.onsiea;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.vulkan.KHRSwapchain;
 
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.vulkan.VulkanBuffer;
@@ -68,7 +69,9 @@ public class VulkanEngine implements Runnable
 
 		// Vulkan ; physical device
 
-		this.setPhysicalDevice(this.getInstance().createPhysicalDevice());
+		final var requiredExtensions = new String[] { KHRSwapchain.VK_KHR_SWAPCHAIN_EXTENSION_NAME, };
+
+		this.setPhysicalDevice(this.getInstance().createPhysicalDevice(requiredExtensions));
 
 		// Vulkan ; device
 
@@ -188,10 +191,28 @@ public class VulkanEngine implements Runnable
 
 	private void cleanup()
 	{
-		this.getVulkanDescriptor().cleanup(this.getDevice());
-		this.getVulkanBuffer().cleanup(this.getDevice());
-		this.getCommandPool().cleanup(this.getDevice());
-		this.getDevice().cleanup();
+		// Vulkan cleanup
+		{
+			if (this.getVulkanDescriptor() != null)
+			{
+				this.getVulkanDescriptor().cleanup(this.getDevice());
+			}
+
+			if (this.getVulkanBuffer() != null)
+			{
+				this.getVulkanBuffer().cleanup(this.getDevice());
+			}
+
+			if (this.getCommandPool() != null)
+			{
+				this.getCommandPool().cleanup(this.getDevice());
+			}
+
+			if (this.getDevice() != null)
+			{
+				this.getDevice().cleanup();
+			}
+		}
 	}
 
 	// Getter | Setter

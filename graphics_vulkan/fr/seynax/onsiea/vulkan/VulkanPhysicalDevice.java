@@ -4,7 +4,6 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
-import org.lwjgl.vulkan.KHRSwapchain;
 import org.lwjgl.vulkan.VK10;
 import org.lwjgl.vulkan.VkExtensionProperties;
 import org.lwjgl.vulkan.VkPhysicalDevice;
@@ -33,7 +32,7 @@ public class VulkanPhysicalDevice
 
 	// Constructor
 
-	VulkanPhysicalDevice(final VulkanInstance vulkanInstanceIn)
+	VulkanPhysicalDevice(final VulkanInstance vulkanInstanceIn, final String[] requiredExtensionsNameIn)
 	{
 		this.setInstance(vulkanInstanceIn);
 
@@ -64,9 +63,6 @@ public class VulkanPhysicalDevice
 
 		// Device extensions and choose the GPU
 
-		final var							requiredExtensions						= new String[] {
-				KHRSwapchain.VK_KHR_SWAPCHAIN_EXTENSION_NAME };
-
 		VkPhysicalDevice					chosenPhysicalDevice					= null;
 		VkPhysicalDeviceProperties			chosenPhysicalDeviceProperties			= null;
 		VkPhysicalDeviceFeatures			chosenPhysicalDeviceFeatures			= null;
@@ -77,7 +73,7 @@ public class VulkanPhysicalDevice
 		{
 			final var physicalDevice = new VkPhysicalDevice(pPhysicalDevices.get(0), instance);
 
-			if (this.hasRequiredExtensions(physicalDevice, requiredExtensions, requiredExtensions.length))
+			if (this.hasRequiredExtensions(physicalDevice, requiredExtensionsNameIn, requiredExtensionsNameIn.length))
 			{
 				final var queueFamilyIndex = this.getQueueFamilly(physicalDevice, VK10.VK_QUEUE_GRAPHICS_BIT);
 
@@ -114,15 +110,22 @@ public class VulkanPhysicalDevice
 			throw new RuntimeException("Failed to choose physical device !");
 		}
 
-		this.setDevice(chosenPhysicalDevice);
-		this.setDeviceProperties(chosenPhysicalDeviceProperties);
-		this.setDeviceFeatures(chosenPhysicalDeviceFeatures);
-		this.setDeviceMemoryProperties(chosenPhysicalDeviceMemoryProperties);
-		this.setQueueFamilyIndex(chosenQueueFamilyIndex);
-		this.setEnabledExtensionCount(requiredExtensions.length);
-		this.setEnabledExtensionNames(requiredExtensions);
-	}
+		{
+			this.setDevice(chosenPhysicalDevice);
+			this.setDeviceProperties(chosenPhysicalDeviceProperties);
+			this.setDeviceFeatures(chosenPhysicalDeviceFeatures);
+			this.setDeviceMemoryProperties(chosenPhysicalDeviceMemoryProperties);
+			this.setQueueFamilyIndex(chosenQueueFamilyIndex);
+			this.setEnabledExtensionCount(requiredExtensionsNameIn.length);
 
+			this.setEnabledExtensionNames(new String[requiredExtensionsNameIn.length]);
+
+			for (var i = 0; i < requiredExtensionsNameIn.length; i++)
+			{
+				this.getEnabledExtensionNames()[i] = requiredExtensionsNameIn[i];
+			}
+		}
+	}
 	// Methods
 
 	private boolean hasRequiredExtensions(final VkPhysicalDevice physicalDeviceIn, final String[] requiredExtensionsIn,
@@ -237,7 +240,7 @@ public class VulkanPhysicalDevice
 
 	public VulkanDevice createLogicalDevice()
 	{
-		return new VulkanDevice(this, this.getInstance());
+		return new VulkanDevice(this, this.getInstance(), this.getEnabledExtensionNames());
 	}
 
 	// Getter | Setter
