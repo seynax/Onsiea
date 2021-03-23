@@ -10,6 +10,7 @@ import org.lwjgl.vulkan.VK10;
 import org.lwjgl.vulkan.VkDevice;
 import org.lwjgl.vulkan.VkExtent2D;
 import org.lwjgl.vulkan.VkPhysicalDevice;
+import org.lwjgl.vulkan.VkQueueFamilyProperties;
 import org.lwjgl.vulkan.VkSurfaceCapabilitiesKHR;
 import org.lwjgl.vulkan.VkSurfaceFormatKHR;
 import org.lwjgl.vulkan.VkSwapchainCreateInfoKHR;
@@ -114,6 +115,67 @@ public class VulkanWindowSurface
 					"Failed to get physical device surface formats khr : " + VKUtil.translateVulkanResult(err));
 		}
 
+		{
+			final var pQueueFamilyPropertyCount = MemoryUtil.memAllocInt(1);
+			VK10.vkGetPhysicalDeviceQueueFamilyProperties(physicalDeviceIn.getDevice(), pQueueFamilyPropertyCount,
+					null);
+			final var	queueCount	= pQueueFamilyPropertyCount.get(0);
+			final var	queueProps	= VkQueueFamilyProperties.calloc(queueCount);
+			VK10.vkGetPhysicalDeviceQueueFamilyProperties(physicalDeviceIn.getDevice(), pQueueFamilyPropertyCount,
+					queueProps);
+			MemoryUtil.memFree(pQueueFamilyPropertyCount);
+
+			// Iterate over each queue to learn whether it supports presenting:
+			final var supportsPresent = MemoryUtil.memAllocInt(queueCount);
+			for (var i = 0; i < queueCount; i++)
+			{
+				supportsPresent.position(i);
+				err = KHRSurface.vkGetPhysicalDeviceSurfaceSupportKHR(physicalDeviceIn.getDevice(), i,
+						this.getVulkanWindowSurface(), supportsPresent);
+				if (err != VK10.VK_SUCCESS)
+				{
+					throw new AssertionError(
+							"Failed to physical device surface support: " + VKUtil.translateVulkanResult(err));
+				}
+			}
+
+			// Search for a graphics and a present queue in the array of queue families, try
+			// to find one that supports both
+			var	graphicsQueueNodeIndex	= Integer.MAX_VALUE;
+			var	presentQueueNodeIndex	= Integer.MAX_VALUE;
+			for (var i = 0; i < queueCount; i++)
+			{
+				if ((queueProps.get(i).queueFlags() & VK10.VK_QUEUE_GRAPHICS_BIT) != 0)
+				{
+					if (graphicsQueueNodeIndex == Integer.MAX_VALUE)
+					{
+						graphicsQueueNodeIndex = i;
+					}
+					if (supportsPresent.get(i) == VK10.VK_TRUE)
+					{
+						graphicsQueueNodeIndex	= i;
+						presentQueueNodeIndex	= i;
+						break;
+					}
+				}
+			}
+			queueProps.free();
+			if (presentQueueNodeIndex == Integer.MAX_VALUE)
+			{
+				// If there's no queue that supports both present and graphics try to find a
+				// separate present queue
+				for (var i = 0; i < queueCount; ++i)
+				{
+					if (supportsPresent.get(i) == VK10.VK_TRUE)
+					{
+						presentQueueNodeIndex = i;
+						break;
+					}
+				}
+			}
+			MemoryUtil.memFree(supportsPresent);
+		}
+
 		final var hasSupport = this.checkSwapchainSupport(physicalDeviceIn.getDevice(), deviceIn.getDevice(),
 				windowIn.getWidth(), windowIn.getHeight(), this.getVulkanWindowSurface(), surfaceCapabilities,
 				passSurfaceFormatBuffer, surfaceFormatCount, passSurfacePresentModeBuffer, surfacePresentModeCount);
@@ -134,7 +196,6 @@ public class VulkanWindowSurface
 			final VkSurfaceCapabilitiesKHR surfaceCapabilitiesIn, final VkSurfaceFormatKHR.Buffer passSurfaceFormatsIn,
 			final int surfaceFormatCountIn, final IntBuffer presentModesIn, final int presentModeCountIn)
 	{
-
 		final var choosenSurfaceFormat = this.chooseSwapChainSurfaceFormat(passSurfaceFormatsIn, surfaceFormatCountIn);
 
 		if (choosenSurfaceFormat == null)
