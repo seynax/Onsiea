@@ -184,6 +184,35 @@ public class Maths
 		return matrix;
 	}
 
+	public static fr.seynax.onsiea.utils.maths.vector.Matrix4f convert(final Matrix4f matrixIn)
+	{
+		final var matrix = new fr.seynax.onsiea.utils.maths.vector.Matrix4f();
+
+		matrix.setIdentity();
+
+		matrix.m00	= matrixIn.m00();
+		matrix.m01	= matrixIn.m01();
+		matrix.m02	= matrixIn.m02();
+		matrix.m03	= matrixIn.m03();
+
+		matrix.m10	= matrixIn.m10();
+		matrix.m11	= matrixIn.m11();
+		matrix.m12	= matrixIn.m12();
+		matrix.m13	= matrixIn.m13();
+
+		matrix.m20	= matrixIn.m20();
+		matrix.m21	= matrixIn.m21();
+		matrix.m22	= matrixIn.m22();
+		matrix.m23	= matrixIn.m23();
+
+		matrix.m30	= matrixIn.m30();
+		matrix.m31	= matrixIn.m31();
+		matrix.m32	= matrixIn.m32();
+		matrix.m33	= matrixIn.m33();
+
+		return matrix;
+	}
+
 	public static Matrix4f copy(final Matrix4f fromMatrixIn, final Matrix4f toMatrixIn)
 	{
 		toMatrixIn.identity();
@@ -209,5 +238,33 @@ public class Maths
 		toMatrixIn.m33(fromMatrixIn.m33());
 
 		return toMatrixIn;
+	}
+
+	public static fr.seynax.onsiea.utils.maths.vector.Matrix4f convert(final Matrix4f fromMatrixIn,
+			final fr.seynax.onsiea.utils.maths.vector.Matrix4f viewMatrix2In)
+	{
+		viewMatrix2In.setIdentity();
+
+		viewMatrix2In.m00	= fromMatrixIn.m00();
+		viewMatrix2In.m01	= fromMatrixIn.m01();
+		viewMatrix2In.m02	= fromMatrixIn.m02();
+		viewMatrix2In.m03	= fromMatrixIn.m03();
+
+		viewMatrix2In.m10	= fromMatrixIn.m10();
+		viewMatrix2In.m11	= fromMatrixIn.m11();
+		viewMatrix2In.m12	= fromMatrixIn.m12();
+		viewMatrix2In.m13	= fromMatrixIn.m13();
+
+		viewMatrix2In.m20	= fromMatrixIn.m20();
+		viewMatrix2In.m21	= fromMatrixIn.m21();
+		viewMatrix2In.m22	= fromMatrixIn.m22();
+		viewMatrix2In.m23	= fromMatrixIn.m23();
+
+		viewMatrix2In.m30	= fromMatrixIn.m30();
+		viewMatrix2In.m31	= fromMatrixIn.m31();
+		viewMatrix2In.m32	= fromMatrixIn.m32();
+		viewMatrix2In.m33	= fromMatrixIn.m33();
+
+		return viewMatrix2In;
 	}
 }

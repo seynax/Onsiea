@@ -2,12 +2,10 @@ package fr.seynax.onsiea.game;
 
 import java.nio.ByteBuffer;
 
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL30;
 
 import fr.seynax.onsiea.entity.Camera;
@@ -37,45 +35,40 @@ public class DummyGame implements IGameLogic
 {
 	// Variables
 
-	private int						direction	= 0;
+	private int												direction	= 0;
 
-	private float					color		= 0.0f;
+	private float											color		= 0.0f;
 
-	private Renderer				renderer;
+	private Renderer										renderer;
 
 	// Variables ; Graphics data
 
-	private AnimatedItem[]			gameItems;
+	private AnimatedItem[]									gameItems;
 
-	private Texture					grassBlockTexture;
+	private Texture											grassBlockTexture;
 
-	private Camera					camera;
+	private Camera											camera;
 
-	private int						fboId;
-	private int						depthBufferId;
-	private int						frameBufferTextureId;
+	// private OpenGLFramebuffer framebuffer0;
+	// private OpenGLFramebuffer framebuffer1;
 
-	private int						fboId1;
-	private int						depthBufferId1;
-	private int						frameBufferTextureId1;
+	private RendererGuiInventory							rendererGuiInventory;
+	private RendererGuiSlot									rendererGuiSlot;
+	private RendererGuiScreenshots							rendererGuiScreenshots;
+	private RendererGui										rendererGui;
 
-	private RendererGuiInventory	rendererGuiInventory;
-	private RendererGuiSlot			rendererGuiSlot;
-	private RendererGuiScreenshots	rendererGuiScreenshots;
-	private RendererGui				rendererGui;
+	private GuiInventory									gui;
 
-	private GuiInventory			gui;
+	private GuiScreenshots									guiScreenshots;
 
-	private GuiScreenshots			guiScreenshots;
+	private ShaderGui										shaderGui;
+	private ShaderScreenshot								shaderScreenshot;
 
-	private ShaderGui				shaderGui;
-	private ShaderScreenshot		shaderScreenshot;
+	private TechnicEngine									technicEngine;
 
-	private TechnicEngine			technicEngine;
+	private fr.seynax.onsiea.utils.maths.vector.Matrix4f	viewMatrix;
 
-	private Matrix4f				viewMatrix;
-
-	private long					last1		= System.nanoTime();
+	private long											last1		= System.nanoTime();
 
 	/**
 	 * private Mesh meshBoat; private GameItem boat; private Texture boatTexture;
@@ -178,7 +171,7 @@ public class DummyGame implements IGameLogic
 
 		final var	mesh		= new Mesh(positions, new float[] {}, textCoords, indices);
 
-		final var	number		= 40_000;
+		final var	number		= 60;
 
 		this.setGameItems(new AnimatedItem[number]);
 
@@ -196,7 +189,7 @@ public class DummyGame implements IGameLogic
 				v = -1f;
 			}
 
-			final var	z			= Maths.randInt((int) v - 4, -4) + Maths.randFloat();
+			final var	z			= Maths.randInt((int) v - 1, -1) + Maths.randFloat();
 
 			final var	rx			= Maths.randInt(0, 360) + Maths.randFloat();
 			final var	ry			= Maths.randInt(0, 360) + Maths.randFloat();
@@ -207,9 +200,9 @@ public class DummyGame implements IGameLogic
 			gameItem.setPosition(x, y, z);
 			gameItem.setRotation(rx, ry, rz);
 
-			final var	speedX			= (Maths.randInt(0, 1) + Maths.randFloat()) * 100.0f;
-			final var	speedY			= (Maths.randInt(0, 1) + Maths.randFloat()) * 100.0f;
-			final var	speedZ			= (Maths.randInt(0, 1) + Maths.randFloat()) * 100.0f;
+			final var	speedX			= (Maths.randInt(0, 1) + Maths.randFloat()) * 1.0f;
+			final var	speedY			= (Maths.randInt(0, 1) + Maths.randFloat()) * 1.0f;
+			final var	speedZ			= (Maths.randInt(0, 1) + Maths.randFloat()) * 1.0f;
 
 			final var	speedRx			= Maths.randInt(0, 50) + Maths.randFloat();
 			final var	speedRy			= Maths.randInt(0, 50) + Maths.randFloat();
@@ -241,147 +234,50 @@ public class DummyGame implements IGameLogic
 		this.view1.setRotation(0.0f, 0.0f, 0.0f);
 		this.view1.setScale(4.0f);
 
-		this.camera	= new Camera();
+		this.camera		= new Camera();
+		this.viewMatrix	= Maths.convert(this.camera.getViewMatrix());
 
 		// FrameBuffer
-
-		this.fboId	= GL30.glGenFramebuffers();
-
-		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, this.fboId);
-
-		this.depthBufferId = GL30.glGenRenderbuffers();
-
-		GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, this.depthBufferId);
-
-		GL30.glRenderbufferStorage(GL30.GL_RENDERBUFFER, GL11.GL_DEPTH_COMPONENT, 1920, 1080);
-
-		GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL30.GL_RENDERBUFFER,
-				this.depthBufferId);
-
-		// LoadTexture
-
-		this.frameBufferTextureId = GL11.glGenTextures();
-
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.frameBufferTextureId);
-		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
-
-		// Setup filtering, i.e. how OpenGL will interpolate the pixels when scaling up
-		// or down
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-
-		// Setup wrap mode, i.e. how OpenGL will handle pixels outside of the expected
-		// range
-		// Note: GL_CLAMP_TO_EDGE is part of GL12
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, 1920, 1080, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE,
-				(ByteBuffer) null);
-
-		// End loadTexture
-
-		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D,
-				this.frameBufferTextureId, 0);
-
-		if (GL30.glCheckFramebufferStatus(GL30.GL_FRAMEBUFFER) == GL30.GL_FRAMEBUFFER_COMPLETE)
-		{
-			System.out.println("Frame buffer créer avec succés !");
-		}
-		else
-		{
-			System.err.println("La création du frame buffer a échoué !");
-		}
-
-		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
-
 		/**
-		 *
-		 */
+		 * { this.framebuffer0 = new OpenGLFramebuffer(1920, 1080); this.framebuffer1 =
+		 * new OpenGLFramebuffer(1920, 1080); }
+		 **/
 
-		// FrameBuffer1
-
-		this.fboId1 = GL30.glGenFramebuffers();
-
-		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, this.fboId1);
-
-		this.depthBufferId1 = GL30.glGenRenderbuffers();
-
-		GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, this.depthBufferId1);
-
-		GL30.glRenderbufferStorage(GL30.GL_RENDERBUFFER, GL11.GL_DEPTH_COMPONENT, 1920, 1080);
-
-		GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL30.GL_RENDERBUFFER,
-				this.depthBufferId1);
-
-		// LoadTexture
-
-		this.frameBufferTextureId1 = GL11.glGenTextures();
-
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.frameBufferTextureId1);
-		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
-
-		// Setup filtering, i.e. how OpenGL will interpolate the pixels when scaling up
-		// or down
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-
-		// Setup wrap mode, i.e. how OpenGL will handle pixels outside of the expected
-		// range
-		// Note: GL_CLAMP_TO_EDGE is part of GL12
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, 1920, 1080, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE,
-				(ByteBuffer) null);
-
-		// End loadTexture
-
-		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D,
-				this.frameBufferTextureId1, 0);
-
-		if (GL30.glCheckFramebufferStatus(GL30.GL_FRAMEBUFFER) == GL30.GL_FRAMEBUFFER_COMPLETE)
+		// Gui Shader
 		{
-			System.out.println("Frame buffer créer avec succés !");
-		}
-		else
-		{
-			System.err.println("La création du frame buffer a échoué !");
+			this.shaderGui = new ShaderGui();
+
+			this.shaderGui.start();
+
+			this.shaderGui.sendProjectrionMatrix(Maths.getProjectionMatrix());
+
+			ShaderProgram.stop();
+
+			this.shaderScreenshot = new ShaderScreenshot();
+
+			this.shaderScreenshot.start();
+
+			this.shaderScreenshot.sendProjectrionMatrix(Maths.getProjectionMatrix());
+
+			ShaderProgram.stop();
 		}
 
-		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+		// Gui
+		{
+			this.rendererGuiInventory	= new RendererGuiInventory();
 
-		// GuiButton
+			this.gui					= new GuiInventory(this.rendererGuiInventory);
 
-		this.rendererGuiInventory	= new RendererGuiInventory();
+			this.rendererGuiSlot		= new RendererGuiSlot();
 
-		this.gui					= new GuiInventory(this.rendererGuiInventory);
+			this.gui.initialization(this.rendererGuiSlot);
 
-		this.rendererGuiSlot		= new RendererGuiSlot();
+			this.rendererGuiScreenshots	= new RendererGuiScreenshots();
 
-		this.gui.initialization(this.rendererGuiSlot);
+			this.rendererGui			= new RendererGui();
 
-		this.rendererGuiScreenshots	= new RendererGuiScreenshots();
-
-		this.rendererGui			= new RendererGui();
-
-		this.guiScreenshots			= new GuiScreenshots(this.rendererGuiScreenshots, this.rendererGui);
-
-		this.shaderGui				= new ShaderGui();
-
-		this.shaderGui.start();
-
-		this.shaderGui.sendProjectrionMatrix(Maths.getProjectionMatrix());
-
-		ShaderProgram.stop();
-
-		this.shaderScreenshot = new ShaderScreenshot();
-
-		this.shaderScreenshot.start();
-
-		this.shaderScreenshot.sendProjectrionMatrix(Maths.getProjectionMatrix());
-
-		ShaderProgram.stop();
+			this.guiScreenshots			= new GuiScreenshots(this.rendererGuiScreenshots, this.rendererGui);
+		}
 
 		/**
 		 * this.meshBoat = OBJLoader.load("D:\\Utilisateurs\\Seynax\\Objects 3D\\Galion
@@ -412,8 +308,6 @@ public class DummyGame implements IGameLogic
 		this.technicEngine = new TechnicEngine(this.camera, windowIn);
 
 		this.technicEngine.start();
-
-		this.viewMatrix = Maths.copy(this.camera.getViewMatrix());
 
 		GLFW.glfwSetCursorPos(windowIn.getWindowHandle(), windowIn.getWidth() / 2.0D, windowIn.getHeight() / 2.0D);
 	}
@@ -618,194 +512,178 @@ public class DummyGame implements IGameLogic
 		 * this.getRenderer().render(windowIn, this.view);
 		 **/
 
-		// Start rendering
-
-		Renderer.clearColor(this.getColor(), this.getColor(), this.getColor(), 1.0f);
-
-		this.getRenderer().startRendering(windowIn);
-
-		// Start render to fbo
-
-		/**
-		 * GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, this.fboId);
-		 *
-		 * GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		 *
-		 * GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-		 *
-		 * GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
-		 *
-		 * // Start render to fbo1
-		 *
-		 * GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, this.fboId1);
-		 *
-		 * GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		 *
-		 * GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-		 *
-		 * GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
-		 *
-		 * // Render to fbo
-		 *
-		 * GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, this.fboId);
-		 *
-		 * GL11.glViewport(0, 0, 1920, 1080);
-		 *
-		 * this.getRenderer().getShaderProgram().start();
-		 * this.getRenderer().getShaderProgram()
-		 * .sendViewMatrix(Maths.loadViewMatrix(this.viewMatrix, 0.0f, 0.0f, 0.0f, 0.0f,
-		 * 0.0f, 0.0f)); this.getRenderer().getShaderProgram().sendColor(new
-		 * Vector3f(1.0f, 1.0f, 1.0f));
-		 *
-		 * Texture.bind(this.getGrassBlockTexture().getTextureId());
-		 *
-		 * this.getRenderer().render(windowIn, this.getGameItems());
-		 *
-		 * GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
-		 *
-		 *
-		 * // Render to fbo1
-		 *
-		 * GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, this.fboId1);
-		 *
-		 * GL11.glViewport(0, 0, 1920, 1080);
-		 *
-		 * this.getRenderer().getShaderProgram().start();
-		 * this.getRenderer().getShaderProgram().sendViewMatrix(this.camera.getViewMatrix());
-		 * this.getRenderer().getShaderProgram().sendColor(new Vector3f(1.0f, 1.0f,
-		 * 1.0f));
-		 *
-		 * Texture.bind(this.getGrassBlockTexture().getTextureId());
-		 *
-		 * this.getRenderer().render(windowIn, this.getGameItems());
-		 *
-		 * this.getRenderer().getShaderProgram().sendColor(new Vector3f(0.5f, 1.0f,
-		 * 0.0f));
-		 *
-		 * /** GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.frameBufferTextureId);
-		 *
-		 * this.getRenderer().render(windowIn, this.view);
-		 **/
-
-		/**
-		 * GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
-		 *
-		 * // Render to fbo pass 2
-		 *
-		 * GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, this.fboId);
-		 *
-		 * GL11.glViewport(0, 0, 1920, 1080);
-		 *
-		 * this.getRenderer().getShaderProgram().start();
-		 * this.getRenderer().getShaderProgram()
-		 * .sendViewMatrix(Maths.loadViewMatrix(this.viewMatrix, 0.0f, 0.0f, 0.0f, 0.0f,
-		 * 0.0f, 0.0f)); this.getRenderer().getShaderProgram().sendColor(new
-		 * Vector3f(1.0f, 1.0f, 1.0f));
-		 *
-		 * this.getRenderer().getShaderProgram().sendColor(new Vector3f(0.5f, 1.0f,
-		 * 0.0f));
-		 *
-		 * GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.frameBufferTextureId1);
-		 *
-		 * this.getRenderer().render(windowIn, this.view1);
-		 *
-		 * GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
-		 *
-		 * GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		 *
-		 * // Final render
-		 *
-		 * this.getRenderer().getShaderProgram().sendViewMatrix(this.camera.getViewMatrix());
-		 *
-		 * // render the texture
-		 *
-		 * this.getRenderer().getShaderProgram().sendColor(new Vector3f(0.5f, 1.0f,
-		 * 0.0f));
-		 *
-		 * GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.frameBufferTextureId);
-		 *
-		 * this.getRenderer().render(windowIn, this.view);
-		 *
-		 * GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-		 *
-		 * // render the texture1
-		 *
-		 * this.getRenderer().getShaderProgram().sendColor(new Vector3f(0.5f, 1.0f,
-		 * 0.0f));
-		 *
-		 * GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.frameBufferTextureId1);
-		 *
-		 * this.getRenderer().render(windowIn, this.view1);
-		 *
-		 * GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-		 **/
-
-		// normal render
-
 		final var lastState = this.camera.isCanUpdate();
 
 		this.camera.setCanUpdate(false);
-		Maths.copy(this.camera.getViewMatrix(), this.viewMatrix);
+		Maths.convert(this.camera.getViewMatrix(), this.viewMatrix);
 		this.camera.setCanUpdate(lastState);
 
-		if (this.gui.isOpen())
+		// Start rendering
 		{
-			this.shaderGui.start();
+			Renderer.clearColor(this.getColor(), this.getColor(), this.getColor(), 1.0f);
 
-			this.shaderGui.sendViewMatrix(this.viewMatrix);
+			this.getRenderer().startRendering(windowIn);
 
-			final var cursorExtension = windowIn.getGlfwEventManager().getCallbacksManager().getCursorPosCallback()
-					.getCursor().getCursorExtension();
+			this.getRenderer().getShaderProgram().start();
+			this.getRenderer().getShaderProgram().sendViewMatrix(this.viewMatrix);
 
-			if (cursorExtension instanceof CursorExtensionMenu)
+			// Framebuffer
 			{
-				final var	cursorExtensionMenu	= (CursorExtensionMenu) cursorExtension;
+				/**
+				 * this.framebuffer0.clear(); this.framebuffer1.clear();
+				 *
+				 * // Render to fbo
+				 *
+				 * this.framebuffer0.start(0, 0, 1920, 1080);
+				 *
+				 * this.getRenderer().getShaderProgram().start();
+				 * this.getRenderer().getShaderProgram().sendColor(new Vector3f(1.0f, 1.0f,
+				 * 1.0f));
+				 *
+				 * Texture.bind(this.getGrassBlockTexture().getTextureId());
+				 *
+				 * this.getRenderer().render(windowIn, this.getGameItems());
+				 *
+				 * GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+				 *
+				 * // Render to fbo1
+				 *
+				 * this.framebuffer0.start(0, 0, 1920, 1080);
+				 *
+				 * this.getRenderer().getShaderProgram().start();
+				 * this.getRenderer().getShaderProgram().sendColor(new Vector3f(1.0f, 1.0f,
+				 * 1.0f)); this.getRenderer().getShaderProgram()
+				 * .sendViewMatrix(Maths.loadViewMatrix(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f));
+				 *
+				 * Texture.bind(this.getGrassBlockTexture().getTextureId());
+				 *
+				 * this.getRenderer().render(windowIn, this.getGameItems());
+				 *
+				 * this.getRenderer().getShaderProgram().sendColor(new Vector3f(0.5f, 1.0f,
+				 * 0.0f));
+				 *
+				 * GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.framebuffer0.getTextureId());
+				 *
+				 * this.getRenderer().render(windowIn, this.view);
+				 *
+				 * GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+				 *
+				 * // Render to fbo pass 2
+				 *
+				 * this.framebuffer0.start(0, 0, 1920, 1080);
+				 *
+				 * this.getRenderer().getShaderProgram().start();
+				 * this.getRenderer().getShaderProgram().sendColor(new Vector3f(0.5f, 1.0f,
+				 * 0.0f));
+				 *
+				 * GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.framebuffer1.getTextureId());
+				 *
+				 * this.getRenderer().render(windowIn, this.view1);
+				 *
+				 * GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+				 **/
+			}
+		}
 
-				final var	mainCursorElement	= cursorExtensionMenu.getMainCursorElement();
+		// Normal render
+		{
+			// Final render
 
-				if (mainCursorElement instanceof SlideItem)
+			// FrameBuffer
+			{
+				// render the texture
+
+				/**
+				 * this.getRenderer().getShaderProgram().start();
+				 * this.getRenderer().getShaderProgram().sendColor(new Vector3f(0.5f, 1.0f,
+				 * 0.0f));
+				 *
+				 * GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.framebuffer0.getTextureId());
+				 *
+				 * this.getRenderer().render(windowIn, this.view);
+				 *
+				 * GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+				 *
+				 * // render the texture1
+				 *
+				 * this.getRenderer().getShaderProgram().start();
+				 * this.getRenderer().getShaderProgram().sendColor(new Vector3f(0.5f, 1.0f,
+				 * 0.0f));
+				 *
+				 * GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.framebuffer1.getTextureId());
+				 *
+				 * this.getRenderer().render(windowIn, this.view1);
+				 *
+				 * GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+				 **/
+			}
+
+			// Gui
+			{
+				if (this.gui.isOpen())
 				{
-					final var slideItem = (SlideItem) mainCursorElement;
+					this.shaderGui.start();
+					this.shaderGui.sendViewMatrix(this.viewMatrix);
 
-					GL30.glBindVertexArray(Shapes.getRectangleVaoId());
+					final var cursorExtension = windowIn.getGlfwEventManager().getCallbacksManager()
+							.getCursorPosCallback().getCursor().getCursorExtension();
 
-					Texture.bind(slideItem.getItem().getTexture().getTextureId());
+					if (cursorExtension instanceof CursorExtensionMenu)
+					{
+						final var	cursorExtensionMenu	= (CursorExtensionMenu) cursorExtension;
 
-					this.shaderGui.sendTransformationMatrix(Maths.getWorldMatrix(
-							new org.joml.Vector3f(slideItem.getPosition().getX(), slideItem.getPosition().getY(), 0.0F),
-							new org.joml.Vector3f(slideItem.getRotation().getX(), slideItem.getRotation().getY(), 0.0F),
-							new org.joml.Vector3f(slideItem.getSize().getX(), slideItem.getSize().getY(), 1.0f)));
+						final var	mainCursorElement	= cursorExtensionMenu.getMainCursorElement();
 
-					GL11.glDrawElements(GL11.GL_TRIANGLES, Shapes.getSurface2dindices().length, GL11.GL_UNSIGNED_INT,
-							0);
+						if (mainCursorElement instanceof SlideItem)
+						{
+							final var slideItem = (SlideItem) mainCursorElement;
+
+							GL30.glBindVertexArray(Shapes.getRectangleVaoId());
+
+							Texture.bind(slideItem.getItem().getTexture().getTextureId());
+
+							this.shaderGui.sendTransformationMatrix(Maths.getWorldMatrix(
+									new org.joml.Vector3f(slideItem.getPosition().getX(),
+											slideItem.getPosition().getY(), 0.0F),
+									new org.joml.Vector3f(slideItem.getRotation().getX(),
+											slideItem.getRotation().getY(), 0.0F),
+									new org.joml.Vector3f(slideItem.getSize().getX(), slideItem.getSize().getY(),
+											1.0f)));
+
+							GL11.glDrawElements(GL11.GL_TRIANGLES, Shapes.getSurface2dindices().length,
+									GL11.GL_UNSIGNED_INT, 0);
+						}
+					}
+
+					this.gui.getRenderer().startDrawing(this.shaderGui);
+					this.gui.getRenderer().draw(this.shaderGui, this.gui);
+					this.gui.getRenderer().endDrawing(this.shaderGui);
+
+					ShaderProgram.stop();
+				}
+
+				if (this.guiScreenshots.isOpen())
+				{
+					this.guiScreenshots.getRenderer().startDrawing(this.shaderGui);
+					this.guiScreenshots.getRenderer().draw(this.shaderGui, this.guiScreenshots);
+					this.guiScreenshots.getRenderer().endDrawing(this.shaderGui);
 				}
 			}
 
-			this.gui.getRenderer().startDrawing(this.shaderGui);
-			this.gui.getRenderer().draw(this.shaderGui, this.gui);
-			this.gui.getRenderer().endDrawing(this.shaderGui);
+			// 3D
+			{
+				this.getRenderer().getShaderProgram().start();
+				this.getRenderer().getShaderProgram().sendColor(new Vector3f(1.0f, 1.0f, 1.0f));
 
-			ShaderProgram.stop();
+				Texture.bind(this.getGrassBlockTexture().getTextureId());
+
+				this.getRenderer().render(windowIn, this.getGameItems());
+
+				// Texture.bind(this.boatTexture.getTextureId());
+
+				// this.getRenderer().render(windowIn, this.boat);
+			}
 		}
-
-		if (this.guiScreenshots.isOpen())
-		{
-			this.guiScreenshots.getRenderer().startDrawing(this.shaderGui);
-			this.guiScreenshots.getRenderer().draw(this.shaderGui, this.guiScreenshots);
-			this.guiScreenshots.getRenderer().endDrawing(this.shaderGui);
-		}
-
-		this.getRenderer().getShaderProgram().start();
-		this.getRenderer().getShaderProgram().sendColor(new Vector3f(1.0f, 1.0f, 1.0f));
-		this.getRenderer().getShaderProgram().sendViewMatrix(this.viewMatrix);
-
-		Texture.bind(this.getGrassBlockTexture().getTextureId());
-
-		this.getRenderer().render(windowIn, this.getGameItems());
-
-		// Texture.bind(this.boatTexture.getTextureId());
-
-		// this.getRenderer().render(windowIn, this.boat);
 	}
 
 	@Override

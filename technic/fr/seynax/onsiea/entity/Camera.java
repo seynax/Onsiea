@@ -46,7 +46,7 @@ public class Camera
 			return;
 		}
 
-		var	currentRotateSpeed	= (float) (0.05f * intervalIn);
+		var	currentRotateSpeed	= (float) (0.090f * intervalIn);
 		var	currentSpeed		= (float) (40.00f * intervalIn);
 
 		if (GLFW.glfwGetKey(windowIn.getWindowHandle(), GLFW.GLFW_KEY_LEFT_CONTROL) == GLFW.GLFW_PRESS)

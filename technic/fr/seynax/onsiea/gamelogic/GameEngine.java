@@ -11,9 +11,9 @@ public class GameEngine implements Runnable
 {
 	// Static constants
 
-	private static final int	TARGET_FPS	= 75;
+	private static final int	TARGET_FPS	= 60;
 
-	private static final int	TARGET_UPS	= 30;
+	private static final int	TARGET_UPS	= 60;
 
 	// Constructor variables
 
