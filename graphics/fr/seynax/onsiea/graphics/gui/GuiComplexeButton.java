@@ -4,9 +4,9 @@ import org.lwjgl.glfw.GLFW;
 
 import fr.seynax.onsiea.graphics.IRenderable;
 import fr.seynax.onsiea.graphics.IWindow;
-import fr.seynax.onsiea.graphics.renderer.IGuiElementData;
-import fr.seynax.onsiea.graphics.renderer.RendererGui;
-import fr.seynax.onsiea.graphics.shader.ShaderGui;
+import fr.seynax.onsiea.opengl.IGuiElementData;
+import fr.seynax.onsiea.opengl.renderer.RendererGui;
+import fr.seynax.onsiea.opengl.shader.ShaderGui;
 import fr.seynax.onsiea.utils.Texture;
 import fr.seynax.onsiea.utils.maths.vector.Vector2f;
 

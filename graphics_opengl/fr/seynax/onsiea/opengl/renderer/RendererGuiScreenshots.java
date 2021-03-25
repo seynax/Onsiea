@@ -1,4 +1,4 @@
-package fr.seynax.onsiea.graphics.renderer;
+package fr.seynax.onsiea.opengl.renderer;
 
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
@@ -7,8 +7,8 @@ import org.lwjgl.opengl.GL30;
 import fr.seynax.onsiea.graphics.IRenderer;
 import fr.seynax.onsiea.graphics.gui.GuiScreenshots;
 import fr.seynax.onsiea.graphics.matter.Shapes;
-import fr.seynax.onsiea.graphics.shader.ShaderGui;
-import fr.seynax.onsiea.graphics.shader.ShaderProgram;
+import fr.seynax.onsiea.opengl.shader.ShaderGui;
+import fr.seynax.onsiea.opengl.shader.ShaderProgram;
 import fr.seynax.onsiea.utils.Texture;
 import fr.seynax.onsiea.utils.maths.Maths;
 

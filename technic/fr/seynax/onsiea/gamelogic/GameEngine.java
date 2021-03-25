@@ -3,8 +3,8 @@ package fr.seynax.onsiea.gamelogic;
 import fr.seynax.onsiea.graphics.GraphicsConstants;
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.graphics.matter.Shapes;
-import fr.seynax.onsiea.graphics.opengl.OpenGLWindow;
-import fr.seynax.onsiea.graphics.render.OpenGLInitializer;
+import fr.seynax.onsiea.opengl.OpenGLInitializer;
+import fr.seynax.onsiea.opengl.OpenGLWindow;
 import fr.seynax.onsiea.utils.Timer;
 
 public class GameEngine implements Runnable

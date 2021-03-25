@@ -1,4 +1,4 @@
-package fr.onsiea.graphics.gui.inventory;
+package fr.seynax.onsiea.graphics.gui.inventory;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -7,8 +7,8 @@ import fr.seynax.onsiea.gamelogic.item.Rectangle;
 import fr.seynax.onsiea.graphics.IRenderable;
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.graphics.input.CursorExtensionMenu;
-import fr.seynax.onsiea.graphics.renderer.RendererGuiSlot;
-import fr.seynax.onsiea.graphics.shader.ShaderGui;
+import fr.seynax.onsiea.opengl.renderer.RendererGuiSlot;
+import fr.seynax.onsiea.opengl.shader.ShaderGui;
 import fr.seynax.onsiea.utils.Texture;
 import fr.seynax.onsiea.utils.maths.vector.Vector2f;
 

@@ -10,39 +10,36 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL30;
 
-import fr.onsiea.graphics.gui.inventory.GuiInventory;
-import fr.onsiea.graphics.gui.inventory.SlideItem;
 import fr.seynax.onsiea.entity.Camera;
 import fr.seynax.onsiea.gamelogic.IGameLogic;
 import fr.seynax.onsiea.gamelogic.TechnicEngine;
 import fr.seynax.onsiea.gamelogic.item.AnimatedItem;
 import fr.seynax.onsiea.gamelogic.item.GameItem;
-import fr.seynax.onsiea.gamelogic.item.TexturedRectangle;
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.graphics.gui.GuiScreenshots;
+import fr.seynax.onsiea.graphics.gui.inventory.GuiInventory;
+import fr.seynax.onsiea.graphics.gui.inventory.SlideItem;
 import fr.seynax.onsiea.graphics.input.CursorExtensionMenu;
 import fr.seynax.onsiea.graphics.matter.Mesh;
 import fr.seynax.onsiea.graphics.matter.Shapes;
-import fr.seynax.onsiea.graphics.render.Renderer;
-import fr.seynax.onsiea.graphics.renderer.RendererGui;
-import fr.seynax.onsiea.graphics.renderer.RendererGuiInventory;
-import fr.seynax.onsiea.graphics.renderer.RendererGuiScreenshots;
-import fr.seynax.onsiea.graphics.renderer.RendererGuiSlot;
-import fr.seynax.onsiea.graphics.shader.ShaderGui;
-import fr.seynax.onsiea.graphics.shader.ShaderProgram;
-import fr.seynax.onsiea.graphics.shader.ShaderScreenshot;
+import fr.seynax.onsiea.opengl.render.Renderer;
+import fr.seynax.onsiea.opengl.renderer.RendererGui;
+import fr.seynax.onsiea.opengl.renderer.RendererGuiInventory;
+import fr.seynax.onsiea.opengl.renderer.RendererGuiScreenshots;
+import fr.seynax.onsiea.opengl.renderer.RendererGuiSlot;
+import fr.seynax.onsiea.opengl.shader.ShaderGui;
+import fr.seynax.onsiea.opengl.shader.ShaderProgram;
+import fr.seynax.onsiea.opengl.shader.ShaderScreenshot;
 import fr.seynax.onsiea.utils.Texture;
 import fr.seynax.onsiea.utils.maths.Maths;
-import fr.seynax.onsiea.utils.maths.vector.Vector2f;
 
-@SuppressWarnings("unused")
 public class DummyGame implements IGameLogic
 {
 	// Variables
 
-	private int						direction		= 0;
+	private int						direction	= 0;
 
-	private float					color			= 0.0f;
+	private float					color		= 0.0f;
 
 	private Renderer				renderer;
 
@@ -78,8 +75,7 @@ public class DummyGame implements IGameLogic
 
 	private Matrix4f				viewMatrix;
 
-	private long					last1			= System.nanoTime();
-	private final long				guiUpdateTime	= System.nanoTime();
+	private long					last1		= System.nanoTime();
 
 	/**
 	 * private Mesh meshBoat; private GameItem boat; private Texture boatTexture;
@@ -356,9 +352,6 @@ public class DummyGame implements IGameLogic
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
 
 		// GuiButton
-
-		final var texturedRectangle = new TexturedRectangle(new Vector2f(0.0f, 0.0f), new Vector2f(2.0f, 2.0f),
-				Texture.loadTexture("gui.png").getTextureId());
 
 		this.rendererGuiInventory	= new RendererGuiInventory();
 

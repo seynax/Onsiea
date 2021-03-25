@@ -6,8 +6,8 @@ import java.util.List;
 import fr.seynax.onsiea.gamelogic.item.TexturedRectangle;
 import fr.seynax.onsiea.graphics.IRenderable;
 import fr.seynax.onsiea.graphics.IWindow;
-import fr.seynax.onsiea.graphics.renderer.RendererGui;
-import fr.seynax.onsiea.graphics.shader.ShaderGui;
+import fr.seynax.onsiea.opengl.renderer.RendererGui;
+import fr.seynax.onsiea.opengl.shader.ShaderGui;
 
 public class Gui implements IRenderable<ShaderGui, Gui, RendererGui>
 {

@@ -1,6 +1,6 @@
 package fr.seynax.onsiea.graphics;
 
-import fr.seynax.onsiea.graphics.shader.ShaderProgram;
+import fr.seynax.onsiea.opengl.shader.ShaderProgram;
 
 public interface IRenderer<S extends ShaderProgram, R>
 {

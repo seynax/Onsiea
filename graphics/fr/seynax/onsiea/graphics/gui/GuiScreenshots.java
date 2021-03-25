@@ -6,9 +6,9 @@ import java.util.List;
 import fr.seynax.onsiea.gamelogic.item.TexturedRectangle;
 import fr.seynax.onsiea.graphics.IRenderable;
 import fr.seynax.onsiea.graphics.IWindow;
-import fr.seynax.onsiea.graphics.renderer.RendererGui;
-import fr.seynax.onsiea.graphics.renderer.RendererGuiScreenshots;
-import fr.seynax.onsiea.graphics.shader.ShaderGui;
+import fr.seynax.onsiea.opengl.renderer.RendererGui;
+import fr.seynax.onsiea.opengl.renderer.RendererGuiScreenshots;
+import fr.seynax.onsiea.opengl.shader.ShaderGui;
 import fr.seynax.onsiea.utils.Texture;
 import fr.seynax.onsiea.utils.maths.vector.Vector2f;
 

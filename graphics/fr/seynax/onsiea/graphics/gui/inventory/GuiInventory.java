@@ -1,11 +1,11 @@
-package fr.onsiea.graphics.gui.inventory;
+package fr.seynax.onsiea.graphics.gui.inventory;
 
 import fr.seynax.onsiea.gamelogic.item.Items;
 import fr.seynax.onsiea.graphics.IRenderable;
 import fr.seynax.onsiea.graphics.IWindow;
-import fr.seynax.onsiea.graphics.renderer.RendererGuiInventory;
-import fr.seynax.onsiea.graphics.renderer.RendererGuiSlot;
-import fr.seynax.onsiea.graphics.shader.ShaderGui;
+import fr.seynax.onsiea.opengl.renderer.RendererGuiInventory;
+import fr.seynax.onsiea.opengl.renderer.RendererGuiSlot;
+import fr.seynax.onsiea.opengl.shader.ShaderGui;
 import fr.seynax.onsiea.utils.maths.vector.Vector2f;
 
 public class GuiInventory implements IRenderable<ShaderGui, GuiInventory, RendererGuiInventory>

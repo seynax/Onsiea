@@ -1,4 +1,4 @@
-package fr.seynax.onsiea.graphics.render;
+package fr.seynax.onsiea.opengl;
 
 import org.lwjgl.glfw.GLFW;
 

@@ -1,8 +1,8 @@
-package fr.seynax.onsiea.graphics.renderer;
+package fr.seynax.onsiea.opengl.renderer;
 
 import fr.seynax.onsiea.graphics.IRenderable;
 import fr.seynax.onsiea.graphics.IRenderer;
-import fr.seynax.onsiea.graphics.shader.ShaderProgram;
+import fr.seynax.onsiea.opengl.shader.ShaderProgram;
 
 public class RendererBase<S extends ShaderProgram, R> implements IRenderer<S, R>
 {

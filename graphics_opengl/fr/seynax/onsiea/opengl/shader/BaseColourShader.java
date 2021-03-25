@@ -1,4 +1,4 @@
-package fr.seynax.onsiea.graphics.shader;
+package fr.seynax.onsiea.opengl.shader;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;

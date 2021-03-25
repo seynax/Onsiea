@@ -1,4 +1,4 @@
-package fr.seynax.onsiea.graphics.renderer;
+package fr.seynax.onsiea.opengl;
 
 import fr.seynax.onsiea.gamelogic.item.Rectangle;
 

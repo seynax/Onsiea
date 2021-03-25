@@ -1,4 +1,4 @@
-package fr.seynax.onsiea.graphics.shader;
+package fr.seynax.onsiea.opengl.shader;
 
 public class BaseShader extends ShaderProgram
 {

@@ -1,4 +1,4 @@
-package fr.seynax.onsiea.graphics.render;
+package fr.seynax.onsiea.opengl.render;
 
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -7,7 +7,7 @@ import fr.seynax.onsiea.gamelogic.item.AnimatedItem;
 import fr.seynax.onsiea.gamelogic.item.GameItem;
 import fr.seynax.onsiea.graphics.GraphicsConstants;
 import fr.seynax.onsiea.graphics.IWindow;
-import fr.seynax.onsiea.graphics.shader.BaseColourShader;
+import fr.seynax.onsiea.opengl.shader.BaseColourShader;
 import fr.seynax.onsiea.utils.maths.Maths;
 
 public class Renderer

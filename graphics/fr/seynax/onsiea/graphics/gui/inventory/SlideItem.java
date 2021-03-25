@@ -1,4 +1,4 @@
-package fr.onsiea.graphics.gui.inventory;
+package fr.seynax.onsiea.graphics.gui.inventory;
 
 import fr.seynax.onsiea.gamelogic.item.Item;
 import fr.seynax.onsiea.graphics.IWindow;

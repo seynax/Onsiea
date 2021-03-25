@@ -1,12 +1,12 @@
-package fr.seynax.onsiea.graphics.renderer;
+package fr.seynax.onsiea.opengl.renderer;
 
 import org.lwjgl.opengl.GL30;
 
-import fr.onsiea.graphics.gui.inventory.GuiInventory;
 import fr.seynax.onsiea.graphics.IRenderer;
+import fr.seynax.onsiea.graphics.gui.inventory.GuiInventory;
 import fr.seynax.onsiea.graphics.matter.Shapes;
-import fr.seynax.onsiea.graphics.shader.ShaderGui;
-import fr.seynax.onsiea.graphics.shader.ShaderProgram;
+import fr.seynax.onsiea.opengl.shader.ShaderGui;
+import fr.seynax.onsiea.opengl.shader.ShaderProgram;
 
 public class RendererGuiInventory extends RendererBase<ShaderGui, GuiInventory>
 		implements IRenderer<ShaderGui, GuiInventory>

@@ -1,8 +1,8 @@
-package fr.seynax.onsiea.graphics.shader;
+package fr.seynax.onsiea.opengl.shader;
 
 import org.joml.Matrix4f;
 
-public class ShaderScreenshot extends ShaderProgram
+public class ShaderGui extends ShaderProgram
 {
 	// Variables
 
@@ -12,9 +12,9 @@ public class ShaderScreenshot extends ShaderProgram
 
 	// Constructor
 
-	public ShaderScreenshot()
+	public ShaderGui()
 	{
-		super("resources/shaders/GLSL/screenshotVertex.glsl", "resources/shaders/GLSL/screenshotFragment.glsl");
+		super("resources/shaders/GLSL/guiVertex.glsl", "resources/shaders/GLSL/guiFragment.glsl");
 	}
 
 	// Methods
@@ -43,9 +43,9 @@ public class ShaderScreenshot extends ShaderProgram
 		super.setUniform(this.getLocationTransformationMatrix(), transformationMatrixIn);
 	}
 
-	public void sendViewMatrix(final fr.seynax.onsiea.utils.maths.vector.Matrix4f matrix4fIn)
+	public void sendViewMatrix(final Matrix4f viewMatrixIn)
 	{
-		super.setUniform(this.getLocationViewMatrix(), matrix4fIn);
+		super.setUniform(this.getLocationViewMatrix(), viewMatrixIn);
 	}
 
 	// Getter | Setters

@@ -1,4 +1,4 @@
-package fr.seynax.onsiea.graphics.shader;
+package fr.seynax.onsiea.opengl.shader;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

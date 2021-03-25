@@ -1,11 +1,11 @@
-package fr.seynax.onsiea.graphics.opengl;
+package fr.seynax.onsiea.opengl;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryUtil;
 
 import fr.seynax.onsiea.graphics.GenericWindow;
 import fr.seynax.onsiea.graphics.callbacks.GLFWEventManager;
-import fr.seynax.onsiea.graphics.render.Renderer;
+import fr.seynax.onsiea.opengl.render.Renderer;
 
 public class OpenGLWindow extends GenericWindow
 {
