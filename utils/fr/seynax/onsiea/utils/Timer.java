@@ -8,7 +8,7 @@ public class Timer
 
 	// Variables
 
-	private double				lastLoopTime;
+	private long				lastTime;
 
 	// Constructor
 
@@ -21,35 +21,56 @@ public class Timer
 
 	public void initialization()
 	{
-		this.setLastLoopTime(Timer.getTime());
+		this.setLastTime(Timer.getTime());
 	}
 
-	public final static double getTime()
+	public final static long getTime()
+	{
+		return System.nanoTime();
+	}
+
+	public final static double convertToSeconds(final long timeIn)
+	{
+		return timeIn * Timer.getNanoToSeconds();
+	}
+
+	public final static double getTimeToSeconds()
 	{
 		return System.nanoTime() * Timer.getNanoToSeconds();
 	}
 
-	public float getElapsedTime()
+	public long getElapsedTime()
 	{
 		final var	time		= Timer.getTime();
 
-		final var	elapsedTime	= (float) (time - this.getLastLoopTime());
+		final var	elapsedTime	= time - this.getLastTime();
 
-		this.setLastLoopTime(time);
+		this.setLastTime(time);
+
+		return elapsedTime;
+	}
+
+	public float getElapsedTimeToSeconds()
+	{
+		final var	time		= Timer.getTime();
+
+		final var	elapsedTime	= (float) (Timer.convertToSeconds(time) - this.getLastTime());
+
+		this.setLastTime(time);
 
 		return elapsedTime;
 	}
 
 	// Getter | Setter
 
-	public double getLastLoopTime()
+	public long getLastTime()
 	{
-		return this.lastLoopTime;
+		return this.lastTime;
 	}
 
-	public void setLastLoopTime(final double lastLoopTimeIn)
+	public void setLastTime(final long lastTimeIn)
 	{
-		this.lastLoopTime = lastLoopTimeIn;
+		this.lastTime = lastTimeIn;
 	}
 
 	// Constants getter
