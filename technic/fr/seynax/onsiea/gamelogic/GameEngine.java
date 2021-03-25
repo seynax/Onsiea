@@ -196,7 +196,7 @@ public class GameEngine implements Runnable
 
 	public void sync(final double secsPerFrameIn)
 	{
-		final var endTime = this.getTimer().getLastLoopTime() + secsPerFrameIn;
+		final var endTime = this.getTimer().getLastTime() + secsPerFrameIn;
 
 		while (Timer.getTime() < endTime)
 		{

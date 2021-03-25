@@ -30,6 +30,7 @@ import fr.seynax.onsiea.opengl.shader.ShaderProgram;
 import fr.seynax.onsiea.opengl.shader.ShaderScreenshot;
 import fr.seynax.onsiea.utils.FPSUtils;
 import fr.seynax.onsiea.utils.Texture;
+import fr.seynax.onsiea.utils.Timer;
 import fr.seynax.onsiea.utils.maths.Maths;
 
 public class DummyGame implements IGameLogic
@@ -67,8 +68,8 @@ public class DummyGame implements IGameLogic
 	private TechnicEngine									technicEngine;
 	private fr.seynax.onsiea.utils.maths.vector.Matrix4f	viewMatrix;
 
-	private long											last0		= System.nanoTime();
-	private long											last1		= System.nanoTime();
+	private Timer											timer0;
+	private Timer											timer1;
 
 	private FPSUtils										fpsUtils;
 
@@ -307,6 +308,11 @@ public class DummyGame implements IGameLogic
 		 * " + b + " | A : " + a); } }
 		 **/
 
+		{
+			this.timer0	= new Timer();
+			this.timer1	= new Timer();
+		}
+
 		GLFW.glfwSetCursorPos(windowIn.getWindowHandle(), windowIn.getWidth() / 2.0D, windowIn.getHeight() / 2.0D);
 
 		{
@@ -323,10 +329,8 @@ public class DummyGame implements IGameLogic
 	@Override
 	public void input(final IWindow windowIn)
 	{
-		if (System.nanoTime() - this.last1 >= 1_000_000L)
+		if (this.timer0.getElapsedTime() >= 1_000_000L)
 		{
-			this.last1 = System.nanoTime();
-
 			if (windowIn.getGlfwEventManager().keyIsPress(GLFW.GLFW_KEY_UP))
 			{
 				this.setDirection(1);
@@ -434,10 +438,8 @@ public class DummyGame implements IGameLogic
 					(float) (animatedItem.getRotation().y() + animatedItem.getRotationSpeed().y() * intervalIn),
 					(float) (animatedItem.getRotation().z() + animatedItem.getRotationSpeed().z() * intervalIn));
 
-			if (System.nanoTime() - this.last0 >= 1_000_000_000L)
+			if (this.timer1.getElapsedTime() >= 1_000_000_000L)
 			{
-				this.last0 = System.nanoTime();
-
 				final var	speedX	= (Maths.randInt(0, 1) + Maths.randFloat()) * 10.0f;
 				final var	speedY	= (Maths.randInt(0, 1) + Maths.randFloat()) * 10.0f;
 				final var	speedZ	= (Maths.randInt(0, 1) + Maths.randFloat()) * 10.0f;
