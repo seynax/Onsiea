@@ -3,32 +3,33 @@ package fr.seynax.onsiea.graphics.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joml.Vector3f;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
-
 import fr.seynax.onsiea.gamelogic.item.TexturedRectangle;
+import fr.seynax.onsiea.graphics.IRenderable;
 import fr.seynax.onsiea.graphics.IWindow;
-import fr.seynax.onsiea.graphics.matter.Shapes;
+import fr.seynax.onsiea.graphics.renderer.RendererGui;
 import fr.seynax.onsiea.graphics.shader.ShaderGui;
-import fr.seynax.onsiea.utils.Texture;
-import fr.seynax.onsiea.utils.maths.Maths;
 
-public class Gui implements IGui
+public class Gui implements IRenderable<ShaderGui, Gui, RendererGui>
 {
-	// Variables
+	// Constructor variables
 
-	private List<TexturedRectangle> texturedRectangles;
+	private RendererGui				renderer;
+
+	private List<TexturedRectangle>	texturedRectangles;
 
 	// Constructor
 
-	public Gui()
+	public Gui(final RendererGui rendererIn)
 	{
+		this.setRenderer(rendererIn);
+
 		this.setTexturedRectangles(new ArrayList<>());
 	}
 
-	public Gui(final TexturedRectangle... texturedRectanglesIn)
+	public Gui(final RendererGui rendererIn, final TexturedRectangle... texturedRectanglesIn)
 	{
+		this.setRenderer(rendererIn);
+
 		this.setTexturedRectangles(new ArrayList<>());
 
 		for (final TexturedRectangle texturedRectangle : texturedRectanglesIn)
@@ -39,7 +40,6 @@ public class Gui implements IGui
 
 	// Methods
 
-	@Override
 	public void initialization()
 	{
 
@@ -53,7 +53,6 @@ public class Gui implements IGui
 		}
 	}
 
-	@Override
 	public void update(final IWindow windowIn)
 	{
 		final var	start	= this.getTexturedRectangles().get(0).getStart();
@@ -70,27 +69,6 @@ public class Gui implements IGui
 		}
 	}
 
-	@Override
-	public void draw(final ShaderGui shaderGuiIn)
-	{
-		GL30.glBindVertexArray(Shapes.getRectangleVaoId());
-
-		for (final TexturedRectangle texturedRectangle : this.getTexturedRectangles())
-		{
-			Texture.bind(texturedRectangle.getTextureId());
-
-			shaderGuiIn.sendTransformationMatrix(Maths.getWorldMatrix(
-					new Vector3f(texturedRectangle.getPosition().getX(), texturedRectangle.getPosition().getY(), 0.0F),
-					new Vector3f(0.0F, 0.0F, 0.0F),
-					new Vector3f(texturedRectangle.getSize().getX(), texturedRectangle.getSize().getY(), 1.0F)));
-
-			GL11.glDrawElements(GL11.GL_TRIANGLES, Shapes.getSurface2dindices().length, GL11.GL_UNSIGNED_INT, 0);
-		}
-
-		GL30.glBindVertexArray(0);
-	}
-
-	@Override
 	public void cleanup()
 	{
 
@@ -107,4 +85,16 @@ public class Gui implements IGui
 	{
 		this.texturedRectangles = texturedRectanglesIn;
 	}
+
+	@Override
+	public RendererGui getRenderer()
+	{
+		return this.renderer;
+	}
+
+	private void setRenderer(final RendererGui rendererIn)
+	{
+		this.renderer = rendererIn;
+	}
+
 }

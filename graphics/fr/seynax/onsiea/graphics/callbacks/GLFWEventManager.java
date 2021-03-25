@@ -64,6 +64,11 @@ public class GLFWEventManager
 		return GLFW.glfwGetKey(this.getWindow().getWindowHandle(), glfwKeyIn);
 	}
 
+	public boolean keyIsHasPress(final int glfwKeyOIn)
+	{
+		return this.getCallbacksManager().getKeyCallback().isHasPress(glfwKeyOIn);
+	}
+
 	public boolean keyIsPress(final int glfwKeyIn)
 	{
 		return GLFW.glfwGetKey(this.getWindow().getWindowHandle(), glfwKeyIn) == GLFW.GLFW_PRESS;
@@ -147,6 +152,11 @@ public class GLFWEventManager
 		}
 
 		return false;
+	}
+
+	public void reset()
+	{
+		this.getCallbacksManager().reset();
 	}
 
 	// Getter | Setter

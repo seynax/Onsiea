@@ -19,10 +19,15 @@ import fr.seynax.onsiea.gamelogic.item.AnimatedItem;
 import fr.seynax.onsiea.gamelogic.item.GameItem;
 import fr.seynax.onsiea.gamelogic.item.TexturedRectangle;
 import fr.seynax.onsiea.graphics.IWindow;
+import fr.seynax.onsiea.graphics.gui.GuiScreenshots;
 import fr.seynax.onsiea.graphics.input.CursorExtensionMenu;
 import fr.seynax.onsiea.graphics.matter.Mesh;
 import fr.seynax.onsiea.graphics.matter.Shapes;
 import fr.seynax.onsiea.graphics.render.Renderer;
+import fr.seynax.onsiea.graphics.renderer.RendererGui;
+import fr.seynax.onsiea.graphics.renderer.RendererGuiInventory;
+import fr.seynax.onsiea.graphics.renderer.RendererGuiScreenshots;
+import fr.seynax.onsiea.graphics.renderer.RendererGuiSlot;
 import fr.seynax.onsiea.graphics.shader.ShaderGui;
 import fr.seynax.onsiea.graphics.shader.ShaderProgram;
 import fr.seynax.onsiea.graphics.shader.ShaderScreenshot;
@@ -35,36 +40,46 @@ public class DummyGame implements IGameLogic
 {
 	// Variables
 
-	private int					direction	= 0;
+	private int						direction		= 0;
 
-	private float				color		= 0.0f;
+	private float					color			= 0.0f;
 
-	private Renderer			renderer;
+	private Renderer				renderer;
 
 	// Variables ; Graphics data
 
-	private AnimatedItem[]		gameItems;
+	private AnimatedItem[]			gameItems;
 
-	private Texture				grassBlockTexture;
+	private Texture					grassBlockTexture;
 
-	private Camera				camera;
+	private Camera					camera;
 
-	private int					fboId;
-	private int					depthBufferId;
-	private int					frameBufferTextureId;
+	private int						fboId;
+	private int						depthBufferId;
+	private int						frameBufferTextureId;
 
-	private int					fboId1;
-	private int					depthBufferId1;
-	private int					frameBufferTextureId1;
+	private int						fboId1;
+	private int						depthBufferId1;
+	private int						frameBufferTextureId1;
 
-	private GuiInventory		gui;
+	private RendererGuiInventory	rendererGuiInventory;
+	private RendererGuiSlot			rendererGuiSlot;
+	private RendererGuiScreenshots	rendererGuiScreenshots;
+	private RendererGui				rendererGui;
 
-	private ShaderGui			shaderGui;
-	private ShaderScreenshot	shaderScreenshot;
+	private GuiInventory			gui;
 
-	private TechnicEngine		technicEngine;
+	private GuiScreenshots			guiScreenshots;
 
-	private Matrix4f			viewMatrix;
+	private ShaderGui				shaderGui;
+	private ShaderScreenshot		shaderScreenshot;
+
+	private TechnicEngine			technicEngine;
+
+	private Matrix4f				viewMatrix;
+
+	private long					last1			= System.nanoTime();
+	private final long				guiUpdateTime	= System.nanoTime();
 
 	/**
 	 * private Mesh meshBoat; private GameItem boat; private Texture boatTexture;
@@ -345,11 +360,21 @@ public class DummyGame implements IGameLogic
 		final var texturedRectangle = new TexturedRectangle(new Vector2f(0.0f, 0.0f), new Vector2f(2.0f, 2.0f),
 				Texture.loadTexture("gui.png").getTextureId());
 
-		this.gui = new GuiInventory();
+		this.rendererGuiInventory	= new RendererGuiInventory();
 
-		this.gui.initialization();
+		this.gui					= new GuiInventory(this.rendererGuiInventory);
 
-		this.shaderGui = new ShaderGui();
+		this.rendererGuiSlot		= new RendererGuiSlot();
+
+		this.gui.initialization(this.rendererGuiSlot);
+
+		this.rendererGuiScreenshots	= new RendererGuiScreenshots();
+
+		this.rendererGui			= new RendererGui();
+
+		this.guiScreenshots			= new GuiScreenshots(this.rendererGuiScreenshots, this.rendererGui);
+
+		this.shaderGui				= new ShaderGui();
 
 		this.shaderGui.start();
 
@@ -400,12 +425,10 @@ public class DummyGame implements IGameLogic
 		GLFW.glfwSetCursorPos(windowIn.getWindowHandle(), windowIn.getWidth() / 2.0D, windowIn.getHeight() / 2.0D);
 	}
 
-	private long last1 = System.nanoTime();
-
 	@Override
 	public void input(final IWindow windowIn)
 	{
-		if (System.nanoTime() - this.last1 >= 1_000_000_00L)
+		if (System.nanoTime() - this.last1 >= 1_000L)
 		{
 			this.last1 = System.nanoTime();
 
@@ -435,16 +458,38 @@ public class DummyGame implements IGameLogic
 			 * height).getTextureId()); }
 			 **/
 
-			if (windowIn.getGlfwEventManager().keyIsPress(GLFW.GLFW_KEY_P))
+			if (windowIn.getGlfwEventManager().keyIsHasPress(GLFW.GLFW_KEY_P))
 			{
 				this.gui.setOpen(!this.gui.isOpen());
 
 				if (this.gui.isOpen())
 				{
+					this.camera.setCanUpdate(false);
+
 					windowIn.getGlfwEventManager().getCallbacksManager().menuView();
 				}
 				else
 				{
+					this.camera.setCanUpdate(true);
+
+					windowIn.getGlfwEventManager().getCallbacksManager().FPSView();
+				}
+			}
+
+			if (windowIn.getGlfwEventManager().keyIsHasPress(GLFW.GLFW_KEY_O))
+			{
+				this.guiScreenshots.setOpen(!this.guiScreenshots.isOpen());
+
+				if (this.guiScreenshots.isOpen())
+				{
+					this.camera.setCanUpdate(false);
+
+					windowIn.getGlfwEventManager().getCallbacksManager().menuView();
+				}
+				else
+				{
+					this.camera.setCanUpdate(true);
+
 					windowIn.getGlfwEventManager().getCallbacksManager().FPSView();
 				}
 			}
@@ -467,13 +512,17 @@ public class DummyGame implements IGameLogic
 			this.setColor(0.0f);
 		}
 
-		// GuiButton
-
 		if (this.gui.isOpen())
 		{
-			this.gui.update(windowIn);
-
 			this.camera.setCanUpdate(false);
+
+			this.gui.update(windowIn);
+		}
+		else if (this.guiScreenshots.isOpen())
+		{
+			this.camera.setCanUpdate(false);
+
+			this.guiScreenshots.update(windowIn);
 		}
 		else
 		{
@@ -700,9 +749,11 @@ public class DummyGame implements IGameLogic
 
 		// normal render
 
+		final var lastState = this.camera.isCanUpdate();
+
 		this.camera.setCanUpdate(false);
 		Maths.copy(this.camera.getViewMatrix(), this.viewMatrix);
-		this.camera.setCanUpdate(true);
+		this.camera.setCanUpdate(lastState);
 
 		if (this.gui.isOpen())
 		{
@@ -737,9 +788,18 @@ public class DummyGame implements IGameLogic
 				}
 			}
 
-			this.gui.draw(this.shaderGui);
+			this.gui.getRenderer().startDrawing(this.shaderGui);
+			this.gui.getRenderer().draw(this.shaderGui, this.gui);
+			this.gui.getRenderer().endDrawing(this.shaderGui);
 
 			ShaderProgram.stop();
+		}
+
+		if (this.guiScreenshots.isOpen())
+		{
+			this.guiScreenshots.getRenderer().startDrawing(this.shaderGui);
+			this.guiScreenshots.getRenderer().draw(this.shaderGui, this.guiScreenshots);
+			this.guiScreenshots.getRenderer().endDrawing(this.shaderGui);
 		}
 
 		this.getRenderer().getShaderProgram().start();

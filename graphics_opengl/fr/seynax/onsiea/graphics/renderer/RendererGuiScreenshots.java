@@ -1,0 +1,88 @@
+package fr.seynax.onsiea.graphics.renderer;
+
+import org.joml.Vector3f;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
+
+import fr.seynax.onsiea.graphics.IRenderer;
+import fr.seynax.onsiea.graphics.gui.GuiScreenshots;
+import fr.seynax.onsiea.graphics.matter.Shapes;
+import fr.seynax.onsiea.graphics.shader.ShaderGui;
+import fr.seynax.onsiea.graphics.shader.ShaderProgram;
+import fr.seynax.onsiea.utils.Texture;
+import fr.seynax.onsiea.utils.maths.Maths;
+
+public class RendererGuiScreenshots extends RendererBase<ShaderGui, GuiScreenshots>
+		implements IRenderer<ShaderGui, GuiScreenshots>
+{
+	@Override
+	public void startDrawing(final ShaderGui shaderGuiIn)
+	{
+		GL30.glBindVertexArray(Shapes.getRectangleVaoId());
+
+		shaderGuiIn.start();
+	}
+
+	@Override
+	public void draw(final ShaderGui shaderGuiIn, final GuiScreenshots guiScreenshots)
+	{
+		// PreviousButton
+
+		Texture.bind(guiScreenshots.getPreviousButton().getTextureId());
+
+		shaderGuiIn.sendTransformationMatrix(Maths.getWorldMatrix(
+				new Vector3f(guiScreenshots.getPreviousButton().getRectangle().getPosition().getX(),
+						guiScreenshots.getPreviousButton().getRectangle().getPosition().getY(), 0.0F),
+				new Vector3f(0.0F, 0.0F, 0.0F),
+				new Vector3f(guiScreenshots.getPreviousButton().getRectangle().getSize().getX(),
+						guiScreenshots.getPreviousButton().getRectangle().getSize().getY(), 1.0F)));
+
+		GL11.glDrawElements(GL11.GL_TRIANGLES, Shapes.getSurface2dindices().length, GL11.GL_UNSIGNED_INT, 0);
+
+		// NextButton
+
+		Texture.bind(guiScreenshots.getNextButton().getTextureId());
+
+		shaderGuiIn.sendTransformationMatrix(Maths.getWorldMatrix(
+				new Vector3f(guiScreenshots.getNextButton().getRectangle().getPosition().getX(),
+						guiScreenshots.getNextButton().getRectangle().getPosition().getY(), 0.0F),
+				new Vector3f(0.0F, 0.0F, 0.0F),
+				new Vector3f(guiScreenshots.getNextButton().getRectangle().getSize().getX(),
+						guiScreenshots.getNextButton().getRectangle().getSize().getY(), 1.0F)));
+
+		GL11.glDrawElements(GL11.GL_TRIANGLES, Shapes.getSurface2dindices().length, GL11.GL_UNSIGNED_INT, 0);
+
+		// Screenshots
+
+		var textureId = guiScreenshots.getScreenshotsSurface().getTextureId();
+
+		if (guiScreenshots.getScreenshots().size() > 0)
+		{
+			// shaderScreenshotIn.start();
+
+			shaderGuiIn.start();
+
+			textureId = guiScreenshots.getScreenshots().get(guiScreenshots.getSelectedScreenshot());
+
+		}
+
+		Texture.bind(textureId);
+
+		shaderGuiIn.sendTransformationMatrix(Maths.getWorldMatrix(
+				new org.joml.Vector3f(guiScreenshots.getScreenshotsSurface().getPosition().getX(),
+						guiScreenshots.getScreenshotsSurface().getPosition().getY(), 0.0F),
+				new org.joml.Vector3f(0.0F, 0.0F, 0.0F),
+				new org.joml.Vector3f(guiScreenshots.getScreenshotsSurface().getSize().getX(),
+						guiScreenshots.getScreenshotsSurface().getSize().getY(), 1.0F)));
+
+		GL11.glDrawElements(GL11.GL_TRIANGLES, Shapes.getSurface2dindices().length, GL11.GL_UNSIGNED_INT, 0);
+	}
+
+	@Override
+	public void endDrawing(final ShaderGui shaderProgramIn)
+	{
+		ShaderProgram.stop();
+
+		GL30.glBindVertexArray(0);
+	}
+}

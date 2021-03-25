@@ -14,7 +14,6 @@ import org.lwjgl.vulkan.VkSurfaceCapabilitiesKHR;
 import org.lwjgl.vulkan.VkSurfaceFormatKHR;
 import org.lwjgl.vulkan.VkSwapchainCreateInfoKHR;
 
-import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.vulkan.utils.VKUtil;
 
 public class VulkanSwapchain
@@ -39,8 +38,8 @@ public class VulkanSwapchain
 	// Constructor
 
 	public VulkanSwapchain(final VulkanDevice deviceIn, final VulkanPhysicalDevice physicalDeviceIn,
-			final long vulkanWindowSurfaceHandleIn, final IWindow windowIn,
-			final VkSurfaceCapabilitiesKHR surfaceCapabilitiesIn,
+			final long vulkanWindowSurfaceHandleIn, final long windowHandleIn, final int windowWidthIn,
+			final int windowHeightIn, final VkSurfaceCapabilitiesKHR surfaceCapabilitiesIn,
 			final VkSurfaceFormatKHR.Buffer passSurfaceFormatBufferIn, final int surfaceFormatCountIn,
 			final IntBuffer passSurfacePresentModeBufferIn, final int surfacePresentModeCountIn)
 	{
@@ -50,9 +49,9 @@ public class VulkanSwapchain
 		// Swapchain creation
 		{
 			final var hasSupport = this.checkSwapchainSupport(physicalDeviceIn.getDevice(), deviceIn.getDevice(),
-					windowIn.getWidth(), windowIn.getHeight(), this.getVulkanWindowSurfaceHandle(),
-					surfaceCapabilitiesIn, passSurfaceFormatBufferIn, surfaceFormatCountIn,
-					passSurfacePresentModeBufferIn, surfacePresentModeCountIn);
+					windowWidthIn, windowHeightIn, this.getVulkanWindowSurfaceHandle(), surfaceCapabilitiesIn,
+					passSurfaceFormatBufferIn, surfaceFormatCountIn, passSurfacePresentModeBufferIn,
+					surfacePresentModeCountIn);
 
 			if (!hasSupport)
 			{

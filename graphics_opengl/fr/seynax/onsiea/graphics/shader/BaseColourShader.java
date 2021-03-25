@@ -12,7 +12,7 @@ public class BaseColourShader extends ShaderProgram
 
 	public BaseColourShader()
 	{
-		super("resources/shaders/baseColourVertex.glsl", "resources/shaders/baseColourFragment.glsl");
+		super("resources/shaders/GLSL/baseColourVertex.glsl", "resources/shaders/GLSL/baseColourFragment.glsl");
 	}
 
 	@Override

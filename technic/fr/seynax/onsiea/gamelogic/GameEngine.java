@@ -1,9 +1,9 @@
 package fr.seynax.onsiea.gamelogic;
 
-import fr.seynax.onsiea.graphics.GenericWindow;
 import fr.seynax.onsiea.graphics.GraphicsConstants;
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.graphics.matter.Shapes;
+import fr.seynax.onsiea.graphics.opengl.OpenGLWindow;
 import fr.seynax.onsiea.graphics.render.OpenGLInitializer;
 import fr.seynax.onsiea.utils.Timer;
 
@@ -34,7 +34,7 @@ public class GameEngine implements Runnable
 	public GameEngine(final String windowTitleIn, final int widthIn, final int heightIn, final int framerateIn,
 			final boolean vSyncIn, final int syncIn, final IGameLogic gameLogicIn) throws Exception
 	{
-		this.setWindow(new GenericWindow(widthIn, heightIn, windowTitleIn, framerateIn, vSyncIn, syncIn,
+		this.setWindow(new OpenGLWindow(widthIn, heightIn, windowTitleIn, framerateIn, vSyncIn, syncIn,
 				GraphicsConstants.isFullscreen()));
 
 		this.setGameLogic(gameLogicIn);
@@ -90,8 +90,6 @@ public class GameEngine implements Runnable
 		Shapes.initialization();
 
 		this.getGameLogic().initialization(this.getWindow());
-
-		System.exit(0);
 	}
 
 	public void gameLoop()
@@ -125,6 +123,8 @@ public class GameEngine implements Runnable
 			{
 				this.sync(secsPerFrame);
 			}
+
+			this.endInput();
 		}
 	}
 
@@ -133,6 +133,11 @@ public class GameEngine implements Runnable
 		this.getWindow().getGlfwEventManager().pollEvents();
 
 		this.getGameLogic().input(this.getWindow());
+	}
+
+	protected void endInput()
+	{
+		this.getWindow().getGlfwEventManager().reset();
 	}
 
 	protected void updateGameState(final double intervalIn)

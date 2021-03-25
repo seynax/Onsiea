@@ -376,7 +376,7 @@ public class GenericWindow implements IWindow
 		return this.glfwEventManager;
 	}
 
-	private void setGlfwEventManager(final GLFWEventManager glfwEventManagerIn)
+	protected void setGlfwEventManager(final GLFWEventManager glfwEventManagerIn)
 	{
 		this.glfwEventManager = glfwEventManagerIn;
 	}

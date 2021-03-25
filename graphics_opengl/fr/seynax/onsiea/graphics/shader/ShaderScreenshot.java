@@ -14,7 +14,7 @@ public class ShaderScreenshot extends ShaderProgram
 
 	public ShaderScreenshot()
 	{
-		super("resources/shaders/screenshotVertex.glsl", "resources/shaders/screenshotFragment.glsl");
+		super("resources/shaders/GLSL/screenshotVertex.glsl", "resources/shaders/GLSL/screenshotFragment.glsl");
 	}
 
 	// Methods

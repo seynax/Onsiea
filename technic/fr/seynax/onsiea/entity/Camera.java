@@ -217,7 +217,7 @@ public class Camera
 		this.orientation = orientationIn;
 	}
 
-	private boolean isCanUpdate()
+	public boolean isCanUpdate()
 	{
 		return this.canUpdate;
 	}

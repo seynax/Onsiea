@@ -3,44 +3,47 @@ package fr.seynax.onsiea.graphics.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
-
 import fr.seynax.onsiea.gamelogic.item.TexturedRectangle;
+import fr.seynax.onsiea.graphics.IRenderable;
 import fr.seynax.onsiea.graphics.IWindow;
-import fr.seynax.onsiea.graphics.matter.Shapes;
+import fr.seynax.onsiea.graphics.renderer.RendererGui;
+import fr.seynax.onsiea.graphics.renderer.RendererGuiScreenshots;
 import fr.seynax.onsiea.graphics.shader.ShaderGui;
-import fr.seynax.onsiea.graphics.shader.ShaderScreenshot;
 import fr.seynax.onsiea.utils.Texture;
-import fr.seynax.onsiea.utils.maths.Maths;
 import fr.seynax.onsiea.utils.maths.vector.Vector2f;
 
-public class GuiScreenshots implements IGui
+public class GuiScreenshots implements IRenderable<ShaderGui, GuiScreenshots, RendererGuiScreenshots>
 {
+	// Constructor variables
+
+	private RendererGuiScreenshots	renderer;
+
 	// Variables
 
-	private GuiButton			previousButton;
+	private GuiButton				previousButton;
 
-	private GuiButton			nextButton;
+	private GuiButton				nextButton;
 
-	private TexturedRectangle	screenshotsSurface;
+	private TexturedRectangle		screenshotsSurface;
 
-	private List<Integer>		screenshots;
+	private List<Integer>			screenshots;
 
-	private int					selectedScreenshot	= 0;
+	private int						selectedScreenshot	= 0;
 
-	private long				last;
+	private long					last;
 
-	private boolean				isOpen;
+	private boolean					isOpen;
 
 	// Constructor
 
-	public GuiScreenshots()
+	public GuiScreenshots(final RendererGuiScreenshots RendererIn, final RendererGui rendererGuiIn)
 	{
-		this.setPreviousButton(
-				new GuiButton(new Vector2f(-1 + 0.5f * 0.25f, -1 + 0.125f * 0.5f), new Vector2f(0.25f, 0.125f)));
-		this.setNextButton(
-				new GuiButton(new Vector2f(1 - 0.5f * 0.25f, -1 + 0.125f * 0.5f), new Vector2f(0.25f, 0.125f)));
+		this.setRenderer(RendererIn);
+
+		this.setPreviousButton(new GuiButton(rendererGuiIn, new Vector2f(-1 + 0.5f * 0.25f, -1 + 0.125f * 0.5f),
+				new Vector2f(0.25f, 0.125f)));
+		this.setNextButton(new GuiButton(rendererGuiIn, new Vector2f(1 - 0.5f * 0.25f, -1 + 0.125f * 0.5f),
+				new Vector2f(0.25f, 0.125f)));
 		this.setScreenshotsSurface(new TexturedRectangle(new Vector2f(0.0f, 0.0f), new Vector2f(1.0f, 1.0f),
 				Texture.loadTexture("gui").getTextureId()));
 
@@ -54,7 +57,6 @@ public class GuiScreenshots implements IGui
 		this.getScreenshots().add(screenshotTextureId);
 	}
 
-	@Override
 	public void initialization()
 	{
 		this.getPreviousButton().initialization();
@@ -62,7 +64,6 @@ public class GuiScreenshots implements IGui
 		this.getNextButton().initialization();
 	}
 
-	@Override
 	public void update(final IWindow windowIn)
 	{
 		if (System.nanoTime() - this.getLast() > 8_500_000_0L)
@@ -110,69 +111,6 @@ public class GuiScreenshots implements IGui
 		}
 	}
 
-	@Override
-	public void draw(final ShaderGui shaderGuiIn)
-	{
-		// PreviousButton
-
-		this.getPreviousButton().draw(shaderGuiIn);
-
-		// NextButton
-
-		this.getNextButton().draw(shaderGuiIn);
-	}
-
-	public void draw(final ShaderGui shaderGuiIn, final ShaderScreenshot shaderScreenshotIn)
-	{
-		// Screenshots surfaces
-
-		GL30.glBindVertexArray(Shapes.getRectangleVaoId());
-
-		if (this.getScreenshots().size() <= 0)
-		{
-			shaderGuiIn.start();
-
-			this.draw(shaderGuiIn, this.getScreenshotsSurface().getPosition(), this.getScreenshotsSurface().getSize(),
-					this.getScreenshotsSurface().getTextureId());
-		}
-		else
-		{
-			shaderScreenshotIn.start();
-
-			final int textureId = this.getScreenshots().get(this.getSelectedScreenshot());
-
-			this.draw(shaderScreenshotIn, this.getScreenshotsSurface().getPosition(),
-					this.getScreenshotsSurface().getSize(), textureId);
-		}
-
-		GL30.glBindVertexArray(0);
-	}
-
-	private void draw(final ShaderGui shaderGuiIn, final Vector2f positionIn, final Vector2f sizeIn,
-			final int textureIdIn)
-	{
-		Texture.bind(textureIdIn);
-
-		shaderGuiIn.sendTransformationMatrix(Maths.getWorldMatrix(
-				new org.joml.Vector3f(positionIn.getX(), positionIn.getY(), 0.0F),
-				new org.joml.Vector3f(0.0F, 0.0F, 0.0F), new org.joml.Vector3f(sizeIn.getX(), sizeIn.getY(), 1.0F)));
-
-		GL11.glDrawElements(GL11.GL_TRIANGLES, Shapes.getSurface2dindices().length, GL11.GL_UNSIGNED_INT, 0);
-	}
-
-	private void draw(final ShaderScreenshot shaderScreenshotIn, final Vector2f positionIn, final Vector2f sizeIn,
-			final int textureIdIn)
-	{
-		Texture.bind(textureIdIn);
-
-		shaderScreenshotIn.sendTransformationMatrix(Maths.getWorldMatrix(
-				new org.joml.Vector3f(positionIn.getX(), positionIn.getY(), 0.0F),
-				new org.joml.Vector3f(0.0F, 0.0F, 0.0F), new org.joml.Vector3f(sizeIn.getX(), sizeIn.getY(), 1.0F)));
-
-		GL11.glDrawElements(GL11.GL_TRIANGLES, Shapes.getSurface2dindices().length, GL11.GL_UNSIGNED_INT, 0);
-	}
-
-	@Override
 	public void cleanup()
 	{
 		this.getPreviousButton().cleanup();
@@ -250,5 +188,16 @@ public class GuiScreenshots implements IGui
 	public void setOpen(final boolean isOpenIn)
 	{
 		this.isOpen = isOpenIn;
+	}
+
+	@Override
+	public RendererGuiScreenshots getRenderer()
+	{
+		return this.renderer;
+	}
+
+	private void setRenderer(final RendererGuiScreenshots rendererIn)
+	{
+		this.renderer = rendererIn;
 	}
 }

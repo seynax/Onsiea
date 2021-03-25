@@ -3,8 +3,10 @@ package fr.seynax.onsiea;
 import fr.seynax.onsiea.game.DummyGame;
 import fr.seynax.onsiea.gamelogic.GameEngine;
 
-public class Main
+public class OpenGLTest
 {
+	// Main method
+
 	public static void main(final String[] argsIn)
 	{
 		try

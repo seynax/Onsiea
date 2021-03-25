@@ -130,6 +130,7 @@ public class CallbacksManager
 	public void reset()
 	{
 		this.getMouseButtonCallback().reset();
+		this.getKeyCallback().reset();
 	}
 
 	// Getter | Setter

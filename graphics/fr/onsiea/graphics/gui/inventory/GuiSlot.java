@@ -1,27 +1,26 @@
-package fr.seynax.onsiea.graphics.gui.inventory;
+package fr.onsiea.graphics.gui.inventory;
 
-import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
 
-import fr.onsiea.graphics.gui.inventory.SlideItem;
 import fr.seynax.onsiea.gamelogic.item.Item;
 import fr.seynax.onsiea.gamelogic.item.Rectangle;
+import fr.seynax.onsiea.graphics.IRenderable;
 import fr.seynax.onsiea.graphics.IWindow;
-import fr.seynax.onsiea.graphics.gui.IGui;
 import fr.seynax.onsiea.graphics.input.CursorExtensionMenu;
-import fr.seynax.onsiea.graphics.matter.Shapes;
+import fr.seynax.onsiea.graphics.renderer.RendererGuiSlot;
 import fr.seynax.onsiea.graphics.shader.ShaderGui;
 import fr.seynax.onsiea.utils.Texture;
-import fr.seynax.onsiea.utils.maths.Maths;
 import fr.seynax.onsiea.utils.maths.vector.Vector2f;
 
-public class GuiSlot implements IGui
+public class GuiSlot implements IRenderable<ShaderGui, GuiSlot, RendererGuiSlot>
 {
-	// Variables
+	// Constructor variables
+
+	private RendererGuiSlot		renderer;
 
 	private Item				item;
+
+	// Variables
 
 	private final static int	SLOT_DEFAULT_TEXTURE_ID	= Texture.loadTexture("slot").getTextureId();
 	private final static int	SLOT_HOVERED_TEXTURE_ID	= Texture.loadTexture("slot_hovered").getTextureId();
@@ -32,38 +31,45 @@ public class GuiSlot implements IGui
 	private Rectangle			slotRectangle;
 	private Rectangle			itemRectangle;
 
+	private long				lastClickTime;
+
 	// Constructor
 
-	public GuiSlot()
+	public GuiSlot(final RendererGuiSlot rendererIn)
 	{
+		this.setRenderer(rendererIn);
+
 		this.setSlotRectangle(new Rectangle(new Vector2f(), new Vector2f(1.0f, 1.0f)));
 		this.setItemRectangle(new Rectangle(new Vector2f(), new Vector2f(1.0f, 1.0f)));
 	}
 
-	public GuiSlot(final Item itemIn)
+	public GuiSlot(final RendererGuiSlot rendererIn, final Item itemIn)
 	{
+		this.setRenderer(rendererIn);
+
 		this.setItem(itemIn);
 		this.setSlotRectangle(new Rectangle(new Vector2f(), new Vector2f(1.0f, 1.0f)));
 		this.setItemRectangle(new Rectangle(new Vector2f(), new Vector2f(1.0f, 1.0f)));
 	}
 
-	public GuiSlot(final Item itemIn, final Vector2f slotPositionIn, final Vector2f slotSizeIn,
-			final Vector2f itemPositionIn, final Vector2f itemSizeIn)
+	public GuiSlot(final RendererGuiSlot rendererIn, final Item itemIn, final Vector2f slotPositionIn,
+			final Vector2f slotSizeIn, final Vector2f itemPositionIn, final Vector2f itemSizeIn)
 	{
+		this.setRenderer(rendererIn);
+
 		this.setItem(itemIn);
+
 		this.setSlotRectangle(new Rectangle(slotPositionIn, slotSizeIn));
 		this.setItemRectangle(new Rectangle(itemPositionIn, itemSizeIn));
 	}
 
 	// Interface methods
 
-	@Override
 	public void initialization()
 	{
 		this.setSlotActiveTextureId(GuiSlot.SLOT_DEFAULT_TEXTURE_ID);
 	}
 
-	@Override
 	public void update(final IWindow windowIn)
 	{
 		final var	cursor	= windowIn.getGlfwEventManager().getCallbacksManager().getCursorPosCallback().getCursor();
@@ -76,9 +82,19 @@ public class GuiSlot implements IGui
 		{
 			this.setSlotActiveTextureId(GuiSlot.getSlotHoveredTextureId());
 
-			if (windowIn.getGlfwEventManager().getCallbacksManager().getMouseButtonCallback()
-					.isPress(GLFW.GLFW_MOUSE_BUTTON_1))
+			var timeHasClick = windowIn.getGlfwEventManager().getCallbacksManager().getMouseButtonCallback()
+					.getTimeIsPress(GLFW.GLFW_MOUSE_BUTTON_1);
+
+			if (timeHasClick < 0)
 			{
+				timeHasClick = windowIn.getGlfwEventManager().getCallbacksManager().getMouseButtonCallback()
+						.getTimeIsHasPress(GLFW.GLFW_MOUSE_BUTTON_1);
+			}
+
+			if (timeHasClick > 0 && timeHasClick != this.getLastClickTime())
+			{
+				this.setLastClickTime(timeHasClick);
+
 				this.setSlotActiveTextureId(GuiSlot.getSlotClickTextureId());
 
 				final var cursorExtension = cursor.getCursorExtension();
@@ -142,40 +158,16 @@ public class GuiSlot implements IGui
 		}
 	}
 
-	@Override
-	public void draw(final ShaderGui shaderGuiIn)
-	{
-		GL30.glBindVertexArray(Shapes.getRectangleVaoId());
-
-		if (this.getItem() != null)
-		{
-			Texture.bind(this.getItem().getTexture().getTextureId());
-
-			shaderGuiIn.sendTransformationMatrix(Maths.getWorldMatrix(new Vector3f(
-					this.getSlotRectangle().getPosition().getX() + this.getItemRectangle().getPosition().getX(),
-					this.getSlotRectangle().getPosition().getY() + this.getItemRectangle().getPosition().getY(), 0.0F),
-					new Vector3f(0.0F, 0.0F, 0.0F), new Vector3f(this.getItemRectangle().getSize().getX(),
-							this.getItemRectangle().getSize().getY(), 1.0F)));
-
-			GL11.glDrawElements(GL11.GL_TRIANGLES, Shapes.getSurface2dindices().length, GL11.GL_UNSIGNED_INT, 0);
-		}
-
-		Texture.bind(this.getSlotActiveTextureId());
-
-		shaderGuiIn.sendTransformationMatrix(Maths.getWorldMatrix(
-				new Vector3f(this.getSlotRectangle().getPosition().getX(), this.getSlotRectangle().getPosition().getY(),
-						0.0F),
-				new Vector3f(0.0F, 0.0F, 0.0F), new Vector3f(this.getSlotRectangle().getSize().getX(),
-						this.getSlotRectangle().getSize().getY(), 1.0F)));
-
-		GL11.glDrawElements(GL11.GL_TRIANGLES, Shapes.getSurface2dindices().length, GL11.GL_UNSIGNED_INT, 0);
-
-		GL30.glBindVertexArray(0);
-	}
-
-	@Override
 	public void cleanup()
 	{
+	}
+
+	// Interface getter | setter
+
+	@Override
+	public RendererGuiSlot getRenderer()
+	{
+		return this.renderer;
 	}
 
 	// Getter | Setter
@@ -210,7 +202,7 @@ public class GuiSlot implements IGui
 		this.itemRectangle = itemRectangleIn;
 	}
 
-	private int getSlotActiveTextureId()
+	public int getSlotActiveTextureId()
 	{
 		return this.slotActiveTextureId;
 	}
@@ -235,5 +227,20 @@ public class GuiSlot implements IGui
 	private static int getSlotClickTextureId()
 	{
 		return GuiSlot.SLOT_CLICK_TEXTURE_ID;
+	}
+
+	private void setRenderer(final RendererGuiSlot rendererIn)
+	{
+		this.renderer = rendererIn;
+	}
+
+	public long getLastClickTime()
+	{
+		return this.lastClickTime;
+	}
+
+	public void setLastClickTime(final long lastClickTimeIn)
+	{
+		this.lastClickTime = lastClickTimeIn;
 	}
 }

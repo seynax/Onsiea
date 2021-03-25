@@ -10,7 +10,6 @@ import org.lwjgl.vulkan.VkQueueFamilyProperties;
 import org.lwjgl.vulkan.VkSurfaceCapabilitiesKHR;
 import org.lwjgl.vulkan.VkSurfaceFormatKHR;
 
-import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.vulkan.utils.VKUtil;
 
 // VulkanSurface
@@ -39,7 +38,7 @@ public class VulkanWindowSurface
 	// Constructor
 
 	VulkanWindowSurface(final VulkanInstance instanceIn, final VulkanPhysicalDevice physicalDeviceIn,
-			final VulkanDevice deviceIn, final IWindow windowIn)
+			final VulkanDevice deviceIn, final long windowHandleIn)
 	{
 		this.setInstance(instanceIn);
 		this.setDevice(deviceIn);
@@ -50,7 +49,7 @@ public class VulkanWindowSurface
 		final var	passVulkanSurfacePointer	= MemoryUtil.memAllocLong(1);
 
 		var			err							= GLFWVulkan.glfwCreateWindowSurface(instanceIn.getInstance(),
-				windowIn.getWindowHandle(), null, passVulkanSurfacePointer);
+				windowHandleIn, null, passVulkanSurfacePointer);
 
 		if (err != VK10.VK_SUCCESS)
 		{
@@ -191,10 +190,10 @@ public class VulkanWindowSurface
 
 	// Methods
 
-	public VulkanSwapchain createSwapchain(final IWindow windowIn)
+	public VulkanSwapchain createSwapchain(final long windowHandleIn, final int widthIn, final int heightIn)
 	{
 		final var swapchain = new VulkanSwapchain(this.getDevice(), this.getPhysicalDevice(),
-				this.getVulkanWindowSurfaceHandle(), windowIn, this.getSurfaceCapabilities(),
+				this.getVulkanWindowSurfaceHandle(), windowHandleIn, widthIn, heightIn, this.getSurfaceCapabilities(),
 				this.getPassSurfaceFormatBuffer(), this.getSurfaceFormatCount(), this.getPassSurfacePresentModeBuffer(),
 				this.getSurfacePresentModeCount());
 

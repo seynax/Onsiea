@@ -7,7 +7,6 @@ import org.lwjgl.vulkan.VkDevice;
 import org.lwjgl.vulkan.VkDeviceCreateInfo;
 import org.lwjgl.vulkan.VkDeviceQueueCreateInfo;
 
-import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.utils.BufferHelper;
 import fr.seynax.onsiea.vulkan.utils.VKUtil;
 
@@ -81,9 +80,9 @@ public class VulkanDevice
 		return VulkanBuffer.createBuffer(this.getPhysicalDevice(), this, dataIn);
 	}
 
-	public VulkanWindowSurface createVulkanWindowSurface(final IWindow windowIn)
+	public VulkanWindowSurface createVulkanWindowSurface(final long windowHandleIn)
 	{
-		return new VulkanWindowSurface(this.getInstance(), this.getPhysicalDevice(), this, windowIn);
+		return new VulkanWindowSurface(this.getInstance(), this.getPhysicalDevice(), this, windowHandleIn);
 	}
 
 	public void cleanup()

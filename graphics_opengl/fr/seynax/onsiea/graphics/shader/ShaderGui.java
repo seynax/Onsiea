@@ -14,7 +14,7 @@ public class ShaderGui extends ShaderProgram
 
 	public ShaderGui()
 	{
-		super("resources/shaders/guiVertex.glsl", "resources/shaders/guiFragment.glsl");
+		super("resources/shaders/GLSL/guiVertex.glsl", "resources/shaders/GLSL/guiFragment.glsl");
 	}
 
 	// Methods
