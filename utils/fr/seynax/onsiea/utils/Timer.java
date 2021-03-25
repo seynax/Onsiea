@@ -50,11 +50,11 @@ public class Timer
 		return elapsedTime;
 	}
 
-	public float getElapsedTimeToSeconds()
+	public double getElapsedTimeToSeconds()
 	{
 		final var	time		= Timer.getTime();
 
-		final var	elapsedTime	= (float) (Timer.convertToSeconds(time) - this.getLastTime());
+		final var	elapsedTime	= Timer.convertToSeconds(time) - Timer.convertToSeconds(this.getLastTime());
 
 		this.setLastTime(time);
 
