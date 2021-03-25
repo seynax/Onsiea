@@ -39,7 +39,7 @@ public class TechnicEngine implements Runnable
 
 		while (this.isRunning())
 		{
-			elpasedTime	= this.getTimer().getElapsedTime();
+			elpasedTime	= this.getTimer().getElapsedTimeToSeconds();
 
 			accumulator	+= elpasedTime;
 

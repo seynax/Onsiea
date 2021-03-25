@@ -104,7 +104,7 @@ public class GameEngine implements Runnable
 
 		while (GameEngine.isKeepOnRunning() && !this.getWindow().windowShouldClose())
 		{
-			elpasedTime	= this.getTimer().getElapsedTime();
+			elpasedTime	= this.getTimer().getElapsedTimeToSeconds();
 
 			accumulator	+= elpasedTime;
 
@@ -145,34 +145,11 @@ public class GameEngine implements Runnable
 		this.getGameLogic().update(intervalIn, this.getWindow());
 	}
 
-	/**
-	 * private long startRenderTime;
-	 *
-	 * private long endRenderTime;
-	 *
-	 * private long startDisplayTime; private long endDisplayTime;
-	 **/
-
 	protected void render()
 	{
-		// this.startRenderTime = System.nanoTime();
 		this.getGameLogic().render(this.getWindow());
-		// this.endRenderTime = System.nanoTime();
 
-		/**
-		 * System.out.println("[INFORMATION-GameEngine] Render time : " +
-		 * (this.endRenderTime - this.startRenderTime) / 1_000_000_000D);
-		 **/
-
-		// this.startDisplayTime = System.nanoTime();
 		this.getWindow().updateRender();
-		// this.endDisplayTime = System.nanoTime();
-
-		/**
-		 * System.out.println("[INFORMATION-GameEngine] Display time : " +
-		 * (this.endDisplayTime - this.startDisplayTime) / 1_000_000_000D);
-		 **/
-
 	}
 
 	protected void cleanup()
@@ -196,9 +173,9 @@ public class GameEngine implements Runnable
 
 	public void sync(final double secsPerFrameIn)
 	{
-		final var endTime = this.getTimer().getLastTime() + secsPerFrameIn;
+		final var endTime = Timer.convertToSeconds(this.getTimer().getLastTime()) + secsPerFrameIn;
 
-		while (Timer.getTime() < endTime)
+		while (Timer.getTimeToSeconds() < endTime)
 		{
 			GameEngine.sleep(1L);
 		}
