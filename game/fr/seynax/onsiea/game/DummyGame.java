@@ -59,7 +59,6 @@ public class DummyGame implements IGameLogic
 	private RendererGui										rendererGui;
 
 	private GuiInventory									gui;
-
 	private GuiScreenshots									guiScreenshots;
 
 	private ShaderGui										shaderGui;

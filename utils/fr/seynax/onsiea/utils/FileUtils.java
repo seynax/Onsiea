@@ -1,15 +1,51 @@
 package fr.seynax.onsiea.utils;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileUtils
 {
+	public final static boolean writeAll(final String filepathNameIn, final String contentIn)
+	{
+		BufferedWriter bufferedWriter = null;
+
+		try
+		{
+			bufferedWriter = new BufferedWriter(new FileWriter(new File(filepathNameIn)));
+
+			bufferedWriter.write(contentIn);
+		}
+		catch (final IOException e)
+		{
+			e.printStackTrace();
+
+			return false;
+		}
+		finally
+		{
+			if (bufferedWriter != null)
+			{
+				try
+				{
+					bufferedWriter.close();
+				}
+				catch (final IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return true;
+	}
+
 	public static List<String> loadLines(final String filetPathNameIn)
 	{
 		final var file = new File(filetPathNameIn);
