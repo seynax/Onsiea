@@ -28,6 +28,7 @@ import fr.seynax.onsiea.opengl.renderer.RendererGuiSlot;
 import fr.seynax.onsiea.opengl.shader.ShaderGui;
 import fr.seynax.onsiea.opengl.shader.ShaderProgram;
 import fr.seynax.onsiea.opengl.shader.ShaderScreenshot;
+import fr.seynax.onsiea.utils.FPSUtils;
 import fr.seynax.onsiea.utils.Texture;
 import fr.seynax.onsiea.utils.maths.Maths;
 
@@ -65,10 +66,12 @@ public class DummyGame implements IGameLogic
 	private ShaderScreenshot								shaderScreenshot;
 
 	private TechnicEngine									technicEngine;
-
 	private fr.seynax.onsiea.utils.maths.vector.Matrix4f	viewMatrix;
 
+	private long											last0		= System.nanoTime();
 	private long											last1		= System.nanoTime();
+
+	private FPSUtils										fpsUtils;
 
 	/**
 	 * private Mesh meshBoat; private GameItem boat; private Texture boatTexture;
@@ -305,17 +308,23 @@ public class DummyGame implements IGameLogic
 		 * " + b + " | A : " + a); } }
 		 **/
 
-		this.technicEngine = new TechnicEngine(this.camera, windowIn);
-
-		this.technicEngine.start();
-
 		GLFW.glfwSetCursorPos(windowIn.getWindowHandle(), windowIn.getWidth() / 2.0D, windowIn.getHeight() / 2.0D);
+
+		{
+			this.technicEngine = new TechnicEngine(this.camera, windowIn);
+			this.technicEngine.start();
+		}
+
+		{
+			this.fpsUtils = new FPSUtils();
+			this.fpsUtils.start();
+		}
 	}
 
 	@Override
 	public void input(final IWindow windowIn)
 	{
-		if (System.nanoTime() - this.last1 >= 1_000L)
+		if (System.nanoTime() - this.last1 >= 1_000_000L)
 		{
 			this.last1 = System.nanoTime();
 
@@ -331,59 +340,57 @@ public class DummyGame implements IGameLogic
 			{
 				this.setDirection(0);
 			}
+		}
 
-			/**
-			 * if (GLFW.glfwGetKey(windowIn.getWindowHandle(), GLFW.GLFW_KEY_F2) ==
-			 * GLFW.GLFW_PRESS) { GL11.glReadBuffer(GL11.GL_FRONT); final var width =
-			 * windowIn.getWidth(); final var height = windowIn.getHeight(); final var bpp =
-			 * 4; // Assuming a 32-bit // display with a byte // each for red, green, //
-			 * blue, and alpha. final var buffer = BufferUtils.createByteBuffer(width *
-			 * height * bpp); GL11.glReadPixels(0, 0, width, height, GL11.GL_RGBA,
-			 * GL11.GL_UNSIGNED_BYTE, buffer);
-			 *
-			 * this.gui.addScreenshot(Texture.loadTexture(buffer, width,
-			 * height).getTextureId()); }
-			 **/
+		/**
+		 * if (GLFW.glfwGetKey(windowIn.getWindowHandle(), GLFW.GLFW_KEY_F2) ==
+		 * GLFW.GLFW_PRESS) { GL11.glReadBuffer(GL11.GL_FRONT); final var width =
+		 * windowIn.getWidth(); final var height = windowIn.getHeight(); final var bpp =
+		 * 4; // Assuming a 32-bit // display with a byte // each for red, green, //
+		 * blue, and alpha. final var buffer = BufferUtils.createByteBuffer(width *
+		 * height * bpp); GL11.glReadPixels(0, 0, width, height, GL11.GL_RGBA,
+		 * GL11.GL_UNSIGNED_BYTE, buffer);
+		 *
+		 * this.gui.addScreenshot(Texture.loadTexture(buffer, width,
+		 * height).getTextureId()); }
+		 **/
 
-			if (windowIn.getGlfwEventManager().keyIsHasPress(GLFW.GLFW_KEY_P))
+		if (windowIn.getGlfwEventManager().keyIsHasPress(GLFW.GLFW_KEY_P))
+		{
+			this.gui.setOpen(!this.gui.isOpen());
+
+			if (this.gui.isOpen())
 			{
-				this.gui.setOpen(!this.gui.isOpen());
+				this.camera.setCanUpdate(false);
 
-				if (this.gui.isOpen())
-				{
-					this.camera.setCanUpdate(false);
-
-					windowIn.getGlfwEventManager().getCallbacksManager().menuView();
-				}
-				else
-				{
-					this.camera.setCanUpdate(true);
-
-					windowIn.getGlfwEventManager().getCallbacksManager().FPSView();
-				}
+				windowIn.getGlfwEventManager().getCallbacksManager().menuView();
 			}
-
-			if (windowIn.getGlfwEventManager().keyIsHasPress(GLFW.GLFW_KEY_O))
+			else
 			{
-				this.guiScreenshots.setOpen(!this.guiScreenshots.isOpen());
+				this.camera.setCanUpdate(true);
 
-				if (this.guiScreenshots.isOpen())
-				{
-					this.camera.setCanUpdate(false);
+				windowIn.getGlfwEventManager().getCallbacksManager().FPSView();
+			}
+		}
 
-					windowIn.getGlfwEventManager().getCallbacksManager().menuView();
-				}
-				else
-				{
-					this.camera.setCanUpdate(true);
+		if (windowIn.getGlfwEventManager().keyIsHasPress(GLFW.GLFW_KEY_O))
+		{
+			this.guiScreenshots.setOpen(!this.guiScreenshots.isOpen());
 
-					windowIn.getGlfwEventManager().getCallbacksManager().FPSView();
-				}
+			if (this.guiScreenshots.isOpen())
+			{
+				this.camera.setCanUpdate(false);
+
+				windowIn.getGlfwEventManager().getCallbacksManager().menuView();
+			}
+			else
+			{
+				this.camera.setCanUpdate(true);
+
+				windowIn.getGlfwEventManager().getCallbacksManager().FPSView();
 			}
 		}
 	}
-
-	long last0 = System.nanoTime();
 
 	@Override
 	public void update(final double intervalIn, final IWindow windowIn)
@@ -445,6 +452,7 @@ public class DummyGame implements IGameLogic
 				animatedItem.setRotationSpeed(speedRx, speedRy, speedRz);
 			}
 		}
+		this.camera.update(windowIn, 1.0D / 30.0D);
 	}
 
 	public boolean isIn(final Vector3f fromPositionIn, final float xMinIn, final float yMinIn, final float zMinIn,
@@ -678,11 +686,14 @@ public class DummyGame implements IGameLogic
 				Texture.bind(this.getGrassBlockTexture().getTextureId());
 
 				this.getRenderer().render(windowIn, this.getGameItems());
-
-				// Texture.bind(this.boatTexture.getTextureId());
-
-				// this.getRenderer().render(windowIn, this.boat);
 			}
+		}
+
+		final var title = this.fpsUtils.updateFPS();
+
+		if (title != null)
+		{
+			GLFW.glfwSetWindowTitle(windowIn.getWindowHandle(), title);
 		}
 	}
 

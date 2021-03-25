@@ -11,7 +11,7 @@ public class OpenGLTest
 	{
 		try
 		{
-			final var gameEng = new GameEngine("Onsiea", 1920, 1080, 60, true, 1, new DummyGame());
+			final var gameEng = new GameEngine("Onsiea", 1280, 720, 60, true, 1, new DummyGame());
 
 			gameEng.start();
 		}

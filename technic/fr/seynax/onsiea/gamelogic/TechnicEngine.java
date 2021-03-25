@@ -80,7 +80,7 @@ public class TechnicEngine implements Runnable
 	{
 		// Camera update
 
-		this.getCamera().update(intervalIn, this.getWindow());
+		this.getCamera().update(this.getWindow(), intervalIn);
 	}
 
 	public void cleanup()

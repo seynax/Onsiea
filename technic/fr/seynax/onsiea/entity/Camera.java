@@ -39,7 +39,7 @@ public class Camera
 
 	// Methods
 
-	public void update(final double intervalIn, final IWindow windowIn)
+	public void update(final IWindow windowIn, final double intervalIn)
 	{
 		if (!this.isCanUpdate())
 		{
