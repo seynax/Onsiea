@@ -34,7 +34,8 @@ public class TechnicEngine extends StoppableThread
 
 	// Methods
 
-	public void execute(final double intervalIn)
+	@Override
+	public boolean execute()
 	{
 		// Camera update
 
@@ -44,10 +45,12 @@ public class TechnicEngine extends StoppableThread
 
 		while (this.getAccumulator() >= this.getSecsPerUpdate())
 		{
-			this.getCamera().update(this.getWindow(), intervalIn);
+			this.getCamera().update(this.getWindow(), this.getSecsPerUpdate());
 
 			this.setAccumulator(this.getAccumulator() - this.getSecsPerUpdate());
 		}
+
+		return true;
 	}
 
 	// Getter | Setter
