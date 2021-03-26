@@ -14,6 +14,7 @@ import fr.seynax.onsiea.gamelogic.TechnicEngine;
 import fr.seynax.onsiea.gamelogic.item.AnimatedItem;
 import fr.seynax.onsiea.gamelogic.item.GameItem;
 import fr.seynax.onsiea.graphics.IWindow;
+import fr.seynax.onsiea.graphics.LWJGL;
 import fr.seynax.onsiea.graphics.gui.GuiScreenshots;
 import fr.seynax.onsiea.graphics.gui.inventory.GuiInventory;
 import fr.seynax.onsiea.graphics.gui.inventory.SlideItem;
@@ -22,6 +23,7 @@ import fr.seynax.onsiea.graphics.matter.Mesh;
 import fr.seynax.onsiea.graphics.matter.Shapes;
 import fr.seynax.onsiea.opengl.render.Renderer;
 import fr.seynax.onsiea.opengl.renderer.RendererGui;
+import fr.seynax.onsiea.opengl.renderer.RendererGuiElement;
 import fr.seynax.onsiea.opengl.renderer.RendererGuiInventory;
 import fr.seynax.onsiea.opengl.renderer.RendererGuiScreenshots;
 import fr.seynax.onsiea.opengl.renderer.RendererGuiSlot;
@@ -58,6 +60,7 @@ public class DummyGame implements IGameLogic
 	private RendererGuiSlot									rendererGuiSlot;
 	private RendererGuiScreenshots							rendererGuiScreenshots;
 	private RendererGui										rendererGui;
+	private RendererGuiElement								rendererGuiElement;
 
 	private GuiInventory									gui;
 	private GuiScreenshots									guiScreenshots;
@@ -88,6 +91,8 @@ public class DummyGame implements IGameLogic
 	@Override
 	public void initialization(final IWindow windowIn) throws Exception
 	{
+		LWJGL.enableDebugging();
+
 		this.setRenderer(new Renderer());
 
 		this.getRenderer().initialization(windowIn);
@@ -174,7 +179,7 @@ public class DummyGame implements IGameLogic
 
 		final var	mesh		= new Mesh(positions, new float[] {}, textCoords, indices);
 
-		final var	number		= 60;
+		final var	number		= 40_000;
 
 		this.setGameItems(new AnimatedItem[number]);
 
@@ -279,7 +284,9 @@ public class DummyGame implements IGameLogic
 
 			this.rendererGui			= new RendererGui();
 
-			this.guiScreenshots			= new GuiScreenshots(this.rendererGuiScreenshots, this.rendererGui);
+			this.rendererGuiElement		= new RendererGuiElement();
+
+			this.guiScreenshots			= new GuiScreenshots(this.rendererGuiScreenshots, this.rendererGuiElement);
 		}
 
 		/**
@@ -701,14 +708,16 @@ public class DummyGame implements IGameLogic
 	@Override
 	public void cleanup()
 	{
-		this.technicEngine.setRunning(false);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 
-		this.getRenderer().cleanup();
+		Texture.cleanUp();
 
 		for (final AnimatedItem gameItem : this.getGameItems())
 		{
-			gameItem.getMesh().cleanUp();
+			gameItem.getMesh().cleanup();
 		}
+
+		this.getRenderer().cleanup();
 
 		if (this.technicEngine.getThread().isAlive())
 		{
@@ -723,7 +732,6 @@ public class DummyGame implements IGameLogic
 
 			this.technicEngine.getThread().interrupt();
 		}
-
 	}
 
 	// Getter | Setter

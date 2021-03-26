@@ -6,7 +6,7 @@ import java.util.List;
 import fr.seynax.onsiea.gamelogic.item.TexturedRectangle;
 import fr.seynax.onsiea.graphics.IRenderable;
 import fr.seynax.onsiea.graphics.IWindow;
-import fr.seynax.onsiea.opengl.renderer.RendererGui;
+import fr.seynax.onsiea.opengl.renderer.RendererGuiElement;
 import fr.seynax.onsiea.opengl.renderer.RendererGuiScreenshots;
 import fr.seynax.onsiea.opengl.shader.ShaderGui;
 import fr.seynax.onsiea.utils.Texture;
@@ -36,7 +36,7 @@ public class GuiScreenshots implements IRenderable<ShaderGui, GuiScreenshots, Re
 
 	// Constructor
 
-	public GuiScreenshots(final RendererGuiScreenshots RendererIn, final RendererGui rendererGuiIn)
+	public GuiScreenshots(final RendererGuiScreenshots RendererIn, final RendererGuiElement rendererGuiIn)
 	{
 		this.setRenderer(RendererIn);
 

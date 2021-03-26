@@ -133,6 +133,30 @@ public class CallbacksManager
 		this.getKeyCallback().reset();
 	}
 
+	public void cleanup()
+	{
+		GLFW.glfwSetCharCallback(this.getWindow().getWindowHandle(), null).free();
+		GLFW.glfwSetCharModsCallback(this.getWindow().getWindowHandle(), null).free();
+		GLFW.glfwSetCursorEnterCallback(this.getWindow().getWindowHandle(), null).free();
+		GLFW.glfwSetCursorPosCallback(this.getWindow().getWindowHandle(), null).free();
+		GLFW.glfwSetDropCallback(this.getWindow().getWindowHandle(), null).free();
+		GLFW.glfwSetErrorCallback(null).free();
+		GLFW.glfwSetFramebufferSizeCallback(this.getWindow().getWindowHandle(), null).free();
+		GLFW.glfwSetJoystickCallback(null).free();
+		GLFW.glfwSetKeyCallback(this.getWindow().getWindowHandle(), null).free();
+		GLFW.glfwSetMonitorCallback(null).free();
+		GLFW.glfwSetMouseButtonCallback(this.getWindow().getWindowHandle(), null).free();
+		GLFW.glfwSetScrollCallback(this.getWindow().getWindowHandle(), null).free();
+		GLFW.glfwSetWindowCloseCallback(this.getWindow().getWindowHandle(), null).free();
+		GLFW.glfwSetWindowContentScaleCallback(this.getWindow().getWindowHandle(), null).free();
+		GLFW.glfwSetWindowFocusCallback(this.getWindow().getWindowHandle(), null).free();
+		GLFW.glfwSetWindowIconifyCallback(this.getWindow().getWindowHandle(), null).free();
+		GLFW.glfwSetWindowMaximizeCallback(this.getWindow().getWindowHandle(), null).free();
+		GLFW.glfwSetWindowPosCallback(this.getWindow().getWindowHandle(), null).free();
+		GLFW.glfwSetWindowRefreshCallback(this.getWindow().getWindowHandle(), null).free();
+		GLFW.glfwSetWindowSizeCallback(this.getWindow().getWindowHandle(), null).free();
+	}
+
 	// Getter | Setter
 
 	// Constructor variables

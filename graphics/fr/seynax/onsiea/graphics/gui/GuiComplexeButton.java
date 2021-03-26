@@ -5,21 +5,22 @@ import org.lwjgl.glfw.GLFW;
 import fr.seynax.onsiea.graphics.IRenderable;
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.opengl.IGuiElementData;
-import fr.seynax.onsiea.opengl.renderer.RendererGui;
+import fr.seynax.onsiea.opengl.renderer.RendererGuiElement;
 import fr.seynax.onsiea.opengl.shader.ShaderGui;
 import fr.seynax.onsiea.utils.Texture;
 import fr.seynax.onsiea.utils.maths.vector.Vector2f;
 
-public class GuiComplexeButton extends GuiButton implements IGuiElementData, IRenderable<ShaderGui, Gui, RendererGui>
+public class GuiComplexeButton extends GuiButton
+		implements IGuiElementData, IRenderable<ShaderGui, IGuiElementData, RendererGuiElement>
 {
 	// Constructor
 
-	public GuiComplexeButton(final RendererGui rendererIn)
+	public GuiComplexeButton(final RendererGuiElement rendererIn)
 	{
 		super(rendererIn);
 	}
 
-	public GuiComplexeButton(final RendererGui rendererIn, final Vector2f positionIn, final Vector2f sizeIn)
+	public GuiComplexeButton(final RendererGuiElement rendererIn, final Vector2f positionIn, final Vector2f sizeIn)
 	{
 		super(rendererIn, positionIn, sizeIn);
 	}

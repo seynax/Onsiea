@@ -9,16 +9,16 @@ import fr.seynax.onsiea.gamelogic.item.Rectangle;
 import fr.seynax.onsiea.graphics.IRenderable;
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.opengl.IGuiElementData;
-import fr.seynax.onsiea.opengl.renderer.RendererGui;
+import fr.seynax.onsiea.opengl.renderer.RendererGuiElement;
 import fr.seynax.onsiea.opengl.shader.ShaderGui;
 import fr.seynax.onsiea.utils.Texture;
 import fr.seynax.onsiea.utils.maths.vector.Vector2f;
 
-public class GuiButton implements IGuiElementData, IRenderable<ShaderGui, Gui, RendererGui>
+public class GuiButton implements IGuiElementData, IRenderable<ShaderGui, IGuiElementData, RendererGuiElement>
 {
 	// Constructor variables
 
-	private RendererGui				renderer;
+	private RendererGuiElement		renderer;
 
 	// Variables
 
@@ -34,7 +34,7 @@ public class GuiButton implements IGuiElementData, IRenderable<ShaderGui, Gui, R
 
 	// Constructor
 
-	public GuiButton(final RendererGui rendererIn)
+	public GuiButton(final RendererGuiElement rendererIn)
 	{
 		this.setRenderer(rendererIn);
 
@@ -43,7 +43,7 @@ public class GuiButton implements IGuiElementData, IRenderable<ShaderGui, Gui, R
 		this.setTextures(new HashMap<>());
 	}
 
-	public GuiButton(final RendererGui rendererIn, final Vector2f positionIn, final Vector2f sizeIn)
+	public GuiButton(final RendererGuiElement rendererIn, final Vector2f positionIn, final Vector2f sizeIn)
 	{
 		this.setRenderer(rendererIn);
 
@@ -124,7 +124,7 @@ public class GuiButton implements IGuiElementData, IRenderable<ShaderGui, Gui, R
 	}
 
 	@Override
-	public RendererGui getRenderer()
+	public RendererGuiElement getRenderer()
 	{
 		return this.renderer;
 	}
@@ -137,7 +137,7 @@ public class GuiButton implements IGuiElementData, IRenderable<ShaderGui, Gui, R
 
 	// Getter | Setter
 
-	public void setRenderer(final RendererGui rendererIn)
+	public void setRenderer(final RendererGuiElement rendererIn)
 	{
 		this.renderer = rendererIn;
 	}

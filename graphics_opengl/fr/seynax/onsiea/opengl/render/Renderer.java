@@ -40,7 +40,7 @@ public class Renderer
 
 	}
 
-	public static void openglInitialization()
+	public final static void openglInitialization()
 	{
 		GL.createCapabilities();
 
@@ -140,6 +140,9 @@ public class Renderer
 		{
 			this.getShaderProgram().cleanup();
 		}
+
+		GL.setCapabilities(null);
+		GL.destroy();
 	}
 
 	// Getter | Setter

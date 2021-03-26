@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 public class Texture
 {
@@ -273,6 +274,25 @@ public class Texture
 	public static void active(final int idIn)
 	{
 		GL13.glActiveTexture(idIn);
+	}
+
+	public static void cleanUp()
+	{
+		final var texturesIdBuffer = MemoryUtil.memAllocInt(Texture.getTextures().size());
+		for (final Texture texture : Texture.getTextures().values())
+		{
+			texturesIdBuffer.put(texture.getTextureId());
+		}
+		texturesIdBuffer.flip();
+
+		GL11.glDeleteTextures(texturesIdBuffer);
+
+		texturesIdBuffer.clear();
+
+		MemoryUtil.memFree(texturesIdBuffer);
+
+		Texture.getTextures().clear();
+		Texture.getIntbuffer().clear();
 	}
 
 	public static void cleanUp(final int textureIdIn)

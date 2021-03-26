@@ -48,6 +48,8 @@ public interface IWindow
 
 	void updateFullscreen(final boolean isFullscreenIn);
 
+	void cleanup();
+
 	// Variables
 
 	GLFWEventManager getGlfwEventManager();

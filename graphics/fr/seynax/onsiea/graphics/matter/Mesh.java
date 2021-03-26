@@ -239,7 +239,7 @@ public class Mesh
 		GL30.glBindVertexArray(0);
 	}
 
-	public void cleanUp()
+	public void cleanup()
 	{
 		GL20.glDisableVertexAttribArray(2);
 		GL20.glDisableVertexAttribArray(1);
@@ -248,6 +248,11 @@ public class Mesh
 		// Delete the VBO
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 		GL15.glDeleteBuffers(this.getVboId());
+
+		GL15.glDeleteBuffers(this.getColourVboId());
+		GL15.glDeleteBuffers(this.getTextureCoordinatesId());
+		GL15.glDeleteBuffers(this.getVboId());
+		GL15.glDeleteBuffers(this.getIndicesId());
 
 		// Delete the VAO
 		GL30.glBindVertexArray(0);

@@ -155,6 +155,8 @@ public class GameEngine implements Runnable
 	protected void cleanup()
 	{
 		this.getGameLogic().cleanup();
+
+		this.getWindow().cleanup();
 	}
 
 	// Add

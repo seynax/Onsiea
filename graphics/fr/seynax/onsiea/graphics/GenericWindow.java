@@ -274,6 +274,14 @@ public class GenericWindow implements IWindow
 		return GLFW.glfwWindowShouldClose(this.getWindowHandle());
 	}
 
+	@Override
+	public void cleanup()
+	{
+		this.getGlfwEventManager().getCallbacksManager().cleanup();
+		GLFW.glfwDestroyWindow(this.getWindowHandle());
+		GLFW.glfwTerminate();
+	}
+
 	// Getter | Setter
 
 	// Constructor variables
