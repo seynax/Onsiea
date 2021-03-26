@@ -33,6 +33,7 @@ import fr.seynax.onsiea.opengl.shader.ShaderScreenshot;
 import fr.seynax.onsiea.utils.Timer;
 import fr.seynax.onsiea.utils.maths.Maths;
 import fr.seynax.onsiea.utils.performances.FPSUtils;
+import fr.seynax.onsiea.utils.performances.ProfilerSystem;
 
 public class DummyGame implements IGameLogic
 {
@@ -71,6 +72,8 @@ public class DummyGame implements IGameLogic
 
 	private FPSUtils										fpsUtils;
 
+	private final ProfilerSystem							profilerSystem;
+
 	/**
 	 * private Mesh meshBoat; private GameItem boat; private Texture boatTexture;
 	 **/
@@ -79,6 +82,9 @@ public class DummyGame implements IGameLogic
 
 	public DummyGame()
 	{
+		this.profilerSystem = new ProfilerSystem();
+
+		this.profilerSystem.add("initialization", "input", "update", "render", "cleanup");
 	}
 
 	// Methods
@@ -86,6 +92,7 @@ public class DummyGame implements IGameLogic
 	@Override
 	public void initialization(final IWindow windowIn) throws Exception
 	{
+		this.profilerSystem.start("initialization");
 
 		if (GraphicsConstants.isDebug())
 		{
@@ -318,11 +325,15 @@ public class DummyGame implements IGameLogic
 			this.fpsUtils = new FPSUtils();
 			this.fpsUtils.start();
 		}
+
+		this.profilerSystem.stop("initialization");
 	}
 
 	@Override
 	public void input(final IWindow windowIn)
 	{
+		this.profilerSystem.start("input");
+
 		if (this.timer0.getElapsedTime() >= 1_000_000L)
 		{
 			this.timer0.start();
@@ -376,11 +387,15 @@ public class DummyGame implements IGameLogic
 				windowIn.getGlfwEventManager().getCallbacksManager().FPSView();
 			}
 		}
+
+		this.profilerSystem.stop("input");
 	}
 
 	@Override
 	public void update(final double intervalIn, final IWindow windowIn)
 	{
+		this.profilerSystem.start("update");
+
 		this.setColor(this.getColor() + this.getDirection() * 0.01f);
 
 		if (this.getColor() > 1)
@@ -439,6 +454,8 @@ public class DummyGame implements IGameLogic
 			}
 		}
 		this.camera.update(windowIn, 1.0D / 30.0D);
+
+		this.profilerSystem.stop("update");
 	}
 
 	public boolean isIn(final Vector3f fromPositionIn, final float xMinIn, final float yMinIn, final float zMinIn,
@@ -451,6 +468,8 @@ public class DummyGame implements IGameLogic
 	@Override
 	public void render(final IWindow windowIn)
 	{
+		this.profilerSystem.start("render");
+
 		final var lastState = this.camera.isCanUpdate();
 
 		this.camera.setCanUpdate(false);
@@ -636,11 +655,15 @@ public class DummyGame implements IGameLogic
 		{
 			OpenGL.showAllError();
 		}
+
+		this.profilerSystem.stop("render");
 	}
 
 	@Override
 	public void cleanup()
 	{
+		this.profilerSystem.start("cleanup");
+
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 
 		Texture.cleanUp();
@@ -654,6 +677,10 @@ public class DummyGame implements IGameLogic
 		OpenGL.cleanup();
 
 		this.technicEngine.stop();
+
+		this.profilerSystem.stop("cleanup");
+
+		System.out.println(this.profilerSystem.report());
 	}
 
 	// Getter | Setter
