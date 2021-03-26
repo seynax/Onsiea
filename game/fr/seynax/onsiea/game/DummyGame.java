@@ -1,9 +1,6 @@
 package fr.seynax.onsiea.game;
 
-import java.nio.ByteBuffer;
-
 import org.joml.Vector3f;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
@@ -13,6 +10,7 @@ import fr.seynax.onsiea.gamelogic.IGameLogic;
 import fr.seynax.onsiea.gamelogic.TechnicEngine;
 import fr.seynax.onsiea.gamelogic.item.AnimatedItem;
 import fr.seynax.onsiea.gamelogic.item.GameItem;
+import fr.seynax.onsiea.graphics.GraphicsConstants;
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.graphics.LWJGL;
 import fr.seynax.onsiea.graphics.gui.GuiScreenshots;
@@ -21,8 +19,9 @@ import fr.seynax.onsiea.graphics.gui.inventory.SlideItem;
 import fr.seynax.onsiea.graphics.input.CursorExtensionMenu;
 import fr.seynax.onsiea.graphics.matter.Mesh;
 import fr.seynax.onsiea.graphics.matter.Shapes;
+import fr.seynax.onsiea.opengl.OpenGL;
+import fr.seynax.onsiea.opengl.OpenGLConstants;
 import fr.seynax.onsiea.opengl.render.Renderer;
-import fr.seynax.onsiea.opengl.renderer.RendererGui;
 import fr.seynax.onsiea.opengl.renderer.RendererGuiElement;
 import fr.seynax.onsiea.opengl.renderer.RendererGuiInventory;
 import fr.seynax.onsiea.opengl.renderer.RendererGuiScreenshots;
@@ -59,7 +58,6 @@ public class DummyGame implements IGameLogic
 	private RendererGuiInventory							rendererGuiInventory;
 	private RendererGuiSlot									rendererGuiSlot;
 	private RendererGuiScreenshots							rendererGuiScreenshots;
-	private RendererGui										rendererGui;
 	private RendererGuiElement								rendererGuiElement;
 
 	private GuiInventory									gui;
@@ -91,11 +89,28 @@ public class DummyGame implements IGameLogic
 	@Override
 	public void initialization(final IWindow windowIn) throws Exception
 	{
-		LWJGL.enableDebugging();
 
-		this.setRenderer(new Renderer());
+		if (GraphicsConstants.isDebug())
+		{
+			LWJGL.enableDebugging();
+			OpenGL.enableDebugging();
+		}
+		else
+		{
+			LWJGL.disableDebugging();
+			OpenGL.disableDebugging();
+		}
 
-		this.getRenderer().initialization(windowIn);
+		if (GraphicsConstants.isDebugStack())
+		{
+			LWJGL.enableDebugStack();
+		}
+		else
+		{
+			LWJGL.disableDebugStack();
+		}
+
+		this.setRenderer(new Renderer(windowIn));
 
 		final var	positions	= new float[] {
 				// V0
@@ -227,21 +242,6 @@ public class DummyGame implements IGameLogic
 
 		this.setGrassBlockTexture(Texture.loadTexture("cyan"));
 
-		final var face = new Mesh(Shapes.getSurface(), Shapes.getSurfaceColours(),
-				Shapes.getSurfaceTextureCoordinates(), Shapes.getSurfaceIndices());
-
-		this.view = new GameItem(face);
-
-		this.view.setPosition(0.0f, 0.0f, -1.6f);
-		this.view.setRotation(0.0f, 0.0f, 0.0f);
-		this.view.setScale(4.0f);
-
-		this.view1 = new GameItem(face);
-
-		this.view1.setPosition(10.5f, 0.0f, -1.6f);
-		this.view1.setRotation(0.0f, 0.0f, 0.0f);
-		this.view1.setScale(4.0f);
-
 		this.camera		= new Camera();
 		this.viewMatrix	= Maths.convert(this.camera.getViewMatrix());
 
@@ -282,21 +282,10 @@ public class DummyGame implements IGameLogic
 
 			this.rendererGuiScreenshots	= new RendererGuiScreenshots();
 
-			this.rendererGui			= new RendererGui();
-
 			this.rendererGuiElement		= new RendererGuiElement();
 
 			this.guiScreenshots			= new GuiScreenshots(this.rendererGuiScreenshots, this.rendererGuiElement);
 		}
-
-		/**
-		 * this.meshBoat = OBJLoader.load("D:\\Utilisateurs\\Seynax\\Objects 3D\\Galion
-		 * Modèle SVM6.obj");
-		 *
-		 * this.boat = new GameItem(this.meshBoat);
-		 *
-		 * this.boatTexture = Texture.loadTexture("boat");
-		 **/
 
 		/**
 		 * final var image =
@@ -315,6 +304,7 @@ public class DummyGame implements IGameLogic
 		 * " + b + " | A : " + a); } }
 		 **/
 
+		// Timer
 		{
 			this.timer0	= new Timer();
 			this.timer1	= new Timer();
@@ -338,6 +328,8 @@ public class DummyGame implements IGameLogic
 	{
 		if (this.timer0.getElapsedTime() >= 1_000_000L)
 		{
+			this.timer0.start();
+
 			if (windowIn.getGlfwEventManager().keyIsPress(GLFW.GLFW_KEY_UP))
 			{
 				this.setDirection(1);
@@ -351,19 +343,6 @@ public class DummyGame implements IGameLogic
 				this.setDirection(0);
 			}
 		}
-
-		/**
-		 * if (GLFW.glfwGetKey(windowIn.getWindowHandle(), GLFW.GLFW_KEY_F2) ==
-		 * GLFW.GLFW_PRESS) { GL11.glReadBuffer(GL11.GL_FRONT); final var width =
-		 * windowIn.getWidth(); final var height = windowIn.getHeight(); final var bpp =
-		 * 4; // Assuming a 32-bit // display with a byte // each for red, green, //
-		 * blue, and alpha. final var buffer = BufferUtils.createByteBuffer(width *
-		 * height * bpp); GL11.glReadPixels(0, 0, width, height, GL11.GL_RGBA,
-		 * GL11.GL_UNSIGNED_BYTE, buffer);
-		 *
-		 * this.gui.addScreenshot(Texture.loadTexture(buffer, width,
-		 * height).getTextureId()); }
-		 **/
 
 		if (windowIn.getGlfwEventManager().keyIsHasPress(GLFW.GLFW_KEY_P))
 		{
@@ -447,6 +426,8 @@ public class DummyGame implements IGameLogic
 
 			if (this.timer1.getElapsedTime() >= 1_000_000_000L)
 			{
+				this.timer1.start();
+
 				final var	speedX	= (Maths.randInt(0, 1) + Maths.randFloat()) * 10.0f;
 				final var	speedY	= (Maths.randInt(0, 1) + Maths.randFloat()) * 10.0f;
 				final var	speedZ	= (Maths.randInt(0, 1) + Maths.randFloat()) * 10.0f;
@@ -470,64 +451,9 @@ public class DummyGame implements IGameLogic
 				&& fromPositionIn.x() <= xMaxIn && fromPositionIn.y() <= yMaxIn && fromPositionIn.z() <= zMaxIn;
 	}
 
-	final int[]			ints			= new int[1920 * 1080 * 4];
-	final ByteBuffer	otherByteBuffer	= BufferUtils.createByteBuffer(this.ints.length * 4);
-
-	Texture				viewTexture;
-
-	private GameItem	view;
-	private GameItem	view1;
-
-	long				last			= 0;
-
 	@Override
 	public void render(final IWindow windowIn)
 	{
-		/**
-		 * if (System.nanoTime() - this.last >= 1_000_000_000) { this.last =
-		 * System.nanoTime();
-		 *
-		 * GL11.glReadPixels(0, 0, 1920, 1080, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE,
-		 * this.ints);
-		 *
-		 * for (final int pixel : this.ints) { final var r = (byte) (pixel >> 16 &
-		 * 0xFF); final var g = (byte) (pixel >> 8 & 0xFF); final var b = (byte) (pixel
-		 * & 0xFF); final var a = (byte) (pixel >> 24 & 0xFF);
-		 *
-		 * // // if (r == 0.0f && g == 0.0f && b == 0.0f || a == 0.0f) { //
-		 * this.otherByteBuffer.put((byte) 1); this.otherByteBuffer.put((byte) 1); //
-		 * this.otherByteBuffer.put((byte) 1); this.otherByteBuffer.put((byte) 1); } //
-		 * else {
-		 *
-		 *
-		 * // if (r == 0 && b == 0 && g == 0) { this.otherByteBuffer.put((byte) (255 &
-		 * 0xFF // << 16)); this.otherByteBuffer.put((byte) (255 & 0xFF << 8)); //
-		 * this.otherByteBuffer.put((byte) (255 & 0xFF)); //
-		 * this.otherByteBuffer.put((byte) (255 & 0xFF << 24)); } else {
-		 *
-		 * this.otherByteBuffer.put((byte) pixel);
-		 *
-		 * // } // } }
-		 *
-		 * this.otherByteBuffer.flip();
-		 *
-		 * if (this.viewTexture == null) { this.viewTexture =
-		 * Texture.loadTexture(this.otherByteBuffer, 1920, 1080); } else {
-		 * Texture.bind(this.viewTexture.getTextureId());
-		 *
-		 * GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, 1920, 1080, 0,
-		 * GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, this.otherByteBuffer);
-		 *
-		 * GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D); //
-		 * STBImage.stbi_image_free(this.byteBuffer);
-		 *
-		 * Texture.unbind(); } }
-		 *
-		 * Texture.bind(this.viewTexture.getTextureId());
-		 *
-		 * this.getRenderer().render(windowIn, this.view);
-		 **/
-
 		final var lastState = this.camera.isCanUpdate();
 
 		this.camera.setCanUpdate(false);
@@ -697,11 +623,21 @@ public class DummyGame implements IGameLogic
 			}
 		}
 
-		final var title = this.fpsUtils.updateFPS();
-
-		if (title != null)
+		if (GraphicsConstants.isFpsShowing())
 		{
-			GLFW.glfwSetWindowTitle(windowIn.getWindowHandle(), title);
+			final var title = this.fpsUtils.updateFPS();
+
+			if (title != null)
+			{
+				GLFW.glfwSetWindowTitle(windowIn.getWindowHandle(), title);
+			}
+		}
+
+		// Debugging
+
+		if (OpenGLConstants.isShowError())
+		{
+			OpenGL.showAllError();
 		}
 	}
 
@@ -718,12 +654,15 @@ public class DummyGame implements IGameLogic
 		}
 
 		this.getRenderer().cleanup();
+		OpenGL.cleanup();
 
-		if (this.technicEngine.getThread().isAlive())
+		this.technicEngine.setRunning(false);
+
+		while (this.technicEngine.getThread().isAlive())
 		{
 			try
 			{
-				Thread.sleep(1000);
+				Thread.sleep(400);
 			}
 			catch (final InterruptedException e)
 			{

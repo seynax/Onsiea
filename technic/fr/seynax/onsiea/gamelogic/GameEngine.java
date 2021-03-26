@@ -3,7 +3,7 @@ package fr.seynax.onsiea.gamelogic;
 import fr.seynax.onsiea.graphics.GraphicsConstants;
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.graphics.matter.Shapes;
-import fr.seynax.onsiea.opengl.OpenGLInitializer;
+import fr.seynax.onsiea.opengl.OpenGLScreenshot;
 import fr.seynax.onsiea.opengl.OpenGLWindow;
 import fr.seynax.onsiea.utils.Timer;
 
@@ -82,10 +82,9 @@ public class GameEngine implements Runnable
 		this.setTimer(new Timer());
 
 		this.getWindow().initialization(1.0D / GameEngine.getTargetUps());
+		OpenGLScreenshot.resize(this.getWindow());
 
-		OpenGLInitializer.initialize(this.getWindow());
-
-		this.getTimer().initialization();
+		this.getTimer().start();
 
 		Shapes.initialization();
 
@@ -104,7 +103,7 @@ public class GameEngine implements Runnable
 
 		while (GameEngine.isKeepOnRunning() && !this.getWindow().windowShouldClose())
 		{
-			elpasedTime	= this.getTimer().getElapsedTimeToSeconds();
+			elpasedTime	= this.getTimer().getElapsedTimeToSecondsAndRestart();
 
 			accumulator	+= elpasedTime;
 

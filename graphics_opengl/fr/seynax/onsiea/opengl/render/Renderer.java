@@ -1,12 +1,12 @@
 package fr.seynax.onsiea.opengl.render;
 
-import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
 import fr.seynax.onsiea.gamelogic.item.AnimatedItem;
 import fr.seynax.onsiea.gamelogic.item.GameItem;
 import fr.seynax.onsiea.graphics.GraphicsConstants;
 import fr.seynax.onsiea.graphics.IWindow;
+import fr.seynax.onsiea.opengl.OpenGLScreenshot;
 import fr.seynax.onsiea.opengl.shader.BaseColourShader;
 import fr.seynax.onsiea.utils.maths.Maths;
 
@@ -20,13 +20,7 @@ public class Renderer
 
 	// Constructor
 
-	public Renderer()
-	{
-	}
-
-	// Methods
-
-	public void initialization(final IWindow windowIn)
+	public Renderer(final IWindow windowIn)
 	{
 		Maths.initialization(windowIn);
 
@@ -38,16 +32,9 @@ public class Renderer
 
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 
-	}
-
-	public final static void openglInitialization()
-	{
-		GL.createCapabilities();
-
-		// Set the clear color
-
 		GL11.glClearColor(GraphicsConstants.getDefaultColorR(), GraphicsConstants.getDefaultColorG(),
 				GraphicsConstants.getDefaultColorB(), GraphicsConstants.getDefaultColorA());
+
 	}
 
 	public void clear()
@@ -73,6 +60,8 @@ public class Renderer
 		if (windowIn.getGlfwEventManager().getCallbacksManager().getFramebufferSizeCallback().isResized())
 		{
 			GL11.glViewport(0, 0, windowIn.getWidth(), windowIn.getHeight());
+
+			OpenGLScreenshot.resize(windowIn);
 
 			windowIn.getGlfwEventManager().getCallbacksManager().getFramebufferSizeCallback().setResized(false);
 		}
@@ -140,9 +129,6 @@ public class Renderer
 		{
 			this.getShaderProgram().cleanup();
 		}
-
-		GL.setCapabilities(null);
-		GL.destroy();
 	}
 
 	// Getter | Setter

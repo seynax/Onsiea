@@ -4,8 +4,8 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryUtil;
 
 import fr.seynax.onsiea.graphics.GenericWindow;
+import fr.seynax.onsiea.graphics.GraphicsConstants;
 import fr.seynax.onsiea.graphics.callbacks.GLFWEventManager;
-import fr.seynax.onsiea.opengl.render.Renderer;
 
 public class OpenGLWindow extends GenericWindow
 {
@@ -38,7 +38,7 @@ public class OpenGLWindow extends GenericWindow
 
 		// WindowHint
 
-		this.initializeWindowHintsFirstPhase(false);
+		this.initializeWindowHintsFirstPhase(GraphicsConstants.isDebug());
 
 		// Fullscreen
 
@@ -75,9 +75,7 @@ public class OpenGLWindow extends GenericWindow
 			GLFW.glfwSwapInterval(1);
 		}
 
-		GLFW.glfwMakeContextCurrent(this.getWindowHandle());
-
-		Renderer.openglInitialization();
+		OpenGL.initialization(this);
 
 		this.getGlfwEventManager().initialization(intervalIn);
 

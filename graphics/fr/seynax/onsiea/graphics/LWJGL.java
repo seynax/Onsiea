@@ -14,8 +14,17 @@ public class LWJGL
 		Configuration.DEBUG_LOADER.set(true);
 		Configuration.DEBUG_MEMORY_ALLOCATOR.set(true);
 		Configuration.DEBUG_MEMORY_ALLOCATOR_INTERNAL.set(true);
-		// Configuration.DEBUG_STACK.set(true);
 		Configuration.DEBUG_STREAM.set(true);
+	}
+
+	public final static void enableDebugStack()
+	{
+		Configuration.DEBUG_STACK.set(true);
+	}
+
+	public final static void disableDebugStack()
+	{
+		Configuration.DEBUG_STACK.set(false);
 	}
 
 	public static void disableDebugging()

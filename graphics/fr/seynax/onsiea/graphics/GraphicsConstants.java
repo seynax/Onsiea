@@ -6,6 +6,10 @@ public class GraphicsConstants
 {
 	// Constants
 
+	private final static boolean	DEBUG				= false;
+	private final static boolean	DEBUG_STACK			= false;
+	private final static boolean	FPS_SHOWING			= true;
+
 	// Ratio
 	// 16 / 9
 
@@ -72,6 +76,23 @@ public class GraphicsConstants
 	private static final boolean	FULLSCREEN			= false;
 
 	// Constants getter
+
+	// Debug
+
+	public static boolean isDebug()
+	{
+		return GraphicsConstants.DEBUG;
+	}
+
+	public static boolean isDebugStack()
+	{
+		return GraphicsConstants.DEBUG_STACK;
+	}
+
+	public static boolean isFpsShowing()
+	{
+		return GraphicsConstants.FPS_SHOWING;
+	}
 
 	// Ratio
 
