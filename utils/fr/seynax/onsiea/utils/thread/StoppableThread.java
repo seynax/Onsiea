@@ -6,21 +6,17 @@ public class StoppableThread implements IStoppableThread
 {
 	// Variables
 
-	private static int	threadNumber	= 0;
+	private boolean	running;
 
-	private boolean		running;
+	private Thread	thread;
 
-	private Thread		thread;
-
-	private String		name;
+	private String	name;
 
 	// Constructor
 
 	public StoppableThread()
 	{
-		this.setName("THREAD-" + StoppableThread.getThreadNumber());
-
-		StoppableThread.setThreadNumber(StoppableThread.getThreadNumber() + 1);
+		this.setName("THREAD-" + ThreadManager.addThreadNumber());
 	}
 
 	public StoppableThread(final String nameIn)
@@ -69,18 +65,6 @@ public class StoppableThread implements IStoppableThread
 	public boolean execute()
 	{
 		return false;
-	}
-
-	// Static getter | setter
-
-	public final static int getThreadNumber()
-	{
-		return StoppableThread.threadNumber;
-	}
-
-	public final static void setThreadNumber(final int threadNumberIn)
-	{
-		StoppableThread.threadNumber = threadNumberIn;
 	}
 
 	// Interface getter

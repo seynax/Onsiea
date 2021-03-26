@@ -7,7 +7,9 @@ public class ThreadManager
 {
 	// Variables
 
-	private Map<String, IStoppableThread> threads;
+	private Map<String, IStoppableThread>	threads;
+
+	private static int						threadNumber	= 0;
 
 	// Constructor
 
@@ -49,9 +51,25 @@ public class ThreadManager
 		return functionThread.getName();
 	}
 
-	public void put(final String threadNameIn, final IThreadExecutionFunction threadExecutionFunctionIn)
+	public String put(final String threadNameIn, final IThreadExecutionFunction threadExecutionFunctionIn)
 	{
-		this.getThreads().put(threadNameIn, new FunctionThread(threadNameIn, threadExecutionFunctionIn));
+		var i = 0;
+
+		while (this.getThreads().containsKey(threadNameIn))
+		{
+			i++;
+		}
+
+		var threadName = threadNameIn;
+
+		if (i > 0)
+		{
+			threadName += "-" + i;
+		}
+
+		this.getThreads().put(threadName, new FunctionThread(threadName, threadExecutionFunctionIn));
+
+		return threadName;
 	}
 
 	public void put(final IStoppableThread... threadsRunnableIn)
@@ -111,6 +129,23 @@ public class ThreadManager
 		{
 			stoppableThread.stop();
 		}
+	}
+
+	// Static getter | setter
+
+	public final static int getThreadNumber()
+	{
+		return ThreadManager.threadNumber;
+	}
+
+	public final static void setThreadNumber(final int threadNumberIn)
+	{
+		ThreadManager.threadNumber = threadNumberIn;
+	}
+
+	public final static int addThreadNumber()
+	{
+		return ThreadManager.threadNumber++;
 	}
 
 	// Getter | Setter

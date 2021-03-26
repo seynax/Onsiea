@@ -3,7 +3,6 @@ package fr.seynax.onsiea.opengl;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.ByteBuffer;
-import java.util.Calendar;
 
 import javax.imageio.ImageIO;
 
@@ -11,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
 import fr.seynax.onsiea.graphics.IWindow;
+import fr.seynax.onsiea.utils.Date;
 import fr.seynax.onsiea.utils.Texture;
 
 public class OpenGLScreenshot
@@ -50,12 +50,7 @@ public class OpenGLScreenshot
 
 	public static boolean write(final BufferedImage bufferedImageIn)
 	{
-		// Tries to create an image, otherwise throws an exception.
-		final var	name			= Calendar.getInstance().get(Calendar.MONTH) + 1 + "."
-				+ Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.HOUR)
-				+ "." + Calendar.getInstance().get(Calendar.MINUTE) + "."
-				+ (Calendar.getInstance().get(Calendar.SECOND) + 1);
-		final var	saveDirectory	= new File("resources/screenshots/");
+		final var saveDirectory = new File("resources/screenshots/");
 
 		if (!saveDirectory.exists())
 		{
@@ -65,8 +60,9 @@ public class OpenGLScreenshot
 			}
 		}
 
-		final var	file	= new File(saveDirectory + "/" + name + ".png");	// The file to save the pixels too.
-		final var	format	= "png";											// "PNG" or "JPG".
+		final var	file	= new File(saveDirectory + "/" + Date.getDate() + ".png");	// The file to save the pixels
+																						// too.
+		final var	format	= "png";													// "PNG" or "JPG".
 
 		// Tries to create image.
 		try

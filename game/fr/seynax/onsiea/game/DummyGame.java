@@ -52,9 +52,6 @@ public class DummyGame implements IGameLogic
 
 	private Camera											camera;
 
-	// private OpenGLFramebuffer framebuffer0;
-	// private OpenGLFramebuffer framebuffer1;
-
 	private RendererGuiInventory							rendererGuiInventory;
 	private RendererGuiSlot									rendererGuiSlot;
 	private RendererGuiScreenshots							rendererGuiScreenshots;
