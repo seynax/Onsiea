@@ -64,7 +64,7 @@ import org.lwjgl.vulkan.VkVertexInputAttributeDescription;
 import org.lwjgl.vulkan.VkVertexInputBindingDescription;
 import org.lwjgl.vulkan.VkViewport;
 
-import fr.seynax.onsiea.utils.FPSUtils;
+import fr.seynax.onsiea.utils.performances.FPSUtils;
 import fr.seynax.onsiea.vulkan.utils.DisallowVKUtil;
 
 /**

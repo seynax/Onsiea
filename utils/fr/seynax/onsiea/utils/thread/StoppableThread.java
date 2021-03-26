@@ -22,6 +22,8 @@ public class StoppableThread implements IStoppableThread
 	public StoppableThread(final String nameIn)
 	{
 		this.setName(nameIn);
+
+		ThreadManager.addThreadNumber();
 	}
 
 	// Interface methods

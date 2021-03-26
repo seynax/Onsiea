@@ -6,8 +6,6 @@ public class FunctionThread implements IStoppableThread
 {
 	// Variables
 
-	private static int					threadNumber	= 0;
-
 	private boolean						running;
 
 	private Thread						thread;
@@ -20,9 +18,7 @@ public class FunctionThread implements IStoppableThread
 
 	public FunctionThread(final IThreadExecutionFunction threadExecutionFunctionIn)
 	{
-		this.setName("THREAD-" + FunctionThread.getThreadNumber());
-
-		FunctionThread.setThreadNumber(FunctionThread.getThreadNumber() + 1);
+		this.setName("THREAD-" + ThreadManager.addThreadNumber());
 
 		this.setThreadExecutionFunction(threadExecutionFunctionIn);
 	}
@@ -32,6 +28,8 @@ public class FunctionThread implements IStoppableThread
 		this.setName(nameIn);
 
 		this.setThreadExecutionFunction(threadExecutionFunctionIn);
+
+		ThreadManager.addThreadNumber();
 	}
 
 	// Interface methods
@@ -75,18 +73,6 @@ public class FunctionThread implements IStoppableThread
 	public boolean execute()
 	{
 		return this.getThreadExecutionFunction().execute();
-	}
-
-	// Static getter | setter
-
-	public final static int getThreadNumber()
-	{
-		return FunctionThread.threadNumber;
-	}
-
-	public final static void setThreadNumber(final int threadNumberIn)
-	{
-		FunctionThread.threadNumber = threadNumberIn;
 	}
 
 	// Interface getter

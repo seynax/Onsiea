@@ -30,9 +30,9 @@ import fr.seynax.onsiea.opengl.renderer.RendererGuiSlot;
 import fr.seynax.onsiea.opengl.shader.ShaderGui;
 import fr.seynax.onsiea.opengl.shader.ShaderProgram;
 import fr.seynax.onsiea.opengl.shader.ShaderScreenshot;
-import fr.seynax.onsiea.utils.FPSUtils;
 import fr.seynax.onsiea.utils.Timer;
 import fr.seynax.onsiea.utils.maths.Maths;
+import fr.seynax.onsiea.utils.performances.FPSUtils;
 
 public class DummyGame implements IGameLogic
 {
