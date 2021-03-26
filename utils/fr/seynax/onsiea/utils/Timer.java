@@ -14,12 +14,12 @@ public class Timer
 
 	public Timer()
 	{
-
+		this.start();
 	}
 
 	// Methods
 
-	public void initialization()
+	public void start()
 	{
 		this.setLastTime(Timer.getTime());
 	}
@@ -45,12 +45,30 @@ public class Timer
 
 		final var	elapsedTime	= time - this.getLastTime();
 
+		return elapsedTime;
+	}
+
+	public long getElapsedTimeAndRestart()
+	{
+		final var	time		= Timer.getTime();
+
+		final var	elapsedTime	= time - this.getLastTime();
+
 		this.setLastTime(time);
 
 		return elapsedTime;
 	}
 
 	public double getElapsedTimeToSeconds()
+	{
+		final var	time		= Timer.getTime();
+
+		final var	elapsedTime	= Timer.convertToSeconds(time) - Timer.convertToSeconds(this.getLastTime());
+
+		return elapsedTime;
+	}
+
+	public double getElapsedTimeToSecondsAndRestart()
 	{
 		final var	time		= Timer.getTime();
 
