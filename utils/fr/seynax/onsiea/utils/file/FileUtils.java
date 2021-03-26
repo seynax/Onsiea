@@ -1,4 +1,4 @@
-package fr.seynax.onsiea.utils;
+package fr.seynax.onsiea.utils.file;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -13,6 +13,7 @@ import fr.seynax.onsiea.gamelogic.item.GameItem;
 import fr.seynax.onsiea.graphics.GraphicsConstants;
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.graphics.LWJGL;
+import fr.seynax.onsiea.graphics.Texture;
 import fr.seynax.onsiea.graphics.gui.GuiScreenshots;
 import fr.seynax.onsiea.graphics.gui.inventory.GuiInventory;
 import fr.seynax.onsiea.graphics.gui.inventory.SlideItem;
@@ -30,7 +31,6 @@ import fr.seynax.onsiea.opengl.shader.ShaderGui;
 import fr.seynax.onsiea.opengl.shader.ShaderProgram;
 import fr.seynax.onsiea.opengl.shader.ShaderScreenshot;
 import fr.seynax.onsiea.utils.FPSUtils;
-import fr.seynax.onsiea.utils.Texture;
 import fr.seynax.onsiea.utils.Timer;
 import fr.seynax.onsiea.utils.maths.Maths;
 

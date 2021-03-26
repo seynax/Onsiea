@@ -6,10 +6,10 @@ import java.util.List;
 import fr.seynax.onsiea.gamelogic.item.TexturedRectangle;
 import fr.seynax.onsiea.graphics.IRenderable;
 import fr.seynax.onsiea.graphics.IWindow;
+import fr.seynax.onsiea.graphics.Texture;
 import fr.seynax.onsiea.opengl.renderer.RendererGuiElement;
 import fr.seynax.onsiea.opengl.renderer.RendererGuiScreenshots;
 import fr.seynax.onsiea.opengl.shader.ShaderGui;
-import fr.seynax.onsiea.utils.Texture;
 import fr.seynax.onsiea.utils.maths.vector.Vector2f;
 
 public class GuiScreenshots implements IRenderable<ShaderGui, GuiScreenshots, RendererGuiScreenshots>

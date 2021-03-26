@@ -6,7 +6,7 @@ import java.util.List;
 import fr.seynax.onsiea.gamelogic.LogicConstants;
 import fr.seynax.onsiea.gamelogic.world.Element;
 import fr.seynax.onsiea.gamelogic.world.ElementGroup;
-import fr.seynax.onsiea.utils.Texture;
+import fr.seynax.onsiea.graphics.Texture;
 import fr.seynax.onsiea.utils.maths.vector.Vector3f;
 
 public class GeneratorPlane implements IGenerator

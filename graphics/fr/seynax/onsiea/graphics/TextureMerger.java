@@ -1,4 +1,4 @@
-package fr.seynax.onsiea.utils;
+package fr.seynax.onsiea.graphics;
 
 import java.io.File;
 import java.nio.ByteBuffer;
@@ -11,6 +11,8 @@ import org.joml.Vector2i;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
+
+import fr.seynax.onsiea.utils.Pair;
 
 public class TextureMerger
 {

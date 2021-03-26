@@ -3,7 +3,7 @@ package fr.seynax.onsiea.gamelogic.item;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.seynax.onsiea.utils.Texture;
+import fr.seynax.onsiea.graphics.Texture;
 
 public class Items
 {

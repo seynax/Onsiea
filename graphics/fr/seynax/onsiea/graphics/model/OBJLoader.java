@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.seynax.onsiea.graphics.matter.Mesh;
-import fr.seynax.onsiea.utils.FileUtils;
+import fr.seynax.onsiea.utils.file.FileUtils;
 import fr.seynax.onsiea.utils.maths.vector.Vector2f;
 import fr.seynax.onsiea.utils.maths.vector.Vector3f;
 

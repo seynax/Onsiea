@@ -10,8 +10,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
 import fr.seynax.onsiea.graphics.IWindow;
+import fr.seynax.onsiea.graphics.Texture;
 import fr.seynax.onsiea.utils.Date;
-import fr.seynax.onsiea.utils.Texture;
 
 public class OpenGLScreenshot
 {

@@ -1,6 +1,6 @@
 package fr.seynax.onsiea.gamelogic.world;
 
-import fr.seynax.onsiea.utils.Texture;
+import fr.seynax.onsiea.graphics.Texture;
 
 public class Element
 {

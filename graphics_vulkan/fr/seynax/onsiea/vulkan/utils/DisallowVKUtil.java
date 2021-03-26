@@ -53,7 +53,7 @@ import org.lwjgl.vulkan.VkLayerProperties;
 import org.lwjgl.vulkan.VkPipelineShaderStageCreateInfo;
 import org.lwjgl.vulkan.VkSpecializationInfo;
 
-import fr.seynax.onsiea.utils.IOUtils;
+import fr.seynax.onsiea.utils.file.IOUtils;
 
 /**
  * Utility functions for Vulkan.

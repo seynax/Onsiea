@@ -4,10 +4,10 @@ import org.lwjgl.glfw.GLFW;
 
 import fr.seynax.onsiea.graphics.IRenderable;
 import fr.seynax.onsiea.graphics.IWindow;
+import fr.seynax.onsiea.graphics.Texture;
 import fr.seynax.onsiea.opengl.IGuiElementData;
 import fr.seynax.onsiea.opengl.renderer.RendererGuiElement;
 import fr.seynax.onsiea.opengl.shader.ShaderGui;
-import fr.seynax.onsiea.utils.Texture;
 import fr.seynax.onsiea.utils.maths.vector.Vector2f;
 
 public class GuiComplexeButton extends GuiButton

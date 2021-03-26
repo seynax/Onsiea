@@ -5,11 +5,11 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import fr.seynax.onsiea.graphics.IRenderer;
+import fr.seynax.onsiea.graphics.Texture;
 import fr.seynax.onsiea.graphics.gui.GuiScreenshots;
 import fr.seynax.onsiea.graphics.matter.Shapes;
 import fr.seynax.onsiea.opengl.shader.ShaderGui;
 import fr.seynax.onsiea.opengl.shader.ShaderProgram;
-import fr.seynax.onsiea.utils.Texture;
 import fr.seynax.onsiea.utils.maths.Maths;
 
 public class RendererGuiScreenshots extends RendererBase<ShaderGui, GuiScreenshots>

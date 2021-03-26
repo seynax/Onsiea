@@ -1,4 +1,6 @@
-package fr.seynax.onsiea.utils;
+package fr.seynax.onsiea.utils.log;
+
+import fr.seynax.onsiea.utils.file.FileUtils;
 
 public class FileLogger
 {

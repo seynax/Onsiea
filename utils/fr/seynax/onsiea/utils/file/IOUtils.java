@@ -1,4 +1,4 @@
-package fr.seynax.onsiea.utils;
+package fr.seynax.onsiea.utils.file;
 
 /*
  * Copyright LWJGL. All rights reserved.
