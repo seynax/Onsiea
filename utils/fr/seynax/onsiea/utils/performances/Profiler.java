@@ -2,14 +2,20 @@ package fr.seynax.onsiea.utils.performances;
 
 public class Profiler
 {
-	// Variables
+	// Static variables
 
 	private static int	profileNumber;
+
+	// Variables
 
 	private long		start;
 	private long		end;
 
-	private long		time;
+	private double		time;
+
+	private long		totalTime;
+
+	private int			iterationNumber;
 
 	private String		name;
 
@@ -42,11 +48,22 @@ public class Profiler
 		this.setStart(System.nanoTime());
 	}
 
-	public void stop()
+	/**
+	 * @return currentTime
+	 */
+	public long stop()
 	{
 		this.setEnd(System.nanoTime());
 
-		this.setTime(this.getEnd() - this.getStart());
+		final var currentTime = this.getEnd() - this.getStart();
+
+		this.setTotalTime(this.getTotalTime() + currentTime);
+
+		this.setTime((this.getTime() + currentTime) / 2.0D);
+
+		this.setIterationNumber(this.getIterationNumber() + 1);
+
+		return currentTime;
 	}
 
 	@Override
@@ -89,14 +106,24 @@ public class Profiler
 		this.end = endIn;
 	}
 
-	public long getTime()
+	public double getTime()
 	{
 		return this.time;
 	}
 
-	public void setTime(final long timeIn)
+	public void setTime(final double timeIn)
 	{
 		this.time = timeIn;
+	}
+
+	public long getTotalTime()
+	{
+		return this.totalTime;
+	}
+
+	public void setTotalTime(final long totalTimeIn)
+	{
+		this.totalTime = totalTimeIn;
 	}
 
 	public String getName()
@@ -107,5 +134,15 @@ public class Profiler
 	public void setName(final String nameIn)
 	{
 		this.name = nameIn;
+	}
+
+	public int getIterationNumber()
+	{
+		return this.iterationNumber;
+	}
+
+	public void setIterationNumber(final int iterationNumberIn)
+	{
+		this.iterationNumber = iterationNumberIn;
 	}
 }

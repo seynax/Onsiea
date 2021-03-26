@@ -680,6 +680,7 @@ public class DummyGame implements IGameLogic
 
 		this.profilerSystem.stop("cleanup");
 
+		System.out.println(this.profilerSystem.shortReport());
 		System.out.println(this.profilerSystem.report());
 	}
 

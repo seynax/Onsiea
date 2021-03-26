@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import fr.seynax.onsiea.utils.maths.Maths;
+
 public class ProfilerSystem
 {
 	// Variables
@@ -19,28 +21,88 @@ public class ProfilerSystem
 
 	// Methods
 
-	public String report()
+	public String shortReport()
 	{
-		var	totalTime		= 0L;
+		var	totalTimeIterations	= 0L;
 
-		var	reportOutput	= "";
+		var	reportOutput		= "";
 
 		for (final Profiler profiler : this.getProfilers().values())
 		{
-			totalTime += profiler.getTime();
+			totalTimeIterations += profiler.getTotalTime();
 		}
 
-		reportOutput = "[TotalTime = " + totalTime + "] :\n{\n";
+		reportOutput = "[TotalTime count each iteration = " + totalTimeIterations + "] :\n";
 
 		for (final Profiler profiler : this.getProfilers().values())
 		{
-			reportOutput += "	" + profiler.toString() + " - ["
-					+ (double) profiler.getTime() / (double) totalTime * 100.0D + " %]\n";
+			reportOutput += "	" + profiler.toString() + " | "
+					+ Maths.round((double) profiler.getTotalTime() / totalTimeIterations * 100.0D, 2) + " %] for "
+					+ profiler.getIterationNumber() + " iterations !\n";
 		}
 
 		reportOutput += "\n}\n";
 
 		return reportOutput;
+	}
+
+	public String report(final boolean roundPercentIn)
+	{
+		var	totalTimeIterations	= 0L;
+		var	totalTime			= 0L;
+
+		var	reportOutput		= "";
+
+		for (final Profiler profiler : this.getProfilers().values())
+		{
+			totalTimeIterations	+= profiler.getTotalTime();
+			totalTime			+= profiler.getTime();
+		}
+
+		reportOutput	= "[TotalTime count each iteration : " + totalTimeIterations + "] :\n";
+		reportOutput	= "[TotalTime : " + totalTime + "]\n{\n";
+
+		var i = 0;
+
+		for (final Profiler profiler : this.getProfilers().values())
+		{
+			reportOutput += "	[" + i + "] : " + profiler.toString() + "\n	{\n";
+
+			if (roundPercentIn)
+			{
+				reportOutput	+= "		Percent with iterations : "
+						+ Maths.round((double) profiler.getTotalTime() / (double) totalTimeIterations * 100.0D, 2)
+						+ " %\n";
+				reportOutput	+= "		Percent : " + Maths.round(profiler.getTime() / totalTime * 100.0D, 2)
+						+ " %\n";
+			}
+			else
+			{
+				reportOutput	+= "		Percent with iterations : "
+						+ (double) profiler.getTotalTime() / (double) totalTimeIterations * 100.0D + " %\n";
+				reportOutput	+= "		Percent : " + profiler.getTime() / totalTime * 100.0D + " %\n";
+			}
+			reportOutput	+= "		Iterations : " + profiler.getIterationNumber() + "\n";
+			reportOutput	+= "	}";
+
+			if (i < this.getProfilers().size() - 1)
+			{
+				reportOutput += ",";
+			}
+
+			reportOutput += "\n";
+
+			i++;
+		}
+
+		reportOutput += "\n}\n";
+
+		return reportOutput;
+	}
+
+	public String report()
+	{
+		return this.report(true);
 	}
 
 	public boolean start(final String profilerNameIn)
