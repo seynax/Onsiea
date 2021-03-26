@@ -1,5 +1,6 @@
 package fr.seynax.onsiea.utils.performances;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +19,30 @@ public class ProfilerSystem
 
 	// Methods
 
+	public String report()
+	{
+		var	totalTime		= 0L;
+
+		var	reportOutput	= "";
+
+		for (final Profiler profiler : this.getProfilers().values())
+		{
+			totalTime += profiler.getTime();
+		}
+
+		reportOutput = "[TotalTime = " + totalTime + "] :\n{\n";
+
+		for (final Profiler profiler : this.getProfilers().values())
+		{
+			reportOutput += "	" + profiler.toString() + " - ["
+					+ (double) profiler.getTime() / (double) totalTime * 100.0D + " %]\n";
+		}
+
+		reportOutput += "\n}\n";
+
+		return reportOutput;
+	}
+
 	public boolean start(final String profilerNameIn)
 	{
 		final var profiler = this.getProfilers().get(profilerNameIn);
@@ -35,6 +60,14 @@ public class ProfilerSystem
 	public boolean remove(final String profilerNameIn)
 	{
 		return this.getProfilers().remove(profilerNameIn) != null;
+	}
+
+	public void add(final String... profilersNameIn)
+	{
+		for (final String profilerName : profilersNameIn)
+		{
+			this.getProfilers().put(profilerName, new Profiler(profilerName));
+		}
 	}
 
 	public void add(final Profiler... profilersIn)
@@ -62,6 +95,16 @@ public class ProfilerSystem
 		profiler.stop();
 
 		return true;
+	}
+
+	public Collection<String> names()
+	{
+		return this.getProfilers().keySet();
+	}
+
+	public Collection<Profiler> profilers()
+	{
+		return this.getProfilers().values();
 	}
 
 	// Getter | Setter
