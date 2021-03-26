@@ -5,6 +5,7 @@ import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.graphics.matter.Shapes;
 import fr.seynax.onsiea.opengl.OpenGLScreenshot;
 import fr.seynax.onsiea.opengl.OpenGLWindow;
+import fr.seynax.onsiea.utils.OS;
 import fr.seynax.onsiea.utils.Timer;
 
 public class GameEngine implements Runnable
@@ -65,9 +66,7 @@ public class GameEngine implements Runnable
 
 	public void start()
 	{
-		final var osName = System.getProperty("os.name");
-
-		if (osName.contains("Mac"))
+		if (OS.getOsName().contains("Mac"))
 		{
 			this.getGameLoopThread().run();
 		}

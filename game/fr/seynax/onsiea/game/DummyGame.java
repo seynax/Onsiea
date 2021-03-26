@@ -656,21 +656,7 @@ public class DummyGame implements IGameLogic
 		this.getRenderer().cleanup();
 		OpenGL.cleanup();
 
-		this.technicEngine.setRunning(false);
-
-		while (this.technicEngine.getThread().isAlive())
-		{
-			try
-			{
-				Thread.sleep(400);
-			}
-			catch (final InterruptedException e)
-			{
-				e.printStackTrace();
-			}
-
-			this.technicEngine.getThread().interrupt();
-		}
+		this.technicEngine.stop();
 	}
 
 	// Getter | Setter
