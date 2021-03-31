@@ -33,8 +33,8 @@ import fr.seynax.onsiea.opengl.shader.ShaderProgram;
 import fr.seynax.onsiea.opengl.shader.ShaderScreenshot;
 import fr.seynax.onsiea.utils.Timer;
 import fr.seynax.onsiea.utils.maths.Maths;
-import fr.seynax.onsiea.utils.performances.FPSMeasurer;
 import fr.seynax.onsiea.utils.performances.ProfilingSystem;
+import fr.seynax.onsiea.utils.performances.measurer.FPSMeasurer;
 
 public class DummyGame implements IGameLogic
 {

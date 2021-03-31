@@ -7,6 +7,11 @@ import fr.seynax.onsiea.utils.performances.beans.ExtendedBeans;
 
 public class MemoryHelper
 {
+	public static long usedMemory()
+	{
+		return MemoryHelper.maxMemory() - MemoryHelper.freeMemory();
+	}
+
 	/**
 	 * @return the total amount of memory in the Java virtual machine
 	 */

@@ -1,4 +1,4 @@
-package fr.seynax.onsiea.utils.performances;
+package fr.seynax.onsiea.utils.performances.measurer;
 
 public class FPSMeasurer
 {

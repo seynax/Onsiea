@@ -25,7 +25,7 @@ public class CPUHelper
 		return ExtendedBeans.getOperatingSystem().getCpuLoad();
 	}
 
-	public final static double ProcessCpuLoad()
+	public final static double processCpuLoad()
 	{
 		return ExtendedBeans.getOperatingSystem().getProcessCpuLoad();
 	}

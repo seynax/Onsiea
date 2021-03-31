@@ -5,7 +5,7 @@ import java.util.Map;
 
 import fr.seynax.onsiea.utils.IFunction;
 import fr.seynax.onsiea.utils.file.FileUtils;
-import fr.seynax.onsiea.utils.performances.TimingProfiler;
+import fr.seynax.onsiea.utils.performances.measurer.TimeMeasurer;
 import fr.seynax.onsiea.utils.performances.tester.PerformanceTypes.EnumTypes;
 
 public class PerformanceTester
@@ -16,7 +16,7 @@ public class PerformanceTester
 
 	private Map<String, IFunction>	functions;
 
-	private TimingProfiler			timingProfiler;
+	private TimeMeasurer			timingProfiler;
 
 	private int						phases;
 	private int						iterations;
@@ -31,7 +31,7 @@ public class PerformanceTester
 
 		this.setFunctions(new HashMap<>());
 
-		this.setTimingProfiler(new TimingProfiler());
+		this.setTimingProfiler(new TimeMeasurer());
 	}
 
 	// Methods
@@ -70,7 +70,7 @@ public class PerformanceTester
 	}
 
 	public final static String checkTiming(final IFunction functionIn, final int iterationsIn,
-			final TimingProfiler timingProfilerIn, final String filepathIn)
+			final TimeMeasurer timingProfilerIn, final String filepathIn)
 	{
 		timingProfilerIn.reset();
 
@@ -112,12 +112,12 @@ public class PerformanceTester
 		this.functions = functionsIn;
 	}
 
-	public TimingProfiler getTimingProfiler()
+	public TimeMeasurer getTimingProfiler()
 	{
 		return this.timingProfiler;
 	}
 
-	public void setTimingProfiler(final TimingProfiler timingProfilerIn)
+	public void setTimingProfiler(final TimeMeasurer timingProfilerIn)
 	{
 		this.timingProfiler = timingProfilerIn;
 	}

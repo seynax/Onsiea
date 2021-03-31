@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
-import fr.seynax.onsiea.utils.performances.FPSMeasurer;
+import fr.seynax.onsiea.utils.performances.measurer.FPSMeasurer;
 
 /**
  * Rendering a simple GL_TRIANGLE_STRIP grid.
