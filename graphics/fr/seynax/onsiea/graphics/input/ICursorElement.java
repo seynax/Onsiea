@@ -1,7 +1,8 @@
 package fr.seynax.onsiea.graphics.input;
 
+import org.joml.Vector2f;
+
 import fr.seynax.onsiea.graphics.IWindow;
-import fr.seynax.onsiea.utils.maths.vector.Vector2f;
 
 public interface ICursorElement
 {

@@ -43,7 +43,7 @@ public class ShaderScreenshot extends ShaderProgram
 		super.setUniform(this.getLocationTransformationMatrix(), transformationMatrixIn);
 	}
 
-	public void sendViewMatrix(final fr.seynax.onsiea.utils.maths.vector.Matrix4f matrix4fIn)
+	public void sendViewMatrix(final Matrix4f matrix4fIn)
 	{
 		super.setUniform(this.getLocationViewMatrix(), matrix4fIn);
 	}

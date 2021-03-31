@@ -1,5 +1,6 @@
 package fr.seynax.onsiea.game;
 
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
@@ -32,47 +33,47 @@ import fr.seynax.onsiea.opengl.shader.ShaderProgram;
 import fr.seynax.onsiea.opengl.shader.ShaderScreenshot;
 import fr.seynax.onsiea.utils.Timer;
 import fr.seynax.onsiea.utils.maths.Maths;
-import fr.seynax.onsiea.utils.performances.FPSUtils;
-import fr.seynax.onsiea.utils.performances.ProfilerSystem;
+import fr.seynax.onsiea.utils.performances.FPSMeasurer;
+import fr.seynax.onsiea.utils.performances.ProfilingSystem;
 
 public class DummyGame implements IGameLogic
 {
 	// Variables
 
-	private int												direction	= 0;
+	private int						direction	= 0;
 
-	private float											color		= 0.0f;
+	private float					color		= 0.0f;
 
-	private Renderer										renderer;
+	private Renderer				renderer;
 
 	// Variables ; Graphics data
 
-	private AnimatedItem[]									gameItems;
+	private AnimatedItem[]			gameItems;
 
-	private Texture											grassBlockTexture;
+	private Texture					grassBlockTexture;
 
-	private Camera											camera;
+	private Camera					camera;
 
-	private RendererGuiInventory							rendererGuiInventory;
-	private RendererGuiSlot									rendererGuiSlot;
-	private RendererGuiScreenshots							rendererGuiScreenshots;
-	private RendererGuiElement								rendererGuiElement;
+	private RendererGuiInventory	rendererGuiInventory;
+	private RendererGuiSlot			rendererGuiSlot;
+	private RendererGuiScreenshots	rendererGuiScreenshots;
+	private RendererGuiElement		rendererGuiElement;
 
-	private GuiInventory									gui;
-	private GuiScreenshots									guiScreenshots;
+	private GuiInventory			gui;
+	private GuiScreenshots			guiScreenshots;
 
-	private ShaderGui										shaderGui;
-	private ShaderScreenshot								shaderScreenshot;
+	private ShaderGui				shaderGui;
+	private ShaderScreenshot		shaderScreenshot;
 
-	private TechnicEngine									technicEngine;
-	private fr.seynax.onsiea.utils.maths.vector.Matrix4f	viewMatrix;
+	private TechnicEngine			technicEngine;
+	private Matrix4f				viewMatrix;
 
-	private Timer											timer0;
-	private Timer											timer1;
+	private Timer					timer0;
+	private Timer					timer1;
 
-	private FPSUtils										fpsUtils;
+	private FPSMeasurer				fpsUtils;
 
-	private final ProfilerSystem							profilerSystem;
+	private final ProfilingSystem	profilerSystem;
 
 	/**
 	 * private Mesh meshBoat; private GameItem boat; private Texture boatTexture;
@@ -82,7 +83,7 @@ public class DummyGame implements IGameLogic
 
 	public DummyGame()
 	{
-		this.profilerSystem = new ProfilerSystem();
+		this.profilerSystem = new ProfilingSystem();
 
 		this.profilerSystem.add("initialization", "input", "update", "render", "cleanup");
 	}
@@ -247,7 +248,8 @@ public class DummyGame implements IGameLogic
 		this.setGrassBlockTexture(Texture.loadTexture("cyan"));
 
 		this.camera		= new Camera();
-		this.viewMatrix	= Maths.convert(this.camera.getViewMatrix());
+		this.viewMatrix	= new Matrix4f();
+		Maths.copy(this.camera.getViewMatrix(), this.viewMatrix);
 
 		// FrameBuffer
 		/**
@@ -322,7 +324,7 @@ public class DummyGame implements IGameLogic
 		}
 
 		{
-			this.fpsUtils = new FPSUtils();
+			this.fpsUtils = new FPSMeasurer();
 			this.fpsUtils.start();
 		}
 
@@ -473,7 +475,7 @@ public class DummyGame implements IGameLogic
 		final var lastState = this.camera.isCanUpdate();
 
 		this.camera.setCanUpdate(false);
-		Maths.convert(this.camera.getViewMatrix(), this.viewMatrix);
+		Maths.copy(this.camera.getViewMatrix(), this.viewMatrix);
 		this.camera.setCanUpdate(lastState);
 
 		// Start rendering
@@ -601,12 +603,9 @@ public class DummyGame implements IGameLogic
 							Texture.bind(slideItem.getItem().getTexture().getTextureId());
 
 							this.shaderGui.sendTransformationMatrix(Maths.getWorldMatrix(
-									new org.joml.Vector3f(slideItem.getPosition().getX(),
-											slideItem.getPosition().getY(), 0.0F),
-									new org.joml.Vector3f(slideItem.getRotation().getX(),
-											slideItem.getRotation().getY(), 0.0F),
-									new org.joml.Vector3f(slideItem.getSize().getX(), slideItem.getSize().getY(),
-											1.0f)));
+									new Vector3f(slideItem.getPosition().x(), slideItem.getPosition().y(), 0.0F),
+									new Vector3f(slideItem.getRotation().x(), slideItem.getRotation().y(), 0.0F),
+									new Vector3f(slideItem.getSize().x(), slideItem.getSize().y(), 1.0f)));
 
 							GL11.glDrawElements(GL11.GL_TRIANGLES, Shapes.getSurface2dindices().length,
 									GL11.GL_UNSIGNED_INT, 0);

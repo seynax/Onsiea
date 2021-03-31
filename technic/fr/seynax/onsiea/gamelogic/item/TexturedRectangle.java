@@ -1,6 +1,6 @@
 package fr.seynax.onsiea.gamelogic.item;
 
-import fr.seynax.onsiea.utils.maths.vector.Vector2f;
+import org.joml.Vector2f;
 
 public class TexturedRectangle
 {

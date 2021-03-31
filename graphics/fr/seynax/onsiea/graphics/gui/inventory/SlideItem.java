@@ -1,11 +1,12 @@
 package fr.seynax.onsiea.graphics.gui.inventory;
 
+import org.joml.Vector2f;
+
 import fr.seynax.onsiea.gamelogic.item.Item;
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.graphics.input.Cursor;
 import fr.seynax.onsiea.graphics.input.ICursorElement;
 import fr.seynax.onsiea.graphics.input.ICursorExtension;
-import fr.seynax.onsiea.utils.maths.vector.Vector2f;
 
 public class SlideItem implements ICursorElement
 {
@@ -49,7 +50,7 @@ public class SlideItem implements ICursorElement
 		final var	normY	= (float) (1.0D - windowIn.getGlfwEventManager().getCallbacksManager()
 				.getCursorPosCallback().getCursor().getPosition().y() / 1080.0D * 2.0D);
 
-		this.setPosition(normX - this.getStartPosition().getX(), normY - this.getStartPosition().getY());
+		this.setPosition(normX - this.getStartPosition().x(), normY - this.getStartPosition().y());
 	}
 
 	// Position
@@ -64,8 +65,8 @@ public class SlideItem implements ICursorElement
 	@Override
 	public void move(final Vector2f deltaIn)
 	{
-		this.getPosition().x	+= deltaIn.getX();
-		this.getPosition().y	+= deltaIn.getY();
+		this.getPosition().x	+= deltaIn.x();
+		this.getPosition().y	+= deltaIn.y();
 	}
 
 	@Override
@@ -87,8 +88,8 @@ public class SlideItem implements ICursorElement
 	@Override
 	public void rotate(final Vector2f deltaIn)
 	{
-		this.getRotation().x	+= deltaIn.getX();
-		this.getRotation().y	+= deltaIn.getY();
+		this.getRotation().x	+= deltaIn.x();
+		this.getRotation().y	+= deltaIn.y();
 	}
 
 	@Override
@@ -110,8 +111,8 @@ public class SlideItem implements ICursorElement
 	@Override
 	public void resize(final Vector2f deltaIn)
 	{
-		this.getSize().x	+= deltaIn.getX();
-		this.getSize().y	+= deltaIn.getY();
+		this.getSize().x	+= deltaIn.x();
+		this.getSize().y	+= deltaIn.y();
 	}
 
 	@Override

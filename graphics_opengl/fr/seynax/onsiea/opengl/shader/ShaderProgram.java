@@ -3,24 +3,20 @@ package fr.seynax.onsiea.opengl.shader;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.FloatBuffer;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.MemoryStack;
 
 public abstract class ShaderProgram
 {
-	private int					programId;
+	private int	programId;
 
-	private int					vertexShaderId;
+	private int	vertexShaderId;
 
-	private int					fragmentShaderId;
-
-	private static FloatBuffer	matrixBuffer	= BufferUtils.createFloatBuffer(16);
+	private int	fragmentShaderId;
 
 	private static int loadShader(final String filenameIn, final int type)
 	{
@@ -138,14 +134,6 @@ public abstract class ShaderProgram
 	public void setUniform(final int locationIn, final Vector3f vectorIn)
 	{
 		GL20.glUniform3f(locationIn, vectorIn.x(), vectorIn.y(), vectorIn.z());
-	}
-
-	public void setUniform(final int locationIn, final fr.seynax.onsiea.utils.maths.vector.Matrix4f matrixIn)
-	{
-		matrixIn.store(ShaderProgram.matrixBuffer);
-		ShaderProgram.matrixBuffer.flip();
-		GL20.glUniformMatrix4fv(locationIn, false, ShaderProgram.matrixBuffer);
-		ShaderProgram.matrixBuffer.clear();
 	}
 
 	public void cleanup()

@@ -17,8 +17,6 @@ public class VulkanTest
 		catch (final Exception exception)
 		{
 			exception.printStackTrace();
-
-			System.exit(-1);
 		}
 	}
 }

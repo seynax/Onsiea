@@ -30,10 +30,12 @@ public class RendererGui extends RendererBase<ShaderGui, Gui> implements IRender
 		{
 			Texture.bind(texturedRectangle.getTextureId());
 
-			shaderGuiIn.sendTransformationMatrix(Maths.getWorldMatrix(
-					new Vector3f(texturedRectangle.getPosition().getX(), texturedRectangle.getPosition().getY(), 0.0F),
-					new Vector3f(0.0F, 0.0F, 0.0F),
-					new Vector3f(texturedRectangle.getSize().getX(), texturedRectangle.getSize().getY(), 1.0F)));
+			shaderGuiIn
+					.sendTransformationMatrix(Maths.getWorldMatrix(
+							new Vector3f(texturedRectangle.getPosition().x(), texturedRectangle.getPosition().y(),
+									0.0F),
+							new Vector3f(0.0F, 0.0F, 0.0F),
+							new Vector3f(texturedRectangle.getSize().x(), texturedRectangle.getSize().y(), 1.0F)));
 
 			GL11.glDrawElements(GL11.GL_TRIANGLES, Shapes.getSurface2dindices().length, GL11.GL_UNSIGNED_INT, 0);
 		}

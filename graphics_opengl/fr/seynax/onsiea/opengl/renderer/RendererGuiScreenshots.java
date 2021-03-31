@@ -31,11 +31,11 @@ public class RendererGuiScreenshots extends RendererBase<ShaderGui, GuiScreensho
 		Texture.bind(guiScreenshots.getPreviousButton().getTextureId());
 
 		shaderGuiIn.sendTransformationMatrix(Maths.getWorldMatrix(
-				new Vector3f(guiScreenshots.getPreviousButton().getRectangle().getPosition().getX(),
-						guiScreenshots.getPreviousButton().getRectangle().getPosition().getY(), 0.0F),
+				new Vector3f(guiScreenshots.getPreviousButton().getRectangle().getPosition().x(),
+						guiScreenshots.getPreviousButton().getRectangle().getPosition().y(), 0.0F),
 				new Vector3f(0.0F, 0.0F, 0.0F),
-				new Vector3f(guiScreenshots.getPreviousButton().getRectangle().getSize().getX(),
-						guiScreenshots.getPreviousButton().getRectangle().getSize().getY(), 1.0F)));
+				new Vector3f(guiScreenshots.getPreviousButton().getRectangle().getSize().x(),
+						guiScreenshots.getPreviousButton().getRectangle().getSize().y(), 1.0F)));
 
 		GL11.glDrawElements(GL11.GL_TRIANGLES, Shapes.getSurface2dindices().length, GL11.GL_UNSIGNED_INT, 0);
 
@@ -44,11 +44,11 @@ public class RendererGuiScreenshots extends RendererBase<ShaderGui, GuiScreensho
 		Texture.bind(guiScreenshots.getNextButton().getTextureId());
 
 		shaderGuiIn.sendTransformationMatrix(Maths.getWorldMatrix(
-				new Vector3f(guiScreenshots.getNextButton().getRectangle().getPosition().getX(),
-						guiScreenshots.getNextButton().getRectangle().getPosition().getY(), 0.0F),
+				new Vector3f(guiScreenshots.getNextButton().getRectangle().getPosition().x(),
+						guiScreenshots.getNextButton().getRectangle().getPosition().y(), 0.0F),
 				new Vector3f(0.0F, 0.0F, 0.0F),
-				new Vector3f(guiScreenshots.getNextButton().getRectangle().getSize().getX(),
-						guiScreenshots.getNextButton().getRectangle().getSize().getY(), 1.0F)));
+				new Vector3f(guiScreenshots.getNextButton().getRectangle().getSize().x(),
+						guiScreenshots.getNextButton().getRectangle().getSize().y(), 1.0F)));
 
 		GL11.glDrawElements(GL11.GL_TRIANGLES, Shapes.getSurface2dindices().length, GL11.GL_UNSIGNED_INT, 0);
 
@@ -69,11 +69,11 @@ public class RendererGuiScreenshots extends RendererBase<ShaderGui, GuiScreensho
 		Texture.bind(textureId);
 
 		shaderGuiIn.sendTransformationMatrix(Maths.getWorldMatrix(
-				new org.joml.Vector3f(guiScreenshots.getScreenshotsSurface().getPosition().getX(),
-						guiScreenshots.getScreenshotsSurface().getPosition().getY(), 0.0F),
+				new org.joml.Vector3f(guiScreenshots.getScreenshotsSurface().getPosition().x(),
+						guiScreenshots.getScreenshotsSurface().getPosition().y(), 0.0F),
 				new org.joml.Vector3f(0.0F, 0.0F, 0.0F),
-				new org.joml.Vector3f(guiScreenshots.getScreenshotsSurface().getSize().getX(),
-						guiScreenshots.getScreenshotsSurface().getSize().getY(), 1.0F)));
+				new org.joml.Vector3f(guiScreenshots.getScreenshotsSurface().getSize().x(),
+						guiScreenshots.getScreenshotsSurface().getSize().y(), 1.0F)));
 
 		GL11.glDrawElements(GL11.GL_TRIANGLES, Shapes.getSurface2dindices().length, GL11.GL_UNSIGNED_INT, 0);
 	}

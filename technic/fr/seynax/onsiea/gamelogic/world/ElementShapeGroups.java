@@ -3,7 +3,7 @@ package fr.seynax.onsiea.gamelogic.world;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.seynax.onsiea.utils.maths.vector.Vector3f;
+import org.joml.Vector3f;
 
 public class ElementShapeGroups
 {

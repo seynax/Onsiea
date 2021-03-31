@@ -64,7 +64,7 @@ import org.lwjgl.vulkan.VkVertexInputAttributeDescription;
 import org.lwjgl.vulkan.VkVertexInputBindingDescription;
 import org.lwjgl.vulkan.VkViewport;
 
-import fr.seynax.onsiea.utils.performances.FPSUtils;
+import fr.seynax.onsiea.utils.performances.FPSMeasurer;
 import fr.seynax.onsiea.vulkan.utils.DisallowVKUtil;
 
 /**
@@ -1197,7 +1197,7 @@ public class VulkanDemo
 				.pWaitSemaphores(pRenderCompleteSemaphore).swapchainCount(pSwapchains.remaining())
 				.pSwapchains(pSwapchains).pImageIndices(pImageIndex);
 
-		final var	fpsUtils	= new FPSUtils();
+		final var	fpsUtils	= new FPSMeasurer();
 		fpsUtils.start();
 
 		// The render loop

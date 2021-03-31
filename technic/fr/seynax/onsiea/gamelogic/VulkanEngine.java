@@ -83,7 +83,6 @@ public class VulkanEngine implements Runnable
 		}
 		finally
 		{
-
 			this.cleanup();
 		}
 	}

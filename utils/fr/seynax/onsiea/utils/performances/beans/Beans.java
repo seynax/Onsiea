@@ -1,4 +1,4 @@
-package fr.seynax.onsiea.utils.performances;
+package fr.seynax.onsiea.utils.performances.beans;
 
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.CompilationMXBean;

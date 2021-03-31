@@ -1,5 +1,6 @@
 package fr.seynax.onsiea.graphics.gui.inventory;
 
+import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
 import fr.seynax.onsiea.gamelogic.item.Item;
@@ -10,7 +11,6 @@ import fr.seynax.onsiea.graphics.Texture;
 import fr.seynax.onsiea.graphics.input.CursorExtensionMenu;
 import fr.seynax.onsiea.opengl.renderer.RendererGuiSlot;
 import fr.seynax.onsiea.opengl.shader.ShaderGui;
-import fr.seynax.onsiea.utils.maths.vector.Vector2f;
 
 public class GuiSlot implements IRenderable<ShaderGui, GuiSlot, RendererGuiSlot>
 {
@@ -139,8 +139,8 @@ public class GuiSlot implements IRenderable<ShaderGui, GuiSlot, RendererGuiSlot>
 
 							slideItem.setPosition((float) normX, (float) normY);
 
-							slideItem.setSize(this.getItemRectangle().getSize().getX(),
-									this.getItemRectangle().getSize().getY());
+							slideItem.setSize(this.getItemRectangle().getSize().x(),
+									this.getItemRectangle().getSize().y());
 
 							slideItem.setItem(this.getItem());
 

@@ -1,12 +1,12 @@
 package fr.seynax.onsiea.entity;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.maths.MathsInstances;
 import fr.seynax.onsiea.utils.maths.Maths;
-import fr.seynax.onsiea.utils.maths.vector.Vector3f;
 
 public class Camera
 {
@@ -94,60 +94,60 @@ public class Camera
 						.getTranslation().y() * currentRotateSpeed),
 				0);
 
-		if (this.getOrientation().getX() < -90)
+		if (this.getOrientation().x() < -90)
 		{
-			this.getOrientation().setX(-90);
+			this.getOrientation().x = -90;
 		}
-		if (this.getOrientation().getX() > 90)
+		if (this.getOrientation().x() > 90)
 		{
-			this.getOrientation().setX(90);
+			this.getOrientation().x = 90;
 		}
 
-		// this.getOrientation().setX(this.getOrientation().getX() % 360);
-		this.getOrientation().setY(this.getOrientation().getY() % 360);
+		// this.getOrientation().x = this.getOrientation().x() % 360;
+		this.getOrientation().y = this.getOrientation().y() % 360;
 
 		if (GLFW.glfwGetKey(windowIn.getWindowHandle(), GLFW.GLFW_KEY_T) == GLFW.GLFW_PRESS)
 		{
-			this.getOrientation().setX(0);
+			this.getOrientation().x = 0;
 		}
 		if (GLFW.glfwGetKey(windowIn.getWindowHandle(), GLFW.GLFW_KEY_Y) == GLFW.GLFW_PRESS)
 		{
-			this.getOrientation().setY(0);
+			this.getOrientation().y = 0;
 		}
 		if (GLFW.glfwGetKey(windowIn.getWindowHandle(), GLFW.GLFW_KEY_U) == GLFW.GLFW_PRESS)
 		{
-			this.getOrientation().setZ(0);
+			this.getOrientation().z = 0;
 		}
 
 		if (GLFW.glfwGetKey(windowIn.getWindowHandle(), GLFW.GLFW_KEY_I) == GLFW.GLFW_PRESS)
 		{
-			this.getOrientation().setX(0);
-			this.getOrientation().setY(0);
-			this.getOrientation().setZ(0);
+			this.getOrientation().x	= 0;
+			this.getOrientation().y	= 0;
+			this.getOrientation().z	= 0;
 		}
 
 		if (GLFW.glfwGetKey(windowIn.getWindowHandle(), GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS)
 		{
-			this.move((float) Math.sin(this.getOrientation().getY() * MathsInstances.getPi180()) * currentSpeed, 0.0f,
-					(float) -Math.cos(this.getOrientation().getY() * MathsInstances.getPi180()) * currentSpeed);
+			this.move((float) Math.sin(this.getOrientation().y() * MathsInstances.getPi180()) * currentSpeed, 0.0f,
+					(float) -Math.cos(this.getOrientation().y() * MathsInstances.getPi180()) * currentSpeed);
 		}
 		if (GLFW.glfwGetKey(windowIn.getWindowHandle(), GLFW.GLFW_KEY_S) == GLFW.GLFW_PRESS)
 		{
-			this.move((float) -Math.sin(this.getOrientation().getY() * MathsInstances.getPi180()) * currentSpeed, 0.0f,
-					(float) Math.cos(this.getOrientation().getY() * MathsInstances.getPi180()) * currentSpeed);
+			this.move((float) -Math.sin(this.getOrientation().y() * MathsInstances.getPi180()) * currentSpeed, 0.0f,
+					(float) Math.cos(this.getOrientation().y() * MathsInstances.getPi180()) * currentSpeed);
 		}
 
 		if (GLFW.glfwGetKey(windowIn.getWindowHandle(), GLFW.GLFW_KEY_A) == GLFW.GLFW_PRESS)
 		{
-			this.move((float) Math.sin((-this.getOrientation().getY() - 90) * MathsInstances.getPi180()) * currentSpeed,
+			this.move((float) Math.sin((-this.getOrientation().y() - 90) * MathsInstances.getPi180()) * currentSpeed,
 					0.0f,
-					(float) -Math.cos((-this.getOrientation().getY() - 90) * MathsInstances.getPi180()) * currentSpeed);
+					(float) -Math.cos((-this.getOrientation().y() - 90) * MathsInstances.getPi180()) * currentSpeed);
 		}
 		if (GLFW.glfwGetKey(windowIn.getWindowHandle(), GLFW.GLFW_KEY_D) == GLFW.GLFW_PRESS)
 		{
-			this.move((float) Math.sin((-this.getOrientation().getY() + 90) * MathsInstances.getPi180()) * currentSpeed,
+			this.move((float) Math.sin((-this.getOrientation().y() + 90) * MathsInstances.getPi180()) * currentSpeed,
 					0.0f,
-					(float) -Math.cos((-this.getOrientation().getY() + 90) * MathsInstances.getPi180()) * currentSpeed);
+					(float) -Math.cos((-this.getOrientation().y() + 90) * MathsInstances.getPi180()) * currentSpeed);
 		}
 
 		if (GLFW.glfwGetKey(windowIn.getWindowHandle(), GLFW.GLFW_KEY_SPACE) == GLFW.GLFW_PRESS)
@@ -162,27 +162,27 @@ public class Camera
 		Maths.loadViewMatrix(this.getViewMatrix(), this);
 
 		/**
-		 * this.getAt().setX(this.getViewMatrix().m02);
-		 * this.getAt().setY(this.getViewMatrix().m12);
-		 * this.getAt().setZ(this.getViewMatrix().m22);
-		 * this.getUp().setX(this.getViewMatrix().m01);
-		 * this.getUp().setY(this.getViewMatrix().m11);
-		 * this.getUp().setZ(this.getViewMatrix().m21);
+		 * this.getAt().x(this.getViewMatrix().m02);
+		 * this.getAt().y(this.getViewMatrix().m12);
+		 * this.getAt().z(this.getViewMatrix().m22);
+		 * this.getUp().x(this.getViewMatrix().m01);
+		 * this.getUp().y(this.getViewMatrix().m11);
+		 * this.getUp().z(this.getViewMatrix().m21);
 		 **/
 	}
 
 	public void move(final float deltaXIn, final float deltaYIn, final float deltaZIn)
 	{
-		this.getPosition().setX(this.getPosition().getX() + deltaXIn);
-		this.getPosition().setY(this.getPosition().getY() + deltaYIn);
-		this.getPosition().setZ(this.getPosition().getZ() + deltaZIn);
+		this.getPosition().x	= this.getPosition().x() + deltaXIn;
+		this.getPosition().y	= this.getPosition().y() + deltaYIn;
+		this.getPosition().z	= this.getPosition().z() + deltaZIn;
 	}
 
 	public void rotate(final float deltaXIn, final float deltaYIn, final float deltaZIn)
 	{
-		this.getOrientation().setX(this.getOrientation().getX() + deltaXIn);
-		this.getOrientation().setY(this.getOrientation().getY() + deltaYIn);
-		this.getOrientation().setZ(this.getOrientation().getZ() + deltaZIn);
+		this.getOrientation().x	= this.getOrientation().x() + deltaXIn;
+		this.getOrientation().y	= this.getOrientation().y() + deltaYIn;
+		this.getOrientation().z	= this.getOrientation().z() + deltaZIn;
 	}
 
 	// Getter | Setter

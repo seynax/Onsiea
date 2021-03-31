@@ -3,10 +3,11 @@ package fr.seynax.onsiea.graphics.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+
 import fr.seynax.onsiea.graphics.matter.Mesh;
 import fr.seynax.onsiea.utils.file.FileUtils;
-import fr.seynax.onsiea.utils.maths.vector.Vector2f;
-import fr.seynax.onsiea.utils.maths.vector.Vector3f;
 
 public class OBJLoader
 {

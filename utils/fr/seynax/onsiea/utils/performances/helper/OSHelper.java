@@ -1,6 +1,6 @@
 package fr.seynax.onsiea.utils.performances.helper;
 
-import fr.seynax.onsiea.utils.performances.Beans;
+import fr.seynax.onsiea.utils.performances.beans.Beans;
 
 public class OSHelper
 {

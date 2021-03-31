@@ -63,7 +63,7 @@ public class Gui implements IRenderable<ShaderGui, Gui, RendererGui>
 		final var	mouseY	= (float) (1.0D - windowIn.getGlfwEventManager().getCallbacksManager()
 				.getCursorPosCallback().getCursor().getPosition().y() * 2.0D / 1080.0D);
 
-		if (mouseX >= start.getX() && mouseY >= start.getY() && mouseX <= end.getX() && mouseY <= end.getY())
+		if (mouseX >= start.x() && mouseY >= start.y() && mouseX <= end.x() && mouseY <= end.y())
 		{
 			System.out.println("Colide !");
 		}

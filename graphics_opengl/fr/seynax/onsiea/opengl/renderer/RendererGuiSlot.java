@@ -29,15 +29,12 @@ public class RendererGuiSlot extends RendererBase<ShaderGui, GuiSlot> implements
 		{
 			Texture.bind(guiSlotIn.getItem().getTexture().getTextureId());
 
-			shaderGuiIn.sendTransformationMatrix(Maths.getWorldMatrix(
-					new Vector3f(
-							guiSlotIn.getSlotRectangle().getPosition().getX()
-									+ guiSlotIn.getItemRectangle().getPosition().getX(),
-							guiSlotIn.getSlotRectangle().getPosition().getY()
-									+ guiSlotIn.getItemRectangle().getPosition().getY(),
-							0.0F),
-					new Vector3f(0.0F, 0.0F, 0.0F), new Vector3f(guiSlotIn.getItemRectangle().getSize().getX(),
-							guiSlotIn.getItemRectangle().getSize().getY(), 1.0F)));
+			shaderGuiIn.sendTransformationMatrix(Maths.getWorldMatrix(new Vector3f(
+					guiSlotIn.getSlotRectangle().getPosition().x() + guiSlotIn.getItemRectangle().getPosition().x(),
+					guiSlotIn.getSlotRectangle().getPosition().y() + guiSlotIn.getItemRectangle().getPosition().y(),
+					0.0F), new Vector3f(0.0F, 0.0F, 0.0F),
+					new Vector3f(guiSlotIn.getItemRectangle().getSize().x(), guiSlotIn.getItemRectangle().getSize().y(),
+							1.0F)));
 
 			GL11.glDrawElements(GL11.GL_TRIANGLES, Shapes.getSurface2dindices().length, GL11.GL_UNSIGNED_INT, 0);
 		}
@@ -45,10 +42,10 @@ public class RendererGuiSlot extends RendererBase<ShaderGui, GuiSlot> implements
 		Texture.bind(guiSlotIn.getSlotActiveTextureId());
 
 		shaderGuiIn.sendTransformationMatrix(Maths.getWorldMatrix(
-				new Vector3f(guiSlotIn.getSlotRectangle().getPosition().getX(),
-						guiSlotIn.getSlotRectangle().getPosition().getY(), 0.0F),
-				new Vector3f(0.0F, 0.0F, 0.0F), new Vector3f(guiSlotIn.getSlotRectangle().getSize().getX(),
-						guiSlotIn.getSlotRectangle().getSize().getY(), 1.0F)));
+				new Vector3f(guiSlotIn.getSlotRectangle().getPosition().x(),
+						guiSlotIn.getSlotRectangle().getPosition().y(), 0.0F),
+				new Vector3f(0.0F, 0.0F, 0.0F), new Vector3f(guiSlotIn.getSlotRectangle().getSize().x(),
+						guiSlotIn.getSlotRectangle().getSize().y(), 1.0F)));
 
 		GL11.glDrawElements(GL11.GL_TRIANGLES, Shapes.getSurface2dindices().length, GL11.GL_UNSIGNED_INT, 0);
 	}

@@ -1,6 +1,6 @@
 package fr.seynax.onsiea.gamelogic.item;
 
-import fr.seynax.onsiea.utils.maths.vector.Vector2f;
+import org.joml.Vector2f;
 
 public class Rectangle
 {
@@ -27,22 +27,22 @@ public class Rectangle
 
 		// Variables assigments
 
-		this.setStart(new Vector2f(positionIn.getX() - sizeIn.getX() * 0.5f, positionIn.getY() - sizeIn.getY() * 0.5f));
-		this.setEnd(new Vector2f(positionIn.getX() + sizeIn.getX() * 0.5f, positionIn.getY() + sizeIn.getY() * 0.5f));
+		this.setStart(new Vector2f(positionIn.x() - sizeIn.x() * 0.5f, positionIn.y() - sizeIn.y() * 0.5f));
+		this.setEnd(new Vector2f(positionIn.x() + sizeIn.x() * 0.5f, positionIn.y() + sizeIn.y() * 0.5f));
 	}
 
 	// Methods
 
 	public boolean isIn(final double mouseXIn, final double mouseYIn)
 	{
-		return mouseXIn >= this.getStart().getX() && mouseYIn >= this.getStart().getY()
-				&& mouseXIn <= this.getEnd().getX() && mouseYIn <= this.getEnd().getY();
+		return mouseXIn >= this.getStart().x() && mouseYIn >= this.getStart().y() && mouseXIn <= this.getEnd().x()
+				&& mouseYIn <= this.getEnd().y();
 	}
 
 	public boolean isIn(final Vector2f mousePositionIn)
 	{
-		return mousePositionIn.getX() >= this.getStart().getX() && mousePositionIn.getY() >= this.getStart().getY()
-				&& mousePositionIn.getX() <= this.getEnd().getX() && mousePositionIn.getY() <= this.getEnd().getY();
+		return mousePositionIn.x() >= this.getStart().x() && mousePositionIn.y() >= this.getStart().y()
+				&& mousePositionIn.x() <= this.getEnd().x() && mousePositionIn.y() <= this.getEnd().y();
 	}
 
 	// Getter | Setter

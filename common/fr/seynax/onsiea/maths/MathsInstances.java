@@ -1,7 +1,7 @@
 package fr.seynax.onsiea.maths;
 
-import fr.seynax.onsiea.utils.maths.vector.Vector2f;
-import fr.seynax.onsiea.utils.maths.vector.Vector3f;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 public class MathsInstances
 {
@@ -45,12 +45,12 @@ public class MathsInstances
 
 	public static boolean isOnAxeX(final Vector2f valueIn)
 	{
-		if (valueIn.getX() != MathsInstances.getAxeX().getX())
+		if (valueIn.x() != MathsInstances.getAxeX().x())
 		{
 			return false;
 		}
 
-		if (valueIn.getY() != MathsInstances.getAxeX().getY())
+		if (valueIn.y() != MathsInstances.getAxeX().y())
 		{
 			return false;
 		}
@@ -60,17 +60,17 @@ public class MathsInstances
 
 	public static boolean isOnAxeX(final Vector3f valueIn)
 	{
-		if (valueIn.getX() != MathsInstances.getAxeX().getX())
+		if (valueIn.x() != MathsInstances.getAxeX().x())
 		{
 			return false;
 		}
 
-		if (valueIn.getY() != MathsInstances.getAxeX().getY())
+		if (valueIn.y() != MathsInstances.getAxeX().y())
 		{
 			return false;
 		}
 
-		if (valueIn.getZ() != MathsInstances.getAxeX().getZ())
+		if (valueIn.z() != MathsInstances.getAxeX().z())
 		{
 			return false;
 		}
@@ -80,12 +80,12 @@ public class MathsInstances
 
 	public static boolean isOnAxeX(final float xIn, final float yIn)
 	{
-		if (xIn != MathsInstances.getAxeX().getX())
+		if (xIn != MathsInstances.getAxeX().x())
 		{
 			return false;
 		}
 
-		if (yIn != MathsInstances.getAxeX().getY())
+		if (yIn != MathsInstances.getAxeX().y())
 		{
 			return false;
 		}
@@ -95,17 +95,17 @@ public class MathsInstances
 
 	public static boolean isOnAxeX(final float xIn, final float yIn, final float zIn)
 	{
-		if (xIn != MathsInstances.getAxeX().getX())
+		if (xIn != MathsInstances.getAxeX().x())
 		{
 			return false;
 		}
 
-		if (yIn != MathsInstances.getAxeX().getY())
+		if (yIn != MathsInstances.getAxeX().y())
 		{
 			return false;
 		}
 
-		if (zIn != MathsInstances.getAxeX().getZ())
+		if (zIn != MathsInstances.getAxeX().z())
 		{
 			return false;
 		}
@@ -129,17 +129,17 @@ public class MathsInstances
 
 	public static boolean isOnAxeY(final Vector3f valueIn)
 	{
-		if (valueIn.getY() != MathsInstances.getAxeY().getX())
+		if (valueIn.y() != MathsInstances.getAxeY().x())
 		{
 			return false;
 		}
 
-		if (valueIn.getY() != MathsInstances.getAxeY().getY())
+		if (valueIn.y() != MathsInstances.getAxeY().y())
 		{
 			return false;
 		}
 
-		if (valueIn.getZ() != MathsInstances.getAxeY().getZ())
+		if (valueIn.z() != MathsInstances.getAxeY().z())
 		{
 			return false;
 		}
@@ -149,12 +149,12 @@ public class MathsInstances
 
 	public static boolean isOnAxeY(final Vector2f valueIn)
 	{
-		if (valueIn.getX() != MathsInstances.getAxeY().getX())
+		if (valueIn.x() != MathsInstances.getAxeY().x())
 		{
 			return false;
 		}
 
-		if (valueIn.getY() != MathsInstances.getAxeY().getY())
+		if (valueIn.y() != MathsInstances.getAxeY().y())
 		{
 			return false;
 		}
@@ -164,12 +164,12 @@ public class MathsInstances
 
 	public static boolean isOnAxeY(final float xIn, final float yIn)
 	{
-		if (xIn != MathsInstances.getAxeY().getX())
+		if (xIn != MathsInstances.getAxeY().x())
 		{
 			return false;
 		}
 
-		if (yIn != MathsInstances.getAxeY().getY())
+		if (yIn != MathsInstances.getAxeY().y())
 		{
 			return false;
 		}
@@ -179,17 +179,17 @@ public class MathsInstances
 
 	public static boolean isOnAxeY(final float xIn, final float yIn, final float zIn)
 	{
-		if (xIn != MathsInstances.getAxeY().getX())
+		if (xIn != MathsInstances.getAxeY().x())
 		{
 			return false;
 		}
 
-		if (yIn != MathsInstances.getAxeY().getY())
+		if (yIn != MathsInstances.getAxeY().y())
 		{
 			return false;
 		}
 
-		if (zIn != MathsInstances.getAxeY().getZ())
+		if (zIn != MathsInstances.getAxeY().z())
 		{
 			return false;
 		}
@@ -213,17 +213,17 @@ public class MathsInstances
 
 	public static boolean isOnAxeZ(final Vector3f valueIn)
 	{
-		if (valueIn.getY() != MathsInstances.getAxeZ().getX())
+		if (valueIn.y() != MathsInstances.getAxeZ().x())
 		{
 			return false;
 		}
 
-		if (valueIn.getY() != MathsInstances.getAxeZ().getY())
+		if (valueIn.y() != MathsInstances.getAxeZ().y())
 		{
 			return false;
 		}
 
-		if (valueIn.getZ() != MathsInstances.getAxeZ().getZ())
+		if (valueIn.z() != MathsInstances.getAxeZ().z())
 		{
 			return false;
 		}
@@ -233,12 +233,12 @@ public class MathsInstances
 
 	public static boolean isOnAxeZ(final float xIn, final float yIn)
 	{
-		if (xIn != MathsInstances.getAxeZ().getX())
+		if (xIn != MathsInstances.getAxeZ().x())
 		{
 			return false;
 		}
 
-		if (yIn != MathsInstances.getAxeZ().getY())
+		if (yIn != MathsInstances.getAxeZ().y())
 		{
 			return false;
 		}
@@ -248,17 +248,17 @@ public class MathsInstances
 
 	public static boolean isOnAxeZ(final float xIn, final float yIn, final float zIn)
 	{
-		if (xIn != MathsInstances.getAxeZ().getX())
+		if (xIn != MathsInstances.getAxeZ().x())
 		{
 			return false;
 		}
 
-		if (yIn != MathsInstances.getAxeZ().getY())
+		if (yIn != MathsInstances.getAxeZ().y())
 		{
 			return false;
 		}
 
-		if (zIn != MathsInstances.getAxeZ().getZ())
+		if (zIn != MathsInstances.getAxeZ().z())
 		{
 			return false;
 		}
@@ -282,12 +282,12 @@ public class MathsInstances
 
 	public static boolean isNull(final Vector2f valueIn)
 	{
-		if (valueIn.getX() != MathsInstances.getNull().getX())
+		if (valueIn.x() != MathsInstances.getNull().x())
 		{
 			return false;
 		}
 
-		if (valueIn.getY() != MathsInstances.getNull().getY())
+		if (valueIn.y() != MathsInstances.getNull().y())
 		{
 			return false;
 		}
@@ -297,17 +297,17 @@ public class MathsInstances
 
 	public static boolean isNull(final Vector3f valueIn)
 	{
-		if (valueIn.getX() != MathsInstances.getNull().getX())
+		if (valueIn.x() != MathsInstances.getNull().x())
 		{
 			return false;
 		}
 
-		if (valueIn.getY() != MathsInstances.getNull().getY())
+		if (valueIn.y() != MathsInstances.getNull().y())
 		{
 			return false;
 		}
 
-		if (valueIn.getZ() != MathsInstances.getNull().getZ())
+		if (valueIn.z() != MathsInstances.getNull().z())
 		{
 			return false;
 		}
@@ -317,12 +317,12 @@ public class MathsInstances
 
 	public static boolean isNull(final float xIn, final float yIn)
 	{
-		if (xIn != MathsInstances.getNull().getX())
+		if (xIn != MathsInstances.getNull().x())
 		{
 			return false;
 		}
 
-		if (yIn != MathsInstances.getNull().getY())
+		if (yIn != MathsInstances.getNull().y())
 		{
 			return false;
 		}
@@ -332,17 +332,17 @@ public class MathsInstances
 
 	public static boolean isNull(final float xIn, final float yIn, final float zIn)
 	{
-		if (xIn != MathsInstances.getNull().getX())
+		if (xIn != MathsInstances.getNull().x())
 		{
 			return false;
 		}
 
-		if (yIn != MathsInstances.getNull().getX())
+		if (yIn != MathsInstances.getNull().y())
 		{
 			return false;
 		}
 
-		if (zIn != MathsInstances.getNull().getZ())
+		if (zIn != MathsInstances.getNull().z())
 		{
 			return false;
 		}
@@ -366,12 +366,12 @@ public class MathsInstances
 
 	public static boolean isOne(final Vector2f valueIn)
 	{
-		if (valueIn.getX() != MathsInstances.getOne().getX())
+		if (valueIn.x() != MathsInstances.getOne().x())
 		{
 			return false;
 		}
 
-		if (valueIn.getY() != MathsInstances.getOne().getY())
+		if (valueIn.y() != MathsInstances.getOne().y())
 		{
 			return false;
 		}
@@ -381,17 +381,17 @@ public class MathsInstances
 
 	public static boolean isOne(final Vector3f valueIn)
 	{
-		if (valueIn.getX() != MathsInstances.getOne().getX())
+		if (valueIn.x() != MathsInstances.getOne().x())
 		{
 			return false;
 		}
 
-		if (valueIn.getY() != MathsInstances.getOne().getY())
+		if (valueIn.y() != MathsInstances.getOne().y())
 		{
 			return false;
 		}
 
-		if (valueIn.getZ() != MathsInstances.getOne().getZ())
+		if (valueIn.z() != MathsInstances.getOne().z())
 		{
 			return false;
 		}
@@ -401,12 +401,12 @@ public class MathsInstances
 
 	public static boolean isOne(final float xIn, final float yIn)
 	{
-		if (xIn != MathsInstances.getOne().getX())
+		if (xIn != MathsInstances.getOne().x())
 		{
 			return false;
 		}
 
-		if (yIn != MathsInstances.getOne().getY())
+		if (yIn != MathsInstances.getOne().y())
 		{
 			return false;
 		}
@@ -416,17 +416,17 @@ public class MathsInstances
 
 	public static boolean isOne(final float xIn, final float yIn, final float zIn)
 	{
-		if (xIn != MathsInstances.getOne().getX())
+		if (xIn != MathsInstances.getOne().x())
 		{
 			return false;
 		}
 
-		if (yIn != MathsInstances.getOne().getX())
+		if (yIn != MathsInstances.getOne().y())
 		{
 			return false;
 		}
 
-		if (zIn != MathsInstances.getOne().getZ())
+		if (zIn != MathsInstances.getOne().z())
 		{
 			return false;
 		}

@@ -42,7 +42,7 @@ public class BaseColourShader extends ShaderProgram
 		this.setUniform(this.getLocationTransformationMatrix(), transformationMatrixIn);
 	}
 
-	public void sendViewMatrix(final fr.seynax.onsiea.utils.maths.vector.Matrix4f viewMatrixIn)
+	public void sendViewMatrix(final Matrix4f viewMatrixIn)
 	{
 		this.setUniform(this.getLocationViewMatrix(), viewMatrixIn);
 	}

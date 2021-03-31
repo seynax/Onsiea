@@ -29,10 +29,10 @@ public class RendererGuiElement extends RendererBase<ShaderGui, IGuiElementData>
 		Texture.bind(guiElementDataIn.getTextureId());
 
 		shaderGuiIn.sendTransformationMatrix(Maths.getWorldMatrix(
-				new Vector3f(guiElementDataIn.getRectangle().getPosition().getX(),
-						guiElementDataIn.getRectangle().getPosition().getY(), 0.0F),
-				new Vector3f(0.0F, 0.0F, 0.0F), new Vector3f(guiElementDataIn.getRectangle().getSize().getX(),
-						guiElementDataIn.getRectangle().getSize().getY(), 1.0F)));
+				new Vector3f(guiElementDataIn.getRectangle().getPosition().x(),
+						guiElementDataIn.getRectangle().getPosition().y(), 0.0F),
+				new Vector3f(0.0F, 0.0F, 0.0F), new Vector3f(guiElementDataIn.getRectangle().getSize().x(),
+						guiElementDataIn.getRectangle().getSize().y(), 1.0F)));
 
 		GL11.glDrawElements(GL11.GL_TRIANGLES, Shapes.getSurface2dindices().length, GL11.GL_UNSIGNED_INT, 0);
 

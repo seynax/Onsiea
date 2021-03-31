@@ -3,6 +3,7 @@ package fr.seynax.onsiea.graphics.gui;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
 import fr.seynax.onsiea.gamelogic.item.Rectangle;
@@ -12,7 +13,6 @@ import fr.seynax.onsiea.graphics.Texture;
 import fr.seynax.onsiea.opengl.IGuiElementData;
 import fr.seynax.onsiea.opengl.renderer.RendererGuiElement;
 import fr.seynax.onsiea.opengl.shader.ShaderGui;
-import fr.seynax.onsiea.utils.maths.vector.Vector2f;
 
 public class GuiButton implements IGuiElementData, IRenderable<ShaderGui, IGuiElementData, RendererGuiElement>
 {

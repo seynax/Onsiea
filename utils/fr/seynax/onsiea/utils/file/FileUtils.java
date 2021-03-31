@@ -222,4 +222,124 @@ public class FileUtils
 
 		return content.toString();
 	}
+
+	public static boolean copy(final String fromFilepathIn, final String toFilepathIn)
+	{
+		if (fromFilepathIn.contentEquals(toFilepathIn))
+		{
+			return false;
+		}
+
+		final var	fromFile	= new File(fromFilepathIn);
+		final var	toFile		= new File(toFilepathIn);
+
+		if (!fromFile.exists() || fromFile.isDirectory())
+		{
+			return false;
+		}
+
+		final var parent = toFile.getParentFile();
+
+		if (parent.exists() && parent.isFile())
+		{
+			return false;
+		}
+		else if (!parent.exists())
+		{
+			parent.mkdirs();
+		}
+
+		if (!toFile.exists())
+		{
+			try
+			{
+				toFile.createNewFile();
+			}
+			catch (final IOException e1)
+			{
+				e1.printStackTrace();
+
+				return false;
+			}
+		}
+
+		final var		content			= new StringBuilder();
+
+		BufferedReader	bufferedReader	= null;
+
+		try
+		{
+			bufferedReader = new BufferedReader(new FileReader(fromFile));
+
+			String line;
+
+			while ((line = bufferedReader.readLine()) != null)
+			{
+				content.append(line).append("//\n");
+			}
+		}
+		catch (final FileNotFoundException e)
+		{
+			e.printStackTrace();
+
+			return false;
+		}
+		catch (final IOException e)
+		{
+			e.printStackTrace();
+
+			return false;
+		}
+		finally
+		{
+			try
+			{
+				if (bufferedReader != null)
+				{
+					bufferedReader.close();
+				}
+			}
+			catch (final IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+		BufferedWriter bufferedWriter = null;
+
+		try
+		{
+			bufferedWriter = new BufferedWriter(new FileWriter(toFile));
+
+			bufferedWriter.write(content.toString());
+		}
+		catch (final FileNotFoundException e)
+		{
+			e.printStackTrace();
+
+			return false;
+		}
+		catch (final IOException e)
+		{
+			e.printStackTrace();
+
+			return false;
+		}
+		finally
+		{
+			try
+			{
+				if (bufferedWriter != null)
+				{
+					bufferedWriter.close();
+				}
+			}
+			catch (final IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+		return true;
+	}
 }

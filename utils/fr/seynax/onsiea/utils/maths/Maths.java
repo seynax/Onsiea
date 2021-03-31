@@ -10,7 +10,6 @@ import org.joml.Vector3f;
 import fr.seynax.onsiea.entity.Camera;
 import fr.seynax.onsiea.graphics.GraphicsConstants;
 import fr.seynax.onsiea.graphics.IWindow;
-import fr.seynax.onsiea.maths.MathsInstances;
 
 public class Maths
 {
@@ -88,41 +87,34 @@ public class Maths
 	{
 		final var	viewMatrix			= new Matrix4f();
 
-		final var	negativePosition	= new Vector3f(-cameraIn.getPosition().getX(), -cameraIn.getPosition().getY(),
-				-cameraIn.getPosition().getZ());
+		final var	negativePosition	= new Vector3f(-cameraIn.getPosition().x(), -cameraIn.getPosition().y(),
+				-cameraIn.getPosition().z());
 
-		viewMatrix.identity().rotateX(cameraIn.getOrientation().getX()).rotateY(cameraIn.getOrientation().getY())
-				.rotateZ(cameraIn.getOrientation().getZ()).translate(negativePosition);
+		viewMatrix.identity().rotateX(cameraIn.getOrientation().x()).rotateY(cameraIn.getOrientation().y())
+				.rotateZ(cameraIn.getOrientation().z()).translate(negativePosition);
 
 		return viewMatrix;
 	}
 
 	public static Matrix4f loadViewMatrix(final Matrix4f viewMatrixIn, final Camera cameraIn)
 	{
-		final var negativePosition = new Vector3f(-cameraIn.getPosition().getX(), -cameraIn.getPosition().getY(),
-				-cameraIn.getPosition().getZ());
+		final var negativePosition = new Vector3f(-cameraIn.getPosition().x(), -cameraIn.getPosition().y(),
+				-cameraIn.getPosition().z());
 
-		viewMatrixIn.identity().rotateX(cameraIn.getOrientation().getX()).rotateY(cameraIn.getOrientation().getY())
-				.rotateZ(cameraIn.getOrientation().getZ()).translate(negativePosition);
+		viewMatrixIn.identity().rotateX(cameraIn.getOrientation().x()).rotateY(cameraIn.getOrientation().y())
+				.rotateZ(cameraIn.getOrientation().z()).translate(negativePosition);
 
 		return viewMatrixIn;
 	}
 
-	public static fr.seynax.onsiea.utils.maths.vector.Matrix4f loadViewMatrix(
-			final fr.seynax.onsiea.utils.maths.vector.Matrix4f viewMatrixIn, final float xIn, final float yIn,
+	public static Matrix4f loadViewMatrix(final Matrix4f viewMatrixIn, final float xIn, final float yIn,
 			final float zIn, final float rxIn, final float ryIn, final float rzIn)
 	{
-		viewMatrixIn.setIdentity();
+		viewMatrixIn.identity();
+		final var negativePosition = new Vector3f(-xIn, -yIn, -zIn);
 
-		fr.seynax.onsiea.utils.maths.vector.Matrix4f.rotate((float) Math.toRadians(rxIn), MathsInstances.getAxeX(),
-				viewMatrixIn, viewMatrixIn);
-		fr.seynax.onsiea.utils.maths.vector.Matrix4f.rotate((float) Math.toRadians(ryIn), MathsInstances.getAxeY(),
-				viewMatrixIn, viewMatrixIn);
-		fr.seynax.onsiea.utils.maths.vector.Matrix4f.rotate((float) Math.toRadians(rzIn), MathsInstances.getAxeZ(),
-				viewMatrixIn, viewMatrixIn);
-
-		final var negativePosition = new fr.seynax.onsiea.utils.maths.vector.Vector3f(-xIn, -yIn, -zIn);
-		fr.seynax.onsiea.utils.maths.vector.Matrix4f.translate(negativePosition, viewMatrixIn, viewMatrixIn);
+		viewMatrixIn.rotateX((float) Math.toRadians(rxIn)).rotateY((float) Math.toRadians(ryIn))
+				.rotateZ((float) Math.toRadians(rzIn)).translate(negativePosition);
 
 		return viewMatrixIn;
 	}
@@ -135,6 +127,62 @@ public class Maths
 	public static float randFloat()
 	{
 		return Maths.getRandom().nextFloat();
+	}
+
+	public static Matrix4f copy(final Matrix4f matrixIn)
+	{
+		final var matrix = new Matrix4f();
+
+		matrix.identity();
+
+		matrix.m00(matrixIn.m00());
+		matrix.m01(matrixIn.m01());
+		matrix.m02(matrixIn.m02());
+		matrix.m03(matrixIn.m03());
+
+		matrix.m10(matrixIn.m10());
+		matrix.m11(matrixIn.m11());
+		matrix.m12(matrixIn.m12());
+		matrix.m13(matrixIn.m13());
+
+		matrix.m20(matrixIn.m20());
+		matrix.m21(matrixIn.m21());
+		matrix.m22(matrixIn.m22());
+		matrix.m23(matrixIn.m23());
+
+		matrix.m30(matrixIn.m30());
+		matrix.m31(matrixIn.m31());
+		matrix.m32(matrixIn.m32());
+		matrix.m33(matrixIn.m33());
+
+		return matrix;
+	}
+
+	public static Matrix4f copy(final Matrix4f fromMatrixIn, final Matrix4f toMatrixIn)
+	{
+		toMatrixIn.identity();
+
+		toMatrixIn.m00(fromMatrixIn.m00());
+		toMatrixIn.m01(fromMatrixIn.m01());
+		toMatrixIn.m02(fromMatrixIn.m02());
+		toMatrixIn.m03(fromMatrixIn.m03());
+
+		toMatrixIn.m10(fromMatrixIn.m10());
+		toMatrixIn.m11(fromMatrixIn.m11());
+		toMatrixIn.m12(fromMatrixIn.m12());
+		toMatrixIn.m13(fromMatrixIn.m13());
+
+		toMatrixIn.m20(fromMatrixIn.m20());
+		toMatrixIn.m21(fromMatrixIn.m21());
+		toMatrixIn.m22(fromMatrixIn.m22());
+		toMatrixIn.m23(fromMatrixIn.m23());
+
+		toMatrixIn.m30(fromMatrixIn.m30());
+		toMatrixIn.m31(fromMatrixIn.m31());
+		toMatrixIn.m32(fromMatrixIn.m32());
+		toMatrixIn.m33(fromMatrixIn.m33());
+
+		return toMatrixIn;
 	}
 
 	// Getter | Setter
@@ -167,118 +215,5 @@ public class Maths
 	public static void setRandom(final Random randomIn)
 	{
 		Maths.random = randomIn;
-	}
-
-	public static Matrix4f copy(final Matrix4f matrixIn)
-	{
-		final var matrix = new Matrix4f();
-
-		matrix.identity();
-
-		matrix.m00(matrixIn.m00());
-		matrix.m01(matrixIn.m01());
-		matrix.m02(matrixIn.m02());
-		matrix.m03(matrixIn.m03());
-
-		matrix.m10(matrixIn.m10());
-		matrix.m11(matrixIn.m11());
-		matrix.m12(matrixIn.m12());
-		matrix.m13(matrixIn.m13());
-
-		matrix.m20(matrixIn.m20());
-		matrix.m21(matrixIn.m21());
-		matrix.m22(matrixIn.m22());
-		matrix.m23(matrixIn.m23());
-
-		matrix.m30(matrixIn.m30());
-		matrix.m31(matrixIn.m31());
-		matrix.m32(matrixIn.m32());
-		matrix.m33(matrixIn.m33());
-
-		return matrix;
-	}
-
-	public static fr.seynax.onsiea.utils.maths.vector.Matrix4f convert(final Matrix4f matrixIn)
-	{
-		final var matrix = new fr.seynax.onsiea.utils.maths.vector.Matrix4f();
-
-		matrix.setIdentity();
-
-		matrix.m00	= matrixIn.m00();
-		matrix.m01	= matrixIn.m01();
-		matrix.m02	= matrixIn.m02();
-		matrix.m03	= matrixIn.m03();
-
-		matrix.m10	= matrixIn.m10();
-		matrix.m11	= matrixIn.m11();
-		matrix.m12	= matrixIn.m12();
-		matrix.m13	= matrixIn.m13();
-
-		matrix.m20	= matrixIn.m20();
-		matrix.m21	= matrixIn.m21();
-		matrix.m22	= matrixIn.m22();
-		matrix.m23	= matrixIn.m23();
-
-		matrix.m30	= matrixIn.m30();
-		matrix.m31	= matrixIn.m31();
-		matrix.m32	= matrixIn.m32();
-		matrix.m33	= matrixIn.m33();
-
-		return matrix;
-	}
-
-	public static Matrix4f copy(final Matrix4f fromMatrixIn, final Matrix4f toMatrixIn)
-	{
-		toMatrixIn.identity();
-
-		toMatrixIn.m00(fromMatrixIn.m00());
-		toMatrixIn.m01(fromMatrixIn.m01());
-		toMatrixIn.m02(fromMatrixIn.m02());
-		toMatrixIn.m03(fromMatrixIn.m03());
-
-		toMatrixIn.m10(fromMatrixIn.m10());
-		toMatrixIn.m11(fromMatrixIn.m11());
-		toMatrixIn.m12(fromMatrixIn.m12());
-		toMatrixIn.m13(fromMatrixIn.m13());
-
-		toMatrixIn.m20(fromMatrixIn.m20());
-		toMatrixIn.m21(fromMatrixIn.m21());
-		toMatrixIn.m22(fromMatrixIn.m22());
-		toMatrixIn.m23(fromMatrixIn.m23());
-
-		toMatrixIn.m30(fromMatrixIn.m30());
-		toMatrixIn.m31(fromMatrixIn.m31());
-		toMatrixIn.m32(fromMatrixIn.m32());
-		toMatrixIn.m33(fromMatrixIn.m33());
-
-		return toMatrixIn;
-	}
-
-	public static fr.seynax.onsiea.utils.maths.vector.Matrix4f convert(final Matrix4f fromMatrixIn,
-			final fr.seynax.onsiea.utils.maths.vector.Matrix4f viewMatrix2In)
-	{
-		viewMatrix2In.setIdentity();
-
-		viewMatrix2In.m00	= fromMatrixIn.m00();
-		viewMatrix2In.m01	= fromMatrixIn.m01();
-		viewMatrix2In.m02	= fromMatrixIn.m02();
-		viewMatrix2In.m03	= fromMatrixIn.m03();
-
-		viewMatrix2In.m10	= fromMatrixIn.m10();
-		viewMatrix2In.m11	= fromMatrixIn.m11();
-		viewMatrix2In.m12	= fromMatrixIn.m12();
-		viewMatrix2In.m13	= fromMatrixIn.m13();
-
-		viewMatrix2In.m20	= fromMatrixIn.m20();
-		viewMatrix2In.m21	= fromMatrixIn.m21();
-		viewMatrix2In.m22	= fromMatrixIn.m22();
-		viewMatrix2In.m23	= fromMatrixIn.m23();
-
-		viewMatrix2In.m30	= fromMatrixIn.m30();
-		viewMatrix2In.m31	= fromMatrixIn.m31();
-		viewMatrix2In.m32	= fromMatrixIn.m32();
-		viewMatrix2In.m33	= fromMatrixIn.m33();
-
-		return viewMatrix2In;
 	}
 }
