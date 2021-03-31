@@ -12,13 +12,90 @@ import java.util.List;
 
 public class FileUtils
 {
-	public final static boolean writeAll(final String filepathNameIn, final String contentIn)
+	public final static boolean writeIfFileExist(final String filepathIn, final String contentIn)
 	{
+		return FileUtils.writeIfFileExist(filepathIn, contentIn, false);
+	}
+
+	public final static boolean writeIfFileExist(final String filepathIn, final String contentIn,
+			final boolean canAppendIn)
+	{
+		final var file = new File(filepathIn);
+
+		if (!file.exists())
+		{
+			return false;
+		}
+
 		BufferedWriter bufferedWriter = null;
 
 		try
 		{
-			bufferedWriter = new BufferedWriter(new FileWriter(new File(filepathNameIn)));
+			bufferedWriter = new BufferedWriter(new FileWriter(file, canAppendIn));
+
+			bufferedWriter.write(contentIn);
+		}
+		catch (final IOException e)
+		{
+			e.printStackTrace();
+
+			return false;
+		}
+		finally
+		{
+			if (bufferedWriter != null)
+			{
+				try
+				{
+					bufferedWriter.close();
+				}
+				catch (final IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return true;
+	}
+
+	public final static boolean write(final String filepathIn, final String contentIn)
+	{
+		return FileUtils.write(filepathIn, contentIn, false);
+	}
+
+	public final static boolean write(final String filepathIn, final String contentIn, final boolean canAppendIn)
+	{
+		final var	file	= new File(filepathIn);
+
+		final var	parent	= file.getParentFile();
+
+		if (parent.exists() && parent.isFile())
+		{
+			return false;
+		}
+		else if (!parent.exists())
+		{
+			parent.mkdirs();
+		}
+
+		if (!file.exists())
+		{
+			try
+			{
+				file.createNewFile();
+			}
+			catch (final IOException e1)
+			{
+				e1.printStackTrace();
+			}
+		}
+
+		BufferedWriter bufferedWriter = null;
+
+		try
+		{
+			bufferedWriter = new BufferedWriter(new FileWriter(file, canAppendIn));
 
 			bufferedWriter.write(contentIn);
 		}
