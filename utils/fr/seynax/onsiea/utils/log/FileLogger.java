@@ -71,7 +71,7 @@ public class FileLogger
 
 	public boolean write(final String filepathIn)
 	{
-		return FileUtils.writeAll(filepathIn, this.getContent());
+		return FileUtils.write(filepathIn, this.getContent());
 	}
 
 	// Getter | Setter

@@ -6,15 +6,15 @@ import java.util.Map;
 
 import fr.seynax.onsiea.utils.maths.Maths;
 
-public class ProfilerSystem
+public class ProfilingSystem
 {
 	// Variables
 
-	private Map<String, Profiler> profilers;
+	private Map<String, TimingProfiler> profilers;
 
 	// Constructor
 
-	public ProfilerSystem()
+	public ProfilingSystem()
 	{
 		this.setProfiler(new HashMap<>());
 	}
@@ -27,14 +27,14 @@ public class ProfilerSystem
 
 		var	reportOutput		= "";
 
-		for (final Profiler profiler : this.getProfilers().values())
+		for (final TimingProfiler profiler : this.getProfilers().values())
 		{
 			totalTimeIterations += profiler.getTotalTime();
 		}
 
 		reportOutput = "[TotalTime count each iteration = " + totalTimeIterations + "] :\n";
 
-		for (final Profiler profiler : this.getProfilers().values())
+		for (final TimingProfiler profiler : this.getProfilers().values())
 		{
 			reportOutput += "	" + profiler.toString() + " | "
 					+ Maths.round((double) profiler.getTotalTime() / totalTimeIterations * 100.0D, 2) + " %] for "
@@ -53,7 +53,7 @@ public class ProfilerSystem
 
 		var	reportOutput		= "";
 
-		for (final Profiler profiler : this.getProfilers().values())
+		for (final TimingProfiler profiler : this.getProfilers().values())
 		{
 			totalTimeIterations	+= profiler.getTotalTime();
 			totalTime			+= profiler.getTime();
@@ -64,7 +64,7 @@ public class ProfilerSystem
 
 		var i = 0;
 
-		for (final Profiler profiler : this.getProfilers().values())
+		for (final TimingProfiler profiler : this.getProfilers().values())
 		{
 			reportOutput += "	[" + i + "] : " + profiler.toString() + "\n	{\n";
 
@@ -128,19 +128,19 @@ public class ProfilerSystem
 	{
 		for (final String profilerName : profilersNameIn)
 		{
-			this.getProfilers().put(profilerName, new Profiler(profilerName));
+			this.getProfilers().put(profilerName, new TimingProfiler(profilerName));
 		}
 	}
 
-	public void add(final Profiler... profilersIn)
+	public void add(final TimingProfiler... profilersIn)
 	{
-		for (final Profiler profiler : profilersIn)
+		for (final TimingProfiler profiler : profilersIn)
 		{
 			this.getProfilers().put(profiler.getName(), profiler);
 		}
 	}
 
-	public Profiler get(final String profilerNameIn)
+	public TimingProfiler get(final String profilerNameIn)
 	{
 		return this.getProfilers().get(profilerNameIn);
 	}
@@ -164,19 +164,19 @@ public class ProfilerSystem
 		return this.getProfilers().keySet();
 	}
 
-	public Collection<Profiler> profilers()
+	public Collection<TimingProfiler> profilers()
 	{
 		return this.getProfilers().values();
 	}
 
 	// Getter | Setter
 
-	private Map<String, Profiler> getProfilers()
+	private Map<String, TimingProfiler> getProfilers()
 	{
 		return this.profilers;
 	}
 
-	private void setProfiler(final Map<String, Profiler> profilersIn)
+	private void setProfiler(final Map<String, TimingProfiler> profilersIn)
 	{
 		this.profilers = profilersIn;
 	}

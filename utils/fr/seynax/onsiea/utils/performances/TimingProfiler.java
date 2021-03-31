@@ -1,6 +1,6 @@
 package fr.seynax.onsiea.utils.performances;
 
-public class Profiler
+public class TimingProfiler
 {
 	// Static variables
 
@@ -21,27 +21,37 @@ public class Profiler
 
 	// Constructor
 
-	public Profiler()
+	public TimingProfiler()
 	{
-		this.setName("PROFILE-" + Profiler.addProfileNumber());
+		this.setName("PROFILE-" + TimingProfiler.addProfileNumber());
 
 	}
 
-	public Profiler(final String nameIn)
+	public TimingProfiler(final String nameIn)
 	{
 		this.setName(nameIn);
 
-		Profiler.addProfileNumber();
+		TimingProfiler.addProfileNumber();
 	}
 
 	// Static methods
 
 	public final static int addProfileNumber()
 	{
-		return Profiler.profileNumber++;
+		return TimingProfiler.profileNumber++;
 	}
 
 	// Methods
+
+	public void reset()
+	{
+		this.setStart(System.nanoTime());
+		this.setEnd(System.nanoTime());
+
+		this.setTime(0.0D);
+		this.setTotalTime(0L);
+		this.setIterationNumber(0);
+	}
 
 	public void start()
 	{
@@ -66,6 +76,16 @@ public class Profiler
 		return currentTime;
 	}
 
+	public String shortReport()
+	{
+		return this.getEnd() + " - " + this.getStart() + " = " + this.getTime();
+	}
+
+	public String report()
+	{
+		return this.toString();
+	}
+
 	@Override
 	public String toString()
 	{
@@ -76,12 +96,12 @@ public class Profiler
 
 	public final static int getProfileNumber()
 	{
-		return Profiler.profileNumber;
+		return TimingProfiler.profileNumber;
 	}
 
 	public final static void setProfileNumber(final int profileNumberIn)
 	{
-		Profiler.profileNumber = profileNumberIn;
+		TimingProfiler.profileNumber = profileNumberIn;
 	}
 
 	// Getter | Setter

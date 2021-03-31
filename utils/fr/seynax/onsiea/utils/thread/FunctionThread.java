@@ -1,5 +1,6 @@
 package fr.seynax.onsiea.utils.thread;
 
+import fr.seynax.onsiea.utils.IFunction;
 import fr.seynax.onsiea.utils.OS;
 
 public class FunctionThread implements IStoppableThread
@@ -12,18 +13,18 @@ public class FunctionThread implements IStoppableThread
 
 	private String						name;
 
-	private IThreadExecutionFunction	threadExecutionFunction;
+	private IFunction	threadExecutionFunction;
 
 	// Constructor
 
-	public FunctionThread(final IThreadExecutionFunction threadExecutionFunctionIn)
+	public FunctionThread(final IFunction threadExecutionFunctionIn)
 	{
 		this.setName("THREAD-" + ThreadManager.addThreadNumber());
 
 		this.setThreadExecutionFunction(threadExecutionFunctionIn);
 	}
 
-	public FunctionThread(final String nameIn, final IThreadExecutionFunction threadExecutionFunctionIn)
+	public FunctionThread(final String nameIn, final IFunction threadExecutionFunctionIn)
 	{
 		this.setName(nameIn);
 
@@ -111,12 +112,12 @@ public class FunctionThread implements IStoppableThread
 		this.name = nameIn;
 	}
 
-	public IThreadExecutionFunction getThreadExecutionFunction()
+	public IFunction getThreadExecutionFunction()
 	{
 		return this.threadExecutionFunction;
 	}
 
-	public void setThreadExecutionFunction(final IThreadExecutionFunction threadExecutionFunctionIn)
+	public void setThreadExecutionFunction(final IFunction threadExecutionFunctionIn)
 	{
 		this.threadExecutionFunction = threadExecutionFunctionIn;
 	}

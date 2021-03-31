@@ -3,6 +3,8 @@ package fr.seynax.onsiea.utils.thread;
 import java.util.HashMap;
 import java.util.Map;
 
+import fr.seynax.onsiea.utils.IFunction;
+
 public class ThreadManager
 {
 	// Variables
@@ -42,7 +44,7 @@ public class ThreadManager
 		return stoppableThread.getThread();
 	}
 
-	public String put(final IThreadExecutionFunction threadExecutionFunctionIn)
+	public String put(final IFunction threadExecutionFunctionIn)
 	{
 		final var functionThread = new FunctionThread(threadExecutionFunctionIn);
 
@@ -51,7 +53,7 @@ public class ThreadManager
 		return functionThread.getName();
 	}
 
-	public String put(final String threadNameIn, final IThreadExecutionFunction threadExecutionFunctionIn)
+	public String put(final String threadNameIn, final IFunction threadExecutionFunctionIn)
 	{
 		var i = 0;
 

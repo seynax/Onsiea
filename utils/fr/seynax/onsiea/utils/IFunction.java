@@ -1,6 +1,6 @@
-package fr.seynax.onsiea.utils.thread;
+package fr.seynax.onsiea.utils;
 
-public interface IThreadExecutionFunction
+public interface IFunction
 {
 	boolean execute();
 }

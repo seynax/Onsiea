@@ -1,6 +1,6 @@
 package fr.seynax.onsiea.utils.performances;
 
-public class FPSUtils
+public class FPSMeasurer
 {
 	// Variables
 
@@ -10,7 +10,7 @@ public class FPSUtils
 
 	// Constructor
 
-	public FPSUtils()
+	public FPSMeasurer()
 	{
 		this.start();
 	}
