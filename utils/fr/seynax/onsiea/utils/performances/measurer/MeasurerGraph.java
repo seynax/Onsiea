@@ -68,7 +68,14 @@ public class MeasurerGraph implements IMeasurer, Runnable
 
 			final var measure = this.getMeasurer().measure();
 			this.getValues().add(measure);
-			this.setAverage((this.getAverage() + measure) / 2.0D);
+			if (this.getAverage() == 0D)
+			{
+				this.setAverage(measure);
+			}
+			else
+			{
+				this.setAverage((this.getAverage() + measure) / 2.0D);
+			}
 			this.setTotal(this.getTotal() + measure);
 
 			return true;

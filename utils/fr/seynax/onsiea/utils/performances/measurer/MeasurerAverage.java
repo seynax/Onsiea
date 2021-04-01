@@ -58,9 +58,15 @@ public class MeasurerAverage implements IMeasurer, Runnable
 			this.getTimer().start();
 
 			final var measure = this.getMeasurer().measure();
-			this.setAverage((this.getAverage() + measure) / 2.0D);
+			if (this.getAverage() == 0D)
+			{
+				this.setAverage(measure);
+			}
+			else
+			{
+				this.setAverage((this.getAverage() + measure) / 2.0D);
+			}
 			this.setTotal(this.getTotal() + measure);
-
 			return true;
 		}
 
@@ -75,8 +81,6 @@ public class MeasurerAverage implements IMeasurer, Runnable
 		this.setThread(new Thread(this));
 
 		this.setRunning(true);
-
-		System.out.println("A !");
 
 		if (OS.getOsName().contains("mac"))
 		{

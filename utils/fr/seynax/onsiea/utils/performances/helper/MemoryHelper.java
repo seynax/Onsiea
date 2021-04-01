@@ -7,9 +7,12 @@ import fr.seynax.onsiea.utils.performances.beans.ExtendedBeans;
 
 public class MemoryHelper
 {
+	/**
+	 * @return used memory by the application
+	 */
 	public static long usedMemory()
 	{
-		return MemoryHelper.maxMemory() - MemoryHelper.freeMemory();
+		return MemoryHelper.totalMemory() - MemoryHelper.freeMemory();
 	}
 
 	/**
@@ -87,22 +90,22 @@ public class MemoryHelper
 		return ExtendedBeans.getOperatingSystem().getTotalSwapSpaceSize();
 	}
 
-	public MemoryUsage heapMemoryUsage()
+	public static final MemoryUsage heapMemoryUsage()
 	{
 		return Beans.getMemory().getHeapMemoryUsage();
 	}
 
-	public MemoryUsage nonHeapMemoryUsage()
+	public static final MemoryUsage nonHeapMemoryUsage()
 	{
 		return Beans.getMemory().getNonHeapMemoryUsage();
 	}
 
-	public int getObjectPendingFinalizationCount()
+	public static final int getObjectPendingFinalizationCount()
 	{
 		return Beans.getMemory().getObjectPendingFinalizationCount();
 	}
 
-	public boolean isVerbose()
+	public static final boolean isVerbose()
 	{
 		return Beans.getMemory().isVerbose();
 	}
