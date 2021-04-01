@@ -64,7 +64,7 @@ import org.lwjgl.vulkan.VkVertexInputAttributeDescription;
 import org.lwjgl.vulkan.VkVertexInputBindingDescription;
 import org.lwjgl.vulkan.VkViewport;
 
-import fr.seynax.onsiea.utils.performances.measurer.FPSMeasurer;
+import fr.seynax.onsiea.utils.performances.measurer.MeasurerFPS;
 import fr.seynax.onsiea.vulkan.utils.DisallowVKUtil;
 
 /**
@@ -98,7 +98,8 @@ public class VulkanDemo
 		final var VK_EXT_DEBUG_REPORT_EXTENSION = MemoryUtil.memUTF8(EXTDebugReport.VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
 		ppEnabledExtensionNames.put(VK_EXT_DEBUG_REPORT_EXTENSION);
 		ppEnabledExtensionNames.flip();
-		final var	ppEnabledLayerNames	= VulkanDemo.debug ? DisallowVKUtil.allocateLayerBuffer(VulkanDemo.layers) : null;
+		final var	ppEnabledLayerNames	= VulkanDemo.debug ? DisallowVKUtil.allocateLayerBuffer(VulkanDemo.layers)
+				: null;
 		final var	pCreateInfo			= VkInstanceCreateInfo.calloc()
 				.sType(VK10.VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO).pApplicationInfo(appInfo)
 				.ppEnabledExtensionNames(ppEnabledExtensionNames).ppEnabledLayerNames(ppEnabledLayerNames);
@@ -149,7 +150,8 @@ public class VulkanDemo
 		var			err						= VK10.vkEnumeratePhysicalDevices(instance, pPhysicalDeviceCount, null);
 		if (err != VK10.VK_SUCCESS)
 		{
-			throw new AssertionError("Failed to get number of physical devices: " + DisallowVKUtil.translateVulkanResult(err));
+			throw new AssertionError(
+					"Failed to get number of physical devices: " + DisallowVKUtil.translateVulkanResult(err));
 		}
 		final var pPhysicalDevices = MemoryUtil.memAllocPointer(pPhysicalDeviceCount.get(0));
 		err = VK10.vkEnumeratePhysicalDevices(instance, pPhysicalDeviceCount, pPhysicalDevices);
@@ -312,8 +314,8 @@ public class VulkanDemo
 		final var	formatCount		= pFormatCount.get(0);
 		if (err != VK10.VK_SUCCESS)
 		{
-			throw new AssertionError(
-					"Failed to query number of physical device surface formats: " + DisallowVKUtil.translateVulkanResult(err));
+			throw new AssertionError("Failed to query number of physical device surface formats: "
+					+ DisallowVKUtil.translateVulkanResult(err));
 		}
 
 		final var surfFormats = VkSurfaceFormatKHR.calloc(formatCount);
@@ -422,8 +424,8 @@ public class VulkanDemo
 		MemoryUtil.memFree(pPresentModeCount);
 		if (err != VK10.VK_SUCCESS)
 		{
-			throw new AssertionError(
-					"Failed to get physical device surface presentation modes: " + DisallowVKUtil.translateVulkanResult(err));
+			throw new AssertionError("Failed to get physical device surface presentation modes: "
+					+ DisallowVKUtil.translateVulkanResult(err));
 		}
 
 		// Try to use mailbox mode. Low latency and non-tearing
@@ -506,7 +508,8 @@ public class VulkanDemo
 		final var imageCount = pImageCount.get(0);
 		if (err != VK10.VK_SUCCESS)
 		{
-			throw new AssertionError("Failed to get number of swapchain images: " + DisallowVKUtil.translateVulkanResult(err));
+			throw new AssertionError(
+					"Failed to get number of swapchain images: " + DisallowVKUtil.translateVulkanResult(err));
 		}
 
 		final var pSwapchainImages = MemoryUtil.memAllocLong(imageCount);
@@ -559,10 +562,10 @@ public class VulkanDemo
 
 		final var	subpass			= VkSubpassDescription.calloc(1)
 				.pipelineBindPoint(VK10.VK_PIPELINE_BIND_POINT_GRAPHICS)
-				.colorAttachmentCount(colorReference.remaining()).pColorAttachments(colorReference)																																								// <-
-																																																																// only
-																																																																// color
-																																																																// attachment
+				.colorAttachmentCount(colorReference.remaining()).pColorAttachments(colorReference)																																												// <-
+																																																																				// only
+																																																																				// color
+																																																																				// attachment
 		;
 
 		final var	renderPassInfo	= VkRenderPassCreateInfo.calloc()
@@ -578,7 +581,8 @@ public class VulkanDemo
 		attachments.free();
 		if (err != VK10.VK_SUCCESS)
 		{
-			throw new AssertionError("Failed to create clear render pass: " + DisallowVKUtil.translateVulkanResult(err));
+			throw new AssertionError(
+					"Failed to create clear render pass: " + DisallowVKUtil.translateVulkanResult(err));
 		}
 		return renderPass;
 	}
@@ -745,19 +749,20 @@ public class VulkanDemo
 		err = VK10.vkBindBufferMemory(device, verticesBuf, verticesMem, 0);
 		if (err != VK10.VK_SUCCESS)
 		{
-			throw new AssertionError("Failed to bind memory to vertex buffer: " + DisallowVKUtil.translateVulkanResult(err));
+			throw new AssertionError(
+					"Failed to bind memory to vertex buffer: " + DisallowVKUtil.translateVulkanResult(err));
 		}
 
 		// Binding description
-		final var	bindingDescriptor		= VkVertexInputBindingDescription.calloc(1).binding(0)													// <-
-																																					// we
-																																					// bind
-																																					// our
-																																					// vertex
-																																					// buffer
-																																					// to
-																																					// point
-																																					// 0
+		final var	bindingDescriptor		= VkVertexInputBindingDescription.calloc(1).binding(0)														// <-
+																																						// we
+																																						// bind
+																																						// our
+																																						// vertex
+																																						// buffer
+																																						// to
+																																						// point
+																																						// 0
 				.stride(2 * 4).inputRate(VK10.VK_VERTEX_INPUT_RATE_VERTEX);
 
 		// Attribute descriptions
@@ -797,20 +802,20 @@ public class VulkanDemo
 
 		// Color blend state
 		// Describes blend modes and color masks
-		final var	colorWriteMask		= VkPipelineColorBlendAttachmentState.calloc(1).colorWriteMask(0xF);																													// <-
-																																																								// RGBA
+		final var	colorWriteMask		= VkPipelineColorBlendAttachmentState.calloc(1).colorWriteMask(0xF);																																// <-
+																																																											// RGBA
 		final var	colorBlendState		= VkPipelineColorBlendStateCreateInfo.calloc()
 				.sType(VK10.VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO).pAttachments(colorWriteMask);
 
 		// Viewport state
 		final var	viewportState		= VkPipelineViewportStateCreateInfo.calloc()
-				.sType(VK10.VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO).viewportCount(1)																																// <-
-																																																								// one
-																																																								// viewport
-				.scissorCount(1);																																																// <-
-																																																								// one
-																																																								// scissor
-																																																								// rectangle
+				.sType(VK10.VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO).viewportCount(1)																																			// <-
+																																																											// one
+																																																											// viewport
+				.scissorCount(1);																																																			// <-
+																																																											// one
+																																																											// scissor
+																																																											// rectangle
 
 		// Enable dynamic states
 		// Describes the dynamic states to be used with this pipeline
@@ -864,30 +869,30 @@ public class VulkanDemo
 
 		// Assign states
 		final var	pipelineCreateInfo	= VkGraphicsPipelineCreateInfo.calloc(1)
-				.sType(VK10.VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO).layout(layout)																																																// <-
-																																																																						// the
-																																																																						// layout
-																																																																						// used
-																																																																						// for
-																																																																						// this
-																																																																						// pipeline
-																																																																						// (NEEDS
-																																																																						// TO
-																																																																						// BE
-																																																																						// SET!
-																																																																						// even
-																																																																						// though
-																																																																						// it
-																																																																						// is
-																																																																						// basically
-																																																																						// empty)
-				.renderPass(renderPass)																																																													// <-
-																																																																						// renderpass
-																																																																						// this
-																																																																						// pipeline
-																																																																						// is
-																																																																						// attached
-																																																																						// to
+				.sType(VK10.VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO).layout(layout)																																																			// <-
+																																																																									// the
+																																																																									// layout
+																																																																									// used
+																																																																									// for
+																																																																									// this
+																																																																									// pipeline
+																																																																									// (NEEDS
+																																																																									// TO
+																																																																									// BE
+																																																																									// SET!
+																																																																									// even
+																																																																									// though
+																																																																									// it
+																																																																									// is
+																																																																									// basically
+																																																																									// empty)
+				.renderPass(renderPass)																																																																// <-
+																																																																									// renderpass
+																																																																									// this
+																																																																									// pipeline
+																																																																									// is
+																																																																									// attached
+																																																																									// to
 				.pVertexInputState(vi).pInputAssemblyState(inputAssemblyState).pRasterizationState(rasterizationState)
 				.pColorBlendState(colorBlendState).pMultisampleState(multisampleState).pViewportState(viewportState)
 				.pDepthStencilState(depthStencilState).pStages(shaderStages).pDynamicState(dynamicState);
@@ -925,7 +930,8 @@ public class VulkanDemo
 		var			err					= VK10.vkAllocateCommandBuffers(device, cmdBufAllocateInfo, pCommandBuffer);
 		if (err != VK10.VK_SUCCESS)
 		{
-			throw new AssertionError("Failed to allocate render command buffer: " + DisallowVKUtil.translateVulkanResult(err));
+			throw new AssertionError(
+					"Failed to allocate render command buffer: " + DisallowVKUtil.translateVulkanResult(err));
 		}
 		final var renderCommandBuffers = new VkCommandBuffer[framebuffers.length];
 		for (var i = 0; i < framebuffers.length; i++)
@@ -958,7 +964,8 @@ public class VulkanDemo
 			err = VK10.vkBeginCommandBuffer(renderCommandBuffers[i], cmdBufInfo);
 			if (err != VK10.VK_SUCCESS)
 			{
-				throw new AssertionError("Failed to begin render command buffer: " + DisallowVKUtil.translateVulkanResult(err));
+				throw new AssertionError(
+						"Failed to begin render command buffer: " + DisallowVKUtil.translateVulkanResult(err));
 			}
 
 			VK10.vkCmdBeginRenderPass(renderCommandBuffers[i], renderPassBeginInfo, VK10.VK_SUBPASS_CONTENTS_INLINE);
@@ -995,7 +1002,8 @@ public class VulkanDemo
 			err = VK10.vkEndCommandBuffer(renderCommandBuffers[i]);
 			if (err != VK10.VK_SUCCESS)
 			{
-				throw new AssertionError("Failed to begin render command buffer: " + DisallowVKUtil.translateVulkanResult(err));
+				throw new AssertionError(
+						"Failed to begin render command buffer: " + DisallowVKUtil.translateVulkanResult(err));
 			}
 		}
 		renderPassBeginInfo.free();
@@ -1197,7 +1205,7 @@ public class VulkanDemo
 				.pWaitSemaphores(pRenderCompleteSemaphore).swapchainCount(pSwapchains.remaining())
 				.pSwapchains(pSwapchains).pImageIndices(pImageIndex);
 
-		final var	fpsUtils	= new FPSMeasurer();
+		final var	fpsUtils	= new MeasurerFPS();
 		fpsUtils.start();
 
 		// The render loop
@@ -1255,7 +1263,8 @@ public class VulkanDemo
 			err = KHRSwapchain.vkQueuePresentKHR(queue, presentInfo);
 			if (err != VK10.VK_SUCCESS)
 			{
-				throw new AssertionError("Failed to present the swapchain image: " + DisallowVKUtil.translateVulkanResult(err));
+				throw new AssertionError(
+						"Failed to present the swapchain image: " + DisallowVKUtil.translateVulkanResult(err));
 			}
 			// Create and submit post present barrier
 			VK10.vkQueueWaitIdle(queue);
@@ -1264,10 +1273,11 @@ public class VulkanDemo
 			VK10.vkDestroySemaphore(device, pImageAcquiredSemaphore.get(0), null);
 			VK10.vkDestroySemaphore(device, pRenderCompleteSemaphore.get(0), null);
 
-			final var title = fpsUtils.updateFPS();
-			if (title != null)
+			final var FPS = fpsUtils.stop();
+
+			if (FPS > 0)
 			{
-				GLFW.glfwSetWindowTitle(window, title);
+				GLFW.glfwSetWindowTitle(window, "FPS : " + FPS);
 			}
 		}
 		presentInfo.free();

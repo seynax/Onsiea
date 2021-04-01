@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
-import fr.seynax.onsiea.utils.performances.measurer.FPSMeasurer;
+import fr.seynax.onsiea.utils.performances.measurer.MeasurerFPS;
 
 /**
  * Rendering a simple GL_TRIANGLE_STRIP grid.
@@ -122,7 +122,7 @@ public class OpenGLDemo
 		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indices, GL15.GL_STATIC_DRAW);
 		GL11.glVertexPointer(2, GL11.GL_FLOAT, 0, 0L);
 
-		final var fpsUtils = new FPSMeasurer();
+		final var fpsUtils = new MeasurerFPS();
 		fpsUtils.start();
 
 		while (!GLFW.glfwWindowShouldClose(window))
@@ -133,11 +133,11 @@ public class OpenGLDemo
 			GLFW.glfwSwapBuffers(window);
 			GLFW.glfwPollEvents();
 
-			final var title = fpsUtils.updateFPS();
+			final var FPS = fpsUtils.stop();
 
-			if (title != null)
+			if (FPS > 0)
 			{
-				GLFW.glfwSetWindowTitle(window, title);
+				GLFW.glfwSetWindowTitle(window, "FPS : " + FPS);
 			}
 		}
 	}

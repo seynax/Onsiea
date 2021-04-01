@@ -33,8 +33,7 @@ import fr.seynax.onsiea.opengl.shader.ShaderProgram;
 import fr.seynax.onsiea.opengl.shader.ShaderScreenshot;
 import fr.seynax.onsiea.utils.Timer;
 import fr.seynax.onsiea.utils.maths.Maths;
-import fr.seynax.onsiea.utils.performances.ProfilingSystem;
-import fr.seynax.onsiea.utils.performances.measurer.FPSMeasurer;
+import fr.seynax.onsiea.utils.performances.measurer.MeasurerFPS;
 
 public class DummyGame implements IGameLogic
 {
@@ -71,9 +70,7 @@ public class DummyGame implements IGameLogic
 	private Timer					timer0;
 	private Timer					timer1;
 
-	private FPSMeasurer				fpsUtils;
-
-	private final ProfilingSystem	profilerSystem;
+	private MeasurerFPS				fpsUtils;
 
 	/**
 	 * private Mesh meshBoat; private GameItem boat; private Texture boatTexture;
@@ -83,9 +80,6 @@ public class DummyGame implements IGameLogic
 
 	public DummyGame()
 	{
-		this.profilerSystem = new ProfilingSystem();
-
-		this.profilerSystem.add("initialization", "input", "update", "render", "cleanup");
 	}
 
 	// Methods
@@ -93,8 +87,6 @@ public class DummyGame implements IGameLogic
 	@Override
 	public void initialization(final IWindow windowIn) throws Exception
 	{
-		this.profilerSystem.start("initialization");
-
 		if (GraphicsConstants.isDebug())
 		{
 			LWJGL.enableDebugging();
@@ -324,18 +316,14 @@ public class DummyGame implements IGameLogic
 		}
 
 		{
-			this.fpsUtils = new FPSMeasurer();
+			this.fpsUtils = new MeasurerFPS();
 			this.fpsUtils.start();
 		}
-
-		this.profilerSystem.stop("initialization");
 	}
 
 	@Override
 	public void input(final IWindow windowIn)
 	{
-		this.profilerSystem.start("input");
-
 		if (this.timer0.getElapsedTime() >= 1_000_000L)
 		{
 			this.timer0.start();
@@ -389,15 +377,11 @@ public class DummyGame implements IGameLogic
 				windowIn.getGlfwEventManager().getCallbacksManager().FPSView();
 			}
 		}
-
-		this.profilerSystem.stop("input");
 	}
 
 	@Override
 	public void update(final double intervalIn, final IWindow windowIn)
 	{
-		this.profilerSystem.start("update");
-
 		this.setColor(this.getColor() + this.getDirection() * 0.01f);
 
 		if (this.getColor() > 1)
@@ -456,8 +440,6 @@ public class DummyGame implements IGameLogic
 			}
 		}
 		this.camera.update(windowIn, 1.0D / 30.0D);
-
-		this.profilerSystem.stop("update");
 	}
 
 	public boolean isIn(final Vector3f fromPositionIn, final float xMinIn, final float yMinIn, final float zMinIn,
@@ -470,8 +452,6 @@ public class DummyGame implements IGameLogic
 	@Override
 	public void render(final IWindow windowIn)
 	{
-		this.profilerSystem.start("render");
-
 		final var lastState = this.camera.isCanUpdate();
 
 		this.camera.setCanUpdate(false);
@@ -640,11 +620,11 @@ public class DummyGame implements IGameLogic
 
 		if (GraphicsConstants.isFpsShowing())
 		{
-			final var title = this.fpsUtils.updateFPS();
+			final var FPS = this.fpsUtils.stop();
 
-			if (title != null)
+			if (FPS > 0)
 			{
-				GLFW.glfwSetWindowTitle(windowIn.getWindowHandle(), title);
+				GLFW.glfwSetWindowTitle(windowIn.getWindowHandle(), "FPS : " + FPS);
 			}
 		}
 
@@ -654,15 +634,11 @@ public class DummyGame implements IGameLogic
 		{
 			OpenGL.showAllError();
 		}
-
-		this.profilerSystem.stop("render");
 	}
 
 	@Override
 	public void cleanup()
 	{
-		this.profilerSystem.start("cleanup");
-
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 
 		Texture.cleanUp();
@@ -676,11 +652,6 @@ public class DummyGame implements IGameLogic
 		OpenGL.cleanup();
 
 		this.technicEngine.stop();
-
-		this.profilerSystem.stop("cleanup");
-
-		System.out.println(this.profilerSystem.shortReport());
-		System.out.println(this.profilerSystem.report());
 	}
 
 	// Getter | Setter

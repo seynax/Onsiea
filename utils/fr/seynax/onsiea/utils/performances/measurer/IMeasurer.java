@@ -1,6 +1,8 @@
 package fr.seynax.onsiea.utils.performances.measurer;
 
-public interface IMeasurerFunction
+public interface IMeasurer
 {
-	long measure();
+	long start();
+
+	long stop();
 }

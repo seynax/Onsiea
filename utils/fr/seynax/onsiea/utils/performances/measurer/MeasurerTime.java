@@ -1,6 +1,6 @@
 package fr.seynax.onsiea.utils.performances.measurer;
 
-public class TimeMeasurer
+public class MeasurerTime implements IMeasurer
 {
 	// Static variables
 
@@ -21,24 +21,24 @@ public class TimeMeasurer
 
 	// Constructor
 
-	public TimeMeasurer()
+	public MeasurerTime()
 	{
-		this.setName("PROFILE-" + TimeMeasurer.addProfileNumber());
+		this.setName("PROFILE-" + MeasurerTime.addProfileNumber());
 
 	}
 
-	public TimeMeasurer(final String nameIn)
+	public MeasurerTime(final String nameIn)
 	{
 		this.setName(nameIn);
 
-		TimeMeasurer.addProfileNumber();
+		MeasurerTime.addProfileNumber();
 	}
 
 	// Static methods
 
 	public final static int addProfileNumber()
 	{
-		return TimeMeasurer.profileNumber++;
+		return MeasurerTime.profileNumber++;
 	}
 
 	// Methods
@@ -53,14 +53,18 @@ public class TimeMeasurer
 		this.setIterationNumber(0);
 	}
 
-	public void start()
+	@Override
+	public long start()
 	{
 		this.setStart(System.nanoTime());
+
+		return this.getStart();
 	}
 
 	/**
 	 * @return currentTime
 	 */
+	@Override
 	public long stop()
 	{
 		this.setEnd(System.nanoTime());
@@ -96,12 +100,12 @@ public class TimeMeasurer
 
 	public final static int getProfileNumber()
 	{
-		return TimeMeasurer.profileNumber;
+		return MeasurerTime.profileNumber;
 	}
 
 	public final static void setProfileNumber(final int profileNumberIn)
 	{
-		TimeMeasurer.profileNumber = profileNumberIn;
+		MeasurerTime.profileNumber = profileNumberIn;
 	}
 
 	// Getter | Setter

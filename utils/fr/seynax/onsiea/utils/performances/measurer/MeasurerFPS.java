@@ -1,6 +1,6 @@
 package fr.seynax.onsiea.utils.performances.measurer;
 
-public class FPSMeasurer
+public class MeasurerFPS implements IMeasurer
 {
 	// Variables
 
@@ -10,56 +10,46 @@ public class FPSMeasurer
 
 	// Constructor
 
-	public FPSMeasurer()
+	public MeasurerFPS()
 	{
 		this.start();
 	}
 
 	// Methods
 
-	/**
-	 * Get the time in milliseconds
-	 *
-	 * @return The system time in milliseconds
-	 */
-	public long getTime()
-	{
-		return System.nanoTime() / 1_000_000L;
-	}
-
 	public int getDelta()
 	{
-		final var	time	= this.getTime();
+		final var	time	= System.nanoTime();
 		final var	delta	= (int) (time - this.getLastFrameTime());
 		this.setLastFrameTime(time);
 
 		return delta;
 	}
 
-	public void start()
+	@Override
+	public long start()
 	{
-		// some startup code
-		this.setLastFPS(this.getTime()); // set lastFPS to current Time
+		this.setLastFPS(System.nanoTime());
+
+		return this.getLastFPS();
 	}
 
-	/**
-	 * Calculate the FPS and set it in the title bar
-	 */
-	public String updateFPS()
+	@Override
+	public long stop()
 	{
-		if (this.getTime() - this.getLastFPS() > 1000)
+		if (System.nanoTime() - this.getLastFPS() > 1_000_000_000L)
 		{
-			final var title = "FPS: " + this.getFPS();
+			final var FPS = this.getFPS();
 
-			this.setFPS(0); // reset the FPS counter
-			this.setLastFPS(this.getLastFPS() + 1000); // add one second
+			this.setFPS(0);
+			this.setLastFPS(this.getLastFPS() + 1_000_000_000L);
 
-			return title;
+			return FPS;
 		}
 
-		this.setFPS(this.getFPS() + 1); // add one second
+		this.setFPS(this.getFPS() + 1);
 
-		return null;
+		return -1L;
 	}
 
 	// Getter | Setter
