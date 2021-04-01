@@ -1,126 +1,113 @@
 package fr.seynax.onsiea.utils.performances.tester;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import fr.seynax.onsiea.utils.IFunction;
-import fr.seynax.onsiea.utils.file.FileUtils;
-import fr.seynax.onsiea.utils.performances.measurer.MeasurerTime;
-import fr.seynax.onsiea.utils.performances.tester.PerformanceTypes.EnumTypes;
+import fr.seynax.onsiea.utils.performances.measurer.IMeasurer;
 
 public class PerformanceTester
 {
+	// Constructor variables
+
+	private int								phases;
+
+	private int								tests;
+
+	private int								executions;
+
 	// Variables
 
-	private PerformanceTypes		performancesTypes;
+	private Map<String, IFunction>			functions;
 
-	private Map<String, IFunction>	functions;
-
-	private MeasurerTime			timingProfiler;
-
-	private int						phases;
-	private int						iterations;
+	private Map<Integer, List<IMeasurer>>	measurers;
 
 	// Constructor
 
-	public PerformanceTester(final PerformanceTypes performanceTypesIn, final int phasesIn, final int iterationsIn)
+	public PerformanceTester()
 	{
-		this.setPerformancesTypes(performanceTypesIn);
+		this.setPhases(1);
+		this.setTests(1);
+		this.setExecutions(1);
+	}
+
+	public PerformanceTester(final int phasesIn)
+	{
 		this.setPhases(phasesIn);
-		this.setIterations(iterationsIn);
+		this.setTests(1);
+		this.setExecutions(1);
+	}
 
-		this.setFunctions(new HashMap<>());
+	public PerformanceTester(final int phasesIn, final int testsIn)
+	{
+		this.setPhases(phasesIn);
+		this.setTests(testsIn);
+		this.setExecutions(1);
+	}
 
-		this.setTimingProfiler(new MeasurerTime());
+	public PerformanceTester(final int phasesIn, final int testsIn, final int executionsIn)
+	{
+		this.setPhases(phasesIn);
+		this.setTests(testsIn);
+		this.setExecutions(executionsIn);
 	}
 
 	// Methods
 
-	public PerformanceTester add(final String functionNameIn, final IFunction functionIn)
+	public void addFunction(final String functionNameIn, final IFunction functionIn)
 	{
 		this.getFunctions().put(functionNameIn, functionIn);
+	}
 
-		return this;
+	public void addMeasurer(final int priorityNumberIn, final IMeasurer... measurersIn)
+	{
+		var measurers = this.getMeasurers().get(priorityNumberIn);
+
+		if (measurers == null)
+		{
+			measurers = new ArrayList<>();
+
+			this.getMeasurers().put(priorityNumberIn, measurers);
+		}
+
+		for (final IMeasurer measurer : measurersIn)
+		{
+			measurers.add(measurer);
+		}
 	}
 
 	public void check()
 	{
-		final var iterator = this.getFunctions().entrySet().iterator();
-
-		while (iterator.hasNext())
+		for (var phase = 0; phase < this.getPhases(); phase++)
 		{
-			final var	entry			= iterator.next();
-
-			final var	filepath		= entry.getKey();
-			final var	function		= entry.getValue();
-
-			final var	finalFilepath	= "output/timing/" + filepath + ".log";
-
-			FileUtils.write(finalFilepath, "", false);
-
-			for (var i = 0; i < this.getPhases(); i++)
+			for (final IFunction function : this.getFunctions().values())
 			{
-				if (this.getPerformancesTypes().has(EnumTypes.TIMING))
+				for (final List<IMeasurer> measurers : this.getMeasurers().values())
 				{
-					PerformanceTester.checkTiming(function, this.getIterations(), this.getTimingProfiler(),
-							finalFilepath);
+					for (var test = 0; test < this.getTests(); test++)
+					{
+						for (final IMeasurer measurer : measurers)
+						{
+							measurer.start();
+						}
+
+						for (var execution = 0; execution < this.getExecutions(); execution++)
+						{
+							function.execute();
+						}
+
+						for (final IMeasurer measurer : measurers)
+						{
+							measurer.stop();
+						}
+					}
 				}
 			}
 		}
 	}
 
-	public final static String checkTiming(final IFunction functionIn, final int iterationsIn,
-			final MeasurerTime timingProfilerIn, final String filepathIn)
-	{
-		timingProfilerIn.reset();
-
-		for (var i = 0; i < iterationsIn; i++)
-		{
-			timingProfilerIn.start();
-
-			functionIn.execute();
-
-			timingProfilerIn.stop();
-		}
-
-		final var report = timingProfilerIn.shortReport();
-
-		FileUtils.write(filepathIn, report + "\n", true);
-
-		return report;
-	}
-
-	// Getter | Setter
-
-	public PerformanceTypes getPerformancesTypes()
-	{
-		return this.performancesTypes;
-	}
-
-	public void setPerformancesTypes(final PerformanceTypes performancesTypesIn)
-	{
-		this.performancesTypes = performancesTypesIn;
-	}
-
-	public Map<String, IFunction> getFunctions()
-	{
-		return this.functions;
-	}
-
-	public void setFunctions(final Map<String, IFunction> functionsIn)
-	{
-		this.functions = functionsIn;
-	}
-
-	public MeasurerTime getTimingProfiler()
-	{
-		return this.timingProfiler;
-	}
-
-	public void setTimingProfiler(final MeasurerTime timingProfilerIn)
-	{
-		this.timingProfiler = timingProfilerIn;
-	}
+	// Getter | Setter ; constructor variables
 
 	public int getPhases()
 	{
@@ -132,13 +119,45 @@ public class PerformanceTester
 		this.phases = phasesIn;
 	}
 
-	public int getIterations()
+	public int getTests()
 	{
-		return this.iterations;
+		return this.tests;
 	}
 
-	public void setIterations(final int iterationsIn)
+	public void setTests(final int testsIn)
 	{
-		this.iterations = iterationsIn;
+		this.tests = testsIn;
+	}
+
+	public int getExecutions()
+	{
+		return this.executions;
+	}
+
+	public void setExecutions(final int executionsIn)
+	{
+		this.executions = executionsIn;
+	}
+
+	// Getter | setter ; variables
+
+	public Map<String, IFunction> getFunctions()
+	{
+		return this.functions;
+	}
+
+	public void setFunctions(final Map<String, IFunction> functionsIn)
+	{
+		this.functions = functionsIn;
+	}
+
+	public Map<Integer, List<IMeasurer>> getMeasurers()
+	{
+		return this.measurers;
+	}
+
+	public void setMeasurers(final Map<Integer, List<IMeasurer>> measurersIn)
+	{
+		this.measurers = measurersIn;
 	}
 }
