@@ -1,71 +1,55 @@
 package fr.seynax.onsiea.utils.performances.profiling;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import fr.seynax.onsiea.utils.performances.measurer.IMeasurer;
 
-public class NamedProfiler implements IProfiler
+public class NamedProfiler extends Profiler implements IProfiler
 {
 	// Static variables
 
-	private static int		namedProfilerNumber;
+	private static int	namedProfilerNumber;
 
 	// Variables
 
-	private List<IMeasurer>	measurers;
-
-	private int				iterations;
-
-	private String			name;
+	private String		name;
 
 	// Constructor
 
 	public NamedProfiler()
 	{
+		super();
+
 		this.setName("PROFILER-" + NamedProfiler.getNamedProfilerNumber());
 
 		NamedProfiler.addNamedProfiler();
-
-		this.setMeasurers(new ArrayList<>());
 	}
 
 	public NamedProfiler(final String nameIn)
 	{
+		super();
+
 		this.setName(nameIn);
 
 		NamedProfiler.addNamedProfiler();
-
-		this.setMeasurers(new ArrayList<>());
 	}
 
 	public NamedProfiler(final IMeasurer... measurersIn)
 	{
+		super(measurersIn);
+
 		this.setName("PROFILER-" + NamedProfiler.getNamedProfilerNumber());
 
 		NamedProfiler.addNamedProfiler();
-
-		this.setMeasurers(new ArrayList<>());
-
-		for (final IMeasurer measurer : measurersIn)
-		{
-			this.getMeasurers().add(measurer);
-		}
 	}
 
 	public NamedProfiler(final String nameIn, final IMeasurer... measurersIn)
 	{
+		super(measurersIn);
+
 		this.setName(nameIn);
 
 		NamedProfiler.addNamedProfiler();
-
-		this.setMeasurers(new ArrayList<>());
-
-		for (final IMeasurer measurer : measurersIn)
-		{
-			this.getMeasurers().add(measurer);
-		}
 	}
+
 	// Static methods
 
 	public final static int addNamedProfiler()
@@ -75,46 +59,44 @@ public class NamedProfiler implements IProfiler
 		return NamedProfiler.getNamedProfilerNumber();
 	}
 
-	// Methods
+	// Interface methods
 
 	@Override
-	public IProfiler add(final IMeasurer... measurersIn)
+	public String shortReport()
 	{
-		for (final IMeasurer measurer : measurersIn)
+		var output = "";
+
+		for (final IMeasurer measurer : this.getMeasurers())
 		{
-			this.getMeasurers().add(measurer);
+			output += "\n" + measurer.shortReport();
 		}
 
-		return this;
+		return output;
 	}
 
 	@Override
-	public void start()
+	public String shortReport(final String startIn)
 	{
+		var output = "";
+
 		for (final IMeasurer measurer : this.getMeasurers())
 		{
-			measurer.start();
+			output += "\n" + startIn + "[" + measurer.shortReport();
 		}
 
-		this.setIterations(this.getIterations() + 1);
+		return output;
 	}
 
 	@Override
-	public void stop()
+	public String report()
 	{
-		for (final IMeasurer measurer : this.getMeasurers())
-		{
-			measurer.stop();
-		}
+		return "[ Name : " + this.getName() + " ]\n" + super.report();
 	}
 
 	@Override
-	public void reset()
+	public String report(final String startIn)
 	{
-		for (final IMeasurer measurer : this.getMeasurers())
-		{
-			measurer.reset();
-		}
+		return startIn + "[ Name : " + this.getName() + " ]\n" + super.report(startIn);
 	}
 
 	// Static variables
@@ -139,25 +121,5 @@ public class NamedProfiler implements IProfiler
 	public void setName(final String nameIn)
 	{
 		this.name = nameIn;
-	}
-
-	public List<IMeasurer> getMeasurers()
-	{
-		return this.measurers;
-	}
-
-	public void setMeasurers(final List<IMeasurer> measurersIn)
-	{
-		this.measurers = measurersIn;
-	}
-
-	public int getIterations()
-	{
-		return this.iterations;
-	}
-
-	public void setIterations(final int iterationsIn)
-	{
-		this.iterations = iterationsIn;
 	}
 }

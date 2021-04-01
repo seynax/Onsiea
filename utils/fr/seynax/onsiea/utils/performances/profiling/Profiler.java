@@ -74,6 +74,58 @@ public class Profiler implements IProfiler
 		}
 	}
 
+	@Override
+	public String shortReport()
+	{
+		var output = "Iterations : " + this.getIterations();
+
+		for (final IMeasurer measurer : this.getMeasurers())
+		{
+			output += "\n" + measurer.shortReport("	");
+		}
+
+		return output;
+	}
+
+	@Override
+	public String shortReport(final String startIn)
+	{
+		var output = startIn + "Iterations : " + this.getIterations();
+
+		for (final IMeasurer measurer : this.getMeasurers())
+		{
+			output += "\n" + startIn + measurer.shortReport("	");
+		}
+
+		return output;
+	}
+
+	@Override
+	public String report()
+	{
+		var output = "Iterations : " + this.getIterations();
+
+		for (final IMeasurer measurer : this.getMeasurers())
+		{
+			output += "\n" + measurer.report("	");
+		}
+
+		return output;
+	}
+
+	@Override
+	public String report(final String startIn)
+	{
+		var output = startIn + "Iterations : " + this.getIterations();
+
+		for (final IMeasurer measurer : this.getMeasurers())
+		{
+			output += "\n" + startIn + measurer.report("	");
+		}
+
+		return output;
+	}
+
 	// Variables
 
 	public List<IMeasurer> getMeasurers()

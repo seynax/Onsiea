@@ -9,8 +9,6 @@ public class MeasurerAverage implements IMeasurer, Runnable
 
 	private IMeasurerFunction	measurer;
 
-	private String				name;
-
 	private double				average;
 
 	private long				total;
@@ -29,25 +27,10 @@ public class MeasurerAverage implements IMeasurer, Runnable
 	{
 		this.setMeasurer(measurerIn);
 
-		this.setName("PROFILE-" + MeasurerTime.addProfileNumber());
-
 		this.setTimer(new Timer());
 
 		this.setTimeInterval(1_000_000_000L);
 
-	}
-
-	public MeasurerAverage(final IMeasurerFunction measurerIn, final String nameIn)
-	{
-		this.setMeasurer(measurerIn);
-
-		this.setName(nameIn);
-
-		MeasurerTime.addProfileNumber();
-
-		this.setTimer(new Timer());
-
-		this.setTimeInterval(1_000_000_000L);
 	}
 
 	public MeasurerAverage(final IMeasurerFunction measurerIn, final long timeIntervalIn)
@@ -56,23 +39,8 @@ public class MeasurerAverage implements IMeasurer, Runnable
 
 		this.setTimeInterval(timeIntervalIn);
 
-		this.setName("PROFILE-" + MeasurerTime.addProfileNumber());
-
 		this.setTimer(new Timer());
 
-	}
-
-	public MeasurerAverage(final IMeasurerFunction measurerIn, final String nameIn, final long timeIntervalIn)
-	{
-		this.setMeasurer(measurerIn);
-
-		this.setName(nameIn);
-
-		MeasurerTime.addProfileNumber();
-
-		this.setTimeInterval(timeIntervalIn);
-
-		this.setTimer(new Timer());
 	}
 
 	// Methods
@@ -137,9 +105,33 @@ public class MeasurerAverage implements IMeasurer, Runnable
 	}
 
 	@Override
+	public String shortReport()
+	{
+		return this.getAverage() + " [" + this.getTotal() + "]";
+	}
+
+	@Override
+	public String shortReport(final String startIn)
+	{
+		return startIn + this.getAverage() + " [" + this.getTotal() + "]";
+	}
+
+	@Override
+	public String report()
+	{
+		return this.getAverage() + " [" + this.getTotal() + "]";
+	}
+
+	@Override
+	public String report(final String startIn)
+	{
+		return startIn + this.getAverage() + " [" + this.getTotal() + "]";
+	}
+
+	@Override
 	public String toString()
 	{
-		return this.getName() + " -> [" + this.getAverage() + " - [" + this.getTotal() + "]";
+		return this.getAverage() + " [" + this.getTotal() + "]";
 	}
 
 	// Getter | Setter
@@ -152,16 +144,6 @@ public class MeasurerAverage implements IMeasurer, Runnable
 	public void setMeasurer(final IMeasurerFunction measurerIn)
 	{
 		this.measurer = measurerIn;
-	}
-
-	public String getName()
-	{
-		return this.name;
-	}
-
-	public void setName(final String nameIn)
-	{
-		this.name = nameIn;
 	}
 
 	public double getAverage()

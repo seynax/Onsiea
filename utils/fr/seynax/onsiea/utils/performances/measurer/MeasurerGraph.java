@@ -12,8 +12,6 @@ public class MeasurerGraph implements IMeasurer, Runnable
 
 	private IMeasurerFunction	measurer;
 
-	private String				name;
-
 	private List<Long>			values;
 
 	private double				average;
@@ -34,29 +32,12 @@ public class MeasurerGraph implements IMeasurer, Runnable
 	{
 		this.setMeasurer(measurerIn);
 
-		this.setName("PROFILE-" + MeasurerTime.addProfileNumber());
-
 		this.setValues(new ArrayList<>());
 
 		this.setTimer(new Timer());
 
 		this.setTimeInterval(1_000_000_000L);
 
-	}
-
-	public MeasurerGraph(final IMeasurerFunction measurerIn, final String nameIn)
-	{
-		this.setMeasurer(measurerIn);
-
-		this.setName(nameIn);
-
-		MeasurerTime.addProfileNumber();
-
-		this.setValues(new ArrayList<>());
-
-		this.setTimer(new Timer());
-
-		this.setTimeInterval(1_000_000_000L);
 	}
 
 	public MeasurerGraph(final IMeasurerFunction measurerIn, final long timeIntervalIn)
@@ -65,27 +46,10 @@ public class MeasurerGraph implements IMeasurer, Runnable
 
 		this.setTimeInterval(timeIntervalIn);
 
-		this.setName("PROFILE-" + MeasurerTime.addProfileNumber());
-
 		this.setValues(new ArrayList<>());
 
 		this.setTimer(new Timer());
 
-	}
-
-	public MeasurerGraph(final IMeasurerFunction measurerIn, final String nameIn, final long timeIntervalIn)
-	{
-		this.setMeasurer(measurerIn);
-
-		this.setName(nameIn);
-
-		MeasurerTime.addProfileNumber();
-
-		this.setTimeInterval(timeIntervalIn);
-
-		this.setValues(new ArrayList<>());
-
-		this.setTimer(new Timer());
 	}
 
 	// Methods
@@ -151,9 +115,52 @@ public class MeasurerGraph implements IMeasurer, Runnable
 	}
 
 	@Override
+	public String shortReport()
+	{
+		return this.getAverage() + " [" + this.getTotal() + "]";
+	}
+
+	@Override
+	public String shortReport(final String startIn)
+	{
+		return startIn + this.getAverage() + " [" + this.getTotal() + "]";
+	}
+
+	@Override
+	public String report()
+	{
+
+		var output = this.getAverage() + " [" + this.getTotal() + "] :\n{";
+
+		for (final long value : this.getValues())
+		{
+			output += "	" + value + "\n";
+		}
+
+		output += "}";
+
+		return output;
+	}
+
+	@Override
+	public String report(final String startIn)
+	{
+		var output = startIn + this.getAverage() + " [" + this.getTotal() + "] :\n" + startIn + "{";
+
+		for (final long value : this.getValues())
+		{
+			output += startIn + "	" + value + "\n";
+		}
+
+		output += startIn + "}";
+
+		return output;
+	}
+
+	@Override
 	public String toString()
 	{
-		return this.getName() + " -> [" + this.getAverage() + " - [" + this.getTotal() + "]";
+		return this.getAverage() + " [" + this.getTotal() + "]";
 	}
 
 	// Getter | Setter
@@ -168,11 +175,6 @@ public class MeasurerGraph implements IMeasurer, Runnable
 		this.measurer = measurerIn;
 	}
 
-	public String getName()
-	{
-		return this.name;
-	}
-
 	public List<Long> getValues()
 	{
 		return this.values;
@@ -181,11 +183,6 @@ public class MeasurerGraph implements IMeasurer, Runnable
 	public void setValues(final List<Long> valuesIn)
 	{
 		this.values = valuesIn;
-	}
-
-	public void setName(final String nameIn)
-	{
-		this.name = nameIn;
 	}
 
 	public double getAverage()

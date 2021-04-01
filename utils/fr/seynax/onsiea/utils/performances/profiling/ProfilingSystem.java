@@ -84,6 +84,56 @@ public class ProfilingSystem
 		return true;
 	}
 
+	public String shortReport()
+	{
+		var			output		= "";
+
+		final var	iterator	= this.getProfilers().entrySet().iterator();
+
+		while (iterator.hasNext())
+		{
+			final var	entry		= iterator.next();
+			final var	name		= entry.getKey();
+			final var	profiler	= entry.getValue();
+
+			if (profiler instanceof NamedProfiler)
+			{
+				output += "{\n" + profiler.shortReport() + "\n}\n";
+			}
+			else
+			{
+				output += name + " : {\n" + profiler.shortReport() + "\n}\n";
+			}
+		}
+
+		return output;
+	}
+
+	public String report()
+	{
+		var			output		= "";
+
+		final var	iterator	= this.getProfilers().entrySet().iterator();
+
+		while (iterator.hasNext())
+		{
+			final var	entry		= iterator.next();
+			final var	name		= entry.getKey();
+			final var	profiler	= entry.getValue();
+
+			if (profiler instanceof NamedProfiler)
+			{
+				output += "{\n" + profiler.report("	") + "\n}\n";
+			}
+			else
+			{
+				output += name + " : {\n" + profiler.report("	") + "\n}\n";
+			}
+		}
+
+		return output;
+	}
+
 	// Getter | Setter
 
 	public Map<String, IProfiler> getProfilers()

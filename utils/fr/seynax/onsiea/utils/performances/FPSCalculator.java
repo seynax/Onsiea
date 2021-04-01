@@ -1,6 +1,6 @@
-package fr.seynax.onsiea.utils.performances.measurer;
+package fr.seynax.onsiea.utils.performances;
 
-public class MeasurerFPS implements IMeasurer
+public class FPSCalculator
 {
 	// Variables
 
@@ -10,7 +10,7 @@ public class MeasurerFPS implements IMeasurer
 
 	// Constructor
 
-	public MeasurerFPS()
+	public FPSCalculator()
 	{
 		this.start();
 	}
@@ -26,9 +26,8 @@ public class MeasurerFPS implements IMeasurer
 		return delta;
 	}
 
-	// Interface methods
+	// Methods
 
-	@Override
 	public long start()
 	{
 		this.setLastFPS(System.nanoTime());
@@ -36,7 +35,6 @@ public class MeasurerFPS implements IMeasurer
 		return this.getLastFPS();
 	}
 
-	@Override
 	public long stop()
 	{
 		if (System.nanoTime() - this.getLastFPS() > 1_000_000_000L)
@@ -54,15 +52,12 @@ public class MeasurerFPS implements IMeasurer
 		return -1L;
 	}
 
-	@Override
 	public void reset()
 	{
 		this.setFPS(0);
 		this.setLastFPS(0L);
 		this.setLastFrameTime(0L);
 	}
-
-	// Getter | Setter
 
 	public long getLastFrameTime()
 	{

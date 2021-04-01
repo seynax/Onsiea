@@ -2,54 +2,14 @@ package fr.seynax.onsiea.utils.performances.measurer;
 
 public class MeasurerTime implements IMeasurer
 {
-	// Static variables
-
-	private static int	profileNumber;
-
 	// Variables
 
-	private long		start;
-	private long		end;
+	private long	start;
+	private long	end;
 
-	private double		time;
+	private double	time;
 
-	private long		totalTime;
-
-	private String		name;
-
-	// Constructor
-
-	public MeasurerTime()
-	{
-		this.setName("PROFILE-" + MeasurerTime.addProfileNumber());
-
-	}
-
-	public MeasurerTime(final String nameIn)
-	{
-		this.setName(nameIn);
-
-		MeasurerTime.addProfileNumber();
-	}
-
-	// Static methods
-
-	public final static int addProfileNumber()
-	{
-		return MeasurerTime.profileNumber++;
-	}
-
-	// Methods
-
-	public String shortReport()
-	{
-		return this.getEnd() + " - " + this.getStart() + " = " + this.getTime();
-	}
-
-	public String report()
-	{
-		return this.toString();
-	}
+	private long	totalTime;
 
 	// Interface methods
 
@@ -89,21 +49,33 @@ public class MeasurerTime implements IMeasurer
 	}
 
 	@Override
+	public String shortReport()
+	{
+		return "Time : " + this.getTime();
+	}
+
+	@Override
+	public String shortReport(final String startIn)
+	{
+		return startIn + "Time : " + this.getTime();
+	}
+
+	@Override
+	public String report()
+	{
+		return this.getEnd() + " - " + this.getStart() + ", Time : " + this.getTime();
+	}
+
+	@Override
+	public String report(final String startIn)
+	{
+		return startIn + this.getEnd() + " - " + this.getStart() + ", Time : " + this.getTime();
+	}
+
+	@Override
 	public String toString()
 	{
-		return this.getName() + " -> [" + this.getEnd() + " - " + this.getStart() + " = " + this.getTime() + "]";
-	}
-
-	// Static getter | setter
-
-	public final static int getProfileNumber()
-	{
-		return MeasurerTime.profileNumber;
-	}
-
-	public final static void setProfileNumber(final int profileNumberIn)
-	{
-		MeasurerTime.profileNumber = profileNumberIn;
+		return this.getEnd() + " - " + this.getStart() + ", Time : " + this.getTime();
 	}
 
 	// Getter | Setter
@@ -146,15 +118,5 @@ public class MeasurerTime implements IMeasurer
 	public void setTotalTime(final long totalTimeIn)
 	{
 		this.totalTime = totalTimeIn;
-	}
-
-	public String getName()
-	{
-		return this.name;
-	}
-
-	public void setName(final String nameIn)
-	{
-		this.name = nameIn;
 	}
 }

@@ -11,4 +11,12 @@ public interface IProfiler
 	void stop();
 
 	void reset();
+
+	String shortReport();
+
+	String shortReport(String startIn);
+
+	String report();
+
+	String report(String startIn);
 }
