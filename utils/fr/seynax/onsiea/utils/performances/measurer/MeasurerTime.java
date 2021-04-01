@@ -15,8 +15,6 @@ public class MeasurerTime implements IMeasurer
 
 	private long		totalTime;
 
-	private int			iterationNumber;
-
 	private String		name;
 
 	// Constructor
@@ -50,7 +48,6 @@ public class MeasurerTime implements IMeasurer
 
 		this.setTime(0.0D);
 		this.setTotalTime(0L);
-		this.setIterationNumber(0);
 	}
 
 	@Override
@@ -74,8 +71,6 @@ public class MeasurerTime implements IMeasurer
 		this.setTotalTime(this.getTotalTime() + currentTime);
 
 		this.setTime((this.getTime() + currentTime) / 2.0D);
-
-		this.setIterationNumber(this.getIterationNumber() + 1);
 
 		return currentTime;
 	}
@@ -158,15 +153,5 @@ public class MeasurerTime implements IMeasurer
 	public void setName(final String nameIn)
 	{
 		this.name = nameIn;
-	}
-
-	public int getIterationNumber()
-	{
-		return this.iterationNumber;
-	}
-
-	public void setIterationNumber(final int iterationNumberIn)
-	{
-		this.iterationNumber = iterationNumberIn;
 	}
 }

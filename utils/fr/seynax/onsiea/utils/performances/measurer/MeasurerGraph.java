@@ -20,8 +20,6 @@ public class MeasurerGraph implements IMeasurer, Runnable
 
 	private long				total;
 
-	private int					iterationNumber;
-
 	private long				timeInterval;
 
 	private Timer				timer;
@@ -96,7 +94,6 @@ public class MeasurerGraph implements IMeasurer, Runnable
 	{
 		this.setAverage(0.0D);
 		this.setTotal(0);
-		this.setIterationNumber(0);
 	}
 
 	@Override
@@ -135,7 +132,6 @@ public class MeasurerGraph implements IMeasurer, Runnable
 			this.getValues().add(measure);
 			this.setAverage((this.getAverage() + measure) / 2.0D);
 			this.setTotal(this.getTotal() + measure);
-			this.setIterationNumber(this.getIterationNumber() + 1);
 
 			return true;
 		}
@@ -207,16 +203,6 @@ public class MeasurerGraph implements IMeasurer, Runnable
 	public void setTotal(final long totalIn)
 	{
 		this.total = totalIn;
-	}
-
-	public int getIterationNumber()
-	{
-		return this.iterationNumber;
-	}
-
-	public void setIterationNumber(final int iterationNumberIn)
-	{
-		this.iterationNumber = iterationNumberIn;
 	}
 
 	public long getTimeInterval()

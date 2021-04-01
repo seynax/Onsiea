@@ -1,4 +1,4 @@
-package fr.seynax.onsiea.utils.performances.profilling;
+package fr.seynax.onsiea.utils.performances.profiling;
 
 import java.util.List;
 
@@ -8,7 +8,9 @@ public class Profiler
 {
 	// Variables
 
-	private List<IMeasurer> measurers;
+	private List<IMeasurer>	measurers;
+
+	private int				iterations;
 
 	// Constructor
 
@@ -32,6 +34,8 @@ public class Profiler
 		{
 			measurer.start();
 		}
+
+		this.setIterations(this.getIterations() + 1);
 	}
 
 	public void stop()
@@ -52,5 +56,15 @@ public class Profiler
 	public void setMeasurers(final List<IMeasurer> measurersIn)
 	{
 		this.measurers = measurersIn;
+	}
+
+	public int getIterations()
+	{
+		return this.iterations;
+	}
+
+	public void setIterations(final int iterationsIn)
+	{
+		this.iterations = iterationsIn;
 	}
 }
