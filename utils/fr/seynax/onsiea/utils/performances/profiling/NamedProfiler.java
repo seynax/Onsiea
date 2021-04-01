@@ -4,18 +4,43 @@ import java.util.List;
 
 import fr.seynax.onsiea.utils.performances.measurer.IMeasurer;
 
-public class Profiler implements IProfiler
+public class NamedProfiler implements IProfiler
 {
+	// Static variables
+
+	private static int		namedProfilerNumber;
+
 	// Variables
 
 	private List<IMeasurer>	measurers;
 
 	private int				iterations;
 
+	private String			name;
+
 	// Constructor
 
-	public Profiler()
+	public NamedProfiler()
 	{
+		this.setName("PROFILER-" + NamedProfiler.getNamedProfilerNumber());
+
+		NamedProfiler.addNamedProfiler();
+	}
+
+	public NamedProfiler(final String nameIn)
+	{
+		this.setName(nameIn);
+
+		NamedProfiler.addNamedProfiler();
+	}
+
+	// Static methods
+
+	public final static int addNamedProfiler()
+	{
+		NamedProfiler.setNamedProfilerNumber(NamedProfiler.getNamedProfilerNumber() + 1);
+
+		return NamedProfiler.getNamedProfilerNumber();
 	}
 
 	// Methods
@@ -58,7 +83,29 @@ public class Profiler implements IProfiler
 		}
 	}
 
+	// Static variables
+
+	public static int getNamedProfilerNumber()
+	{
+		return NamedProfiler.namedProfilerNumber;
+	}
+
+	public static void setNamedProfilerNumber(final int namedProfilerNumberIn)
+	{
+		NamedProfiler.namedProfilerNumber = namedProfilerNumberIn;
+	}
+
 	// Variables
+
+	public String getName()
+	{
+		return this.name;
+	}
+
+	public void setName(final String nameIn)
+	{
+		this.name = nameIn;
+	}
 
 	public List<IMeasurer> getMeasurers()
 	{

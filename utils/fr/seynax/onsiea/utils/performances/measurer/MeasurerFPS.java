@@ -26,6 +26,8 @@ public class MeasurerFPS implements IMeasurer
 		return delta;
 	}
 
+	// Interface methods
+
 	@Override
 	public long start()
 	{
@@ -50,6 +52,14 @@ public class MeasurerFPS implements IMeasurer
 		this.setFPS(this.getFPS() + 1);
 
 		return -1L;
+	}
+
+	@Override
+	public void reset()
+	{
+		this.setFPS(0);
+		this.setLastFPS(0L);
+		this.setLastFrameTime(0L);
 	}
 
 	// Getter | Setter

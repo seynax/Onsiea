@@ -41,14 +41,17 @@ public class MeasurerTime implements IMeasurer
 
 	// Methods
 
-	public void reset()
+	public String shortReport()
 	{
-		this.setStart(System.nanoTime());
-		this.setEnd(System.nanoTime());
-
-		this.setTime(0.0D);
-		this.setTotalTime(0L);
+		return this.getEnd() + " - " + this.getStart() + " = " + this.getTime();
 	}
+
+	public String report()
+	{
+		return this.toString();
+	}
+
+	// Interface methods
 
 	@Override
 	public long start()
@@ -75,14 +78,14 @@ public class MeasurerTime implements IMeasurer
 		return currentTime;
 	}
 
-	public String shortReport()
+	@Override
+	public void reset()
 	{
-		return this.getEnd() + " - " + this.getStart() + " = " + this.getTime();
-	}
+		this.setStart(System.nanoTime());
+		this.setEnd(System.nanoTime());
 
-	public String report()
-	{
-		return this.toString();
+		this.setTime(0.0D);
+		this.setTotalTime(0L);
 	}
 
 	@Override

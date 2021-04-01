@@ -5,4 +5,6 @@ public interface IMeasurer
 	long start();
 
 	long stop();
+
+	void reset();
 }

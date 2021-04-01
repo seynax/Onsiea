@@ -77,11 +77,23 @@ public class MeasurerAverage implements IMeasurer, Runnable
 
 	// Methods
 
-	public void reset()
+	private boolean execute()
 	{
-		this.setAverage(0.0D);
-		this.setTotal(0);
+		if (this.getTimer().getElapsedTime() > this.getTimeInterval())
+		{
+			this.getTimer().start();
+
+			final var measure = this.getMeasurer().measure();
+			this.setAverage((this.getAverage() + measure) / 2.0D);
+			this.setTotal(this.getTotal() + measure);
+
+			return true;
+		}
+
+		return false;
 	}
+
+	// Interface methods
 
 	@Override
 	public long start()
@@ -101,36 +113,27 @@ public class MeasurerAverage implements IMeasurer, Runnable
 	}
 
 	@Override
+	public long stop()
+	{
+		this.setRunning(false);
+
+		return -1L;
+	}
+
+	@Override
+	public void reset()
+	{
+		this.setAverage(0.0D);
+		this.setTotal(0);
+	}
+
+	@Override
 	public void run()
 	{
 		while (this.isRunning())
 		{
 			this.execute();
 		}
-	}
-
-	private boolean execute()
-	{
-		if (this.getTimer().getElapsedTime() > this.getTimeInterval())
-		{
-			this.getTimer().start();
-
-			final var measure = this.getMeasurer().measure();
-			this.setAverage((this.getAverage() + measure) / 2.0D);
-			this.setTotal(this.getTotal() + measure);
-
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
-	public long stop()
-	{
-		this.setRunning(false);
-
-		return -1L;
 	}
 
 	@Override
