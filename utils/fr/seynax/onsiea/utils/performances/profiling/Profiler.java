@@ -1,5 +1,6 @@
 package fr.seynax.onsiea.utils.performances.profiling;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.seynax.onsiea.utils.performances.measurer.IMeasurer;
@@ -16,17 +17,32 @@ public class Profiler implements IProfiler
 
 	public Profiler()
 	{
+		this.setMeasurers(new ArrayList<>());
+	}
+
+	public Profiler(final IMeasurer... measurersIn)
+	{
+		this.setMeasurers(new ArrayList<>());
+
+		for (final IMeasurer measurer : measurersIn)
+		{
+			this.getMeasurers().add(measurer);
+		}
 	}
 
 	// Methods
 
 	@Override
-	public void add(final IMeasurer... measurersIn)
+	public IProfiler add(final IMeasurer... measurersIn)
 	{
+		this.setMeasurers(new ArrayList<>());
+
 		for (final IMeasurer measurer : measurersIn)
 		{
 			this.getMeasurers().add(measurer);
 		}
+
+		return this;
 	}
 
 	@Override

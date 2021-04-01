@@ -6,7 +6,7 @@ public interface IProfiler
 {
 	void start();
 
-	void add(IMeasurer... measurerIn);
+	IProfiler add(IMeasurer... measurerIn);
 
 	void stop();
 

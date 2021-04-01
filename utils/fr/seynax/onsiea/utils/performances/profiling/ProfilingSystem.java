@@ -23,7 +23,7 @@ public class ProfilingSystem
 
 	// Methods
 
-	public ProfilingSystem add(final String nameIn, final Profiler profilerIn)
+	public ProfilingSystem add(final String nameIn, final IProfiler profilerIn)
 	{
 		this.getProfilers().put(nameIn, profilerIn);
 

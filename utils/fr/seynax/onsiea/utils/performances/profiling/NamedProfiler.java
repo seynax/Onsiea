@@ -1,5 +1,6 @@
 package fr.seynax.onsiea.utils.performances.profiling;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.seynax.onsiea.utils.performances.measurer.IMeasurer;
@@ -25,6 +26,8 @@ public class NamedProfiler implements IProfiler
 		this.setName("PROFILER-" + NamedProfiler.getNamedProfilerNumber());
 
 		NamedProfiler.addNamedProfiler();
+
+		this.setMeasurers(new ArrayList<>());
 	}
 
 	public NamedProfiler(final String nameIn)
@@ -32,8 +35,37 @@ public class NamedProfiler implements IProfiler
 		this.setName(nameIn);
 
 		NamedProfiler.addNamedProfiler();
+
+		this.setMeasurers(new ArrayList<>());
 	}
 
+	public NamedProfiler(final IMeasurer... measurersIn)
+	{
+		this.setName("PROFILER-" + NamedProfiler.getNamedProfilerNumber());
+
+		NamedProfiler.addNamedProfiler();
+
+		this.setMeasurers(new ArrayList<>());
+
+		for (final IMeasurer measurer : measurersIn)
+		{
+			this.getMeasurers().add(measurer);
+		}
+	}
+
+	public NamedProfiler(final String nameIn, final IMeasurer... measurersIn)
+	{
+		this.setName(nameIn);
+
+		NamedProfiler.addNamedProfiler();
+
+		this.setMeasurers(new ArrayList<>());
+
+		for (final IMeasurer measurer : measurersIn)
+		{
+			this.getMeasurers().add(measurer);
+		}
+	}
 	// Static methods
 
 	public final static int addNamedProfiler()
@@ -46,12 +78,14 @@ public class NamedProfiler implements IProfiler
 	// Methods
 
 	@Override
-	public void add(final IMeasurer... measurersIn)
+	public IProfiler add(final IMeasurer... measurersIn)
 	{
 		for (final IMeasurer measurer : measurersIn)
 		{
 			this.getMeasurers().add(measurer);
 		}
+
+		return this;
 	}
 
 	@Override
