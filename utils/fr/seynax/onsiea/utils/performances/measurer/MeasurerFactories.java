@@ -5,26 +5,11 @@ import fr.seynax.onsiea.utils.performances.helper.MemoryHelper;
 
 public class MeasurerFactories
 {
-	private final static Factory	FREE_MEMORY	= new Factory(() ->
-												{
-													MemoryHelper.freeMemory();
+	private final static Factory	FREE_MEMORY	= new Factory("freeMemory", MemoryHelper::freeMemory);
 
-													return 0L;
-												});
+	private final static Factory	USED_MEMORY	= new Factory("usedMemory", MemoryHelper::usedMemory);
 
-	private final static Factory	USED_MEMORY	= new Factory(() ->
-												{
-													MemoryHelper.usedMemory();
-
-													return 0L;
-												});
-
-	private final static Factory	CPU_USAGE	= new Factory(() ->
-												{
-													CPUHelper.processCpuLoad();
-
-													return 0L;
-												});
+	private final static Factory	CPU_USAGE	= new Factory("cpuUsage", () -> ((long) CPUHelper.processCpuLoad()));
 
 	// Getter
 
@@ -61,16 +46,19 @@ public class MeasurerFactories
 		return MeasurerFactories.CPU_USAGE;
 	}
 
-	final static class Factory
+	public final static class Factory
 	{
 		// Variables
 
-		private IMeasurerFunction measurerFunction;
+		private IMeasurerFunction	measurerFunction;
+
+		private String				measureName;
 
 		// Constructor
 
-		public Factory(final IMeasurerFunction measurerFunctionIn)
+		public Factory(final String measureNameIn, final IMeasurerFunction measurerFunctionIn)
 		{
+			this.setMeasureName(measureNameIn);
 			this.setMeasurerFunction(measurerFunctionIn);
 		}
 
@@ -78,12 +66,12 @@ public class MeasurerFactories
 
 		public IMeasurer create()
 		{
-			return new MeasurerAverage(this.getMeasurerFunction());
+			return new MeasurerAverage(this.getMeasureName(), this.getMeasurerFunction());
 		}
 
 		public IMeasurer create(final long timeIntervalIn)
 		{
-			return new MeasurerAverage(this.getMeasurerFunction(), timeIntervalIn);
+			return new MeasurerAverage(this.getMeasureName(), this.getMeasurerFunction(), timeIntervalIn);
 		}
 
 		// Getter | Setter
@@ -96,6 +84,16 @@ public class MeasurerFactories
 		public void setMeasurerFunction(final IMeasurerFunction measurerFunctionIn)
 		{
 			this.measurerFunction = measurerFunctionIn;
+		}
+
+		public String getMeasureName()
+		{
+			return this.measureName;
+		}
+
+		public void setMeasureName(final String measureNameIn)
+		{
+			this.measureName = measureNameIn;
 		}
 	}
 }

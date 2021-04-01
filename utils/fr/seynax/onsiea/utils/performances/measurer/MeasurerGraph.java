@@ -10,6 +10,8 @@ public class MeasurerGraph implements IMeasurer, Runnable
 {
 	// Variables
 
+	private String				name;
+
 	private IMeasurerFunction	measurer;
 
 	private List<Long>			values;
@@ -28,8 +30,10 @@ public class MeasurerGraph implements IMeasurer, Runnable
 
 	// Constructor
 
-	public MeasurerGraph(final IMeasurerFunction measurerIn)
+	public MeasurerGraph(final String nameIn, final IMeasurerFunction measurerIn)
 	{
+		this.setMeasureName(nameIn);
+
 		this.setMeasurer(measurerIn);
 
 		this.setValues(new ArrayList<>());
@@ -40,8 +44,10 @@ public class MeasurerGraph implements IMeasurer, Runnable
 
 	}
 
-	public MeasurerGraph(final IMeasurerFunction measurerIn, final long timeIntervalIn)
+	public MeasurerGraph(final String nameIn, final IMeasurerFunction measurerIn, final long timeIntervalIn)
 	{
+		this.setMeasureName(nameIn);
+
 		this.setMeasurer(measurerIn);
 
 		this.setTimeInterval(timeIntervalIn);
@@ -56,7 +62,7 @@ public class MeasurerGraph implements IMeasurer, Runnable
 
 	private boolean execute()
 	{
-		if (this.getTimer().getElapsedTime() > this.getTimeInterval())
+		if (this.getTimer().getElapsedTime() >= this.getTimeInterval())
 		{
 			this.getTimer().start();
 
@@ -77,6 +83,8 @@ public class MeasurerGraph implements IMeasurer, Runnable
 	public long start()
 	{
 		this.setThread(new Thread(this));
+
+		this.setRunning(true);
 
 		if (OS.getOsName().contains("mac"))
 		{
@@ -117,20 +125,19 @@ public class MeasurerGraph implements IMeasurer, Runnable
 	@Override
 	public String shortReport()
 	{
-		return this.getAverage() + " [" + this.getTotal() + "]";
+		return this.getMeasureName() + " -> " + this.getAverage() + " [" + this.getTotal() + "]";
 	}
 
 	@Override
 	public String shortReport(final String startIn)
 	{
-		return startIn + this.getAverage() + " [" + this.getTotal() + "]";
+		return startIn + this.getMeasureName() + " -> " + this.getAverage() + " [" + this.getTotal() + "]";
 	}
 
 	@Override
 	public String report()
 	{
-
-		var output = this.getAverage() + " [" + this.getTotal() + "] :\n{";
+		var output = this.getMeasureName() + " -> " + this.getAverage() + " [" + this.getTotal() + "] :\n{";
 
 		for (final long value : this.getValues())
 		{
@@ -145,7 +152,8 @@ public class MeasurerGraph implements IMeasurer, Runnable
 	@Override
 	public String report(final String startIn)
 	{
-		var output = startIn + this.getAverage() + " [" + this.getTotal() + "] :\n" + startIn + "{";
+		var output = startIn + this.getMeasureName() + " -> " + this.getAverage() + " [" + this.getTotal() + "] :\n"
+				+ startIn + "{";
 
 		for (final long value : this.getValues())
 		{
@@ -160,7 +168,15 @@ public class MeasurerGraph implements IMeasurer, Runnable
 	@Override
 	public String toString()
 	{
-		return this.getAverage() + " [" + this.getTotal() + "]";
+		return this.getMeasureName() + " -> " + this.getAverage() + " [" + this.getTotal() + "]";
+	}
+
+	// Interface getter | setter
+
+	@Override
+	public String getMeasureName()
+	{
+		return this.name + "-GRAPH";
 	}
 
 	// Getter | Setter
@@ -243,5 +259,10 @@ public class MeasurerGraph implements IMeasurer, Runnable
 	public void setRunning(final boolean isRunningIn)
 	{
 		this.isRunning = isRunningIn;
+	}
+
+	public void setMeasureName(final String nameIn)
+	{
+		this.name = nameIn;
 	}
 }

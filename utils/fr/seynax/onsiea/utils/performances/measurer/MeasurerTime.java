@@ -49,6 +49,12 @@ public class MeasurerTime implements IMeasurer
 	}
 
 	@Override
+	public String getMeasureName()
+	{
+		return "time";
+	}
+
+	@Override
 	public String shortReport()
 	{
 		return "Time : " + this.getTime();

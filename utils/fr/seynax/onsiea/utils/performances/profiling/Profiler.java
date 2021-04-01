@@ -35,8 +35,6 @@ public class Profiler implements IProfiler
 	@Override
 	public IProfiler add(final IMeasurer... measurersIn)
 	{
-		this.setMeasurers(new ArrayList<>());
-
 		for (final IMeasurer measurer : measurersIn)
 		{
 			this.getMeasurers().add(measurer);

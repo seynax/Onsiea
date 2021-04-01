@@ -8,6 +8,8 @@ public interface IMeasurer
 
 	void reset();
 
+	String getMeasureName();
+
 	String shortReport();
 
 	String shortReport(String startIn);
