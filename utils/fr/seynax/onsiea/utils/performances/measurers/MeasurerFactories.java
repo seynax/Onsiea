@@ -1,7 +1,8 @@
-package fr.seynax.onsiea.utils.performances.measurer;
+package fr.seynax.onsiea.utils.performances.measurers;
 
 import fr.seynax.onsiea.utils.performances.helper.CPUHelper;
 import fr.seynax.onsiea.utils.performances.helper.MemoryHelper;
+import fr.seynax.onsiea.utils.performances.measurer.IMeasurerFunction;
 
 public class MeasurerFactories
 {
@@ -64,15 +65,14 @@ public class MeasurerFactories
 
 		// Methods
 
-		public IMeasurer create()
-		{
-			return new MeasurerAverage(this.getMeasureName(), this.getMeasurerFunction());
-		}
-
-		public IMeasurer create(final long timeIntervalIn)
-		{
-			return new MeasurerAverage(this.getMeasureName(), this.getMeasurerFunction(), timeIntervalIn);
-		}
+		/**
+		 * public IMeasurer create() { return new Measurer(this.getMeasureName(),
+		 * this.getMeasurerFunction()); }
+		 * 
+		 * public IMeasurer create(final long timeIntervalIn) { return new
+		 * Measurer(this.getMeasureName(), this.getMeasurerFunction(), timeIntervalIn);
+		 * }
+		 **/
 
 		// Getter | Setter
 

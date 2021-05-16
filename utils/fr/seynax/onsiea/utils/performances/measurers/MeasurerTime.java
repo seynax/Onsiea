@@ -1,78 +1,81 @@
-package fr.seynax.onsiea.utils.performances.measurer;
+package fr.seynax.onsiea.utils.performances.measurers;
+
+import fr.seynax.onsiea.utils.performances.measurer.IMeasurer;
 
 public class MeasurerTime implements IMeasurer
 {
-	// Variables
-
 	private long	start;
 	private long	end;
 
-	private double	time;
+	private double	average;
+	private long	total;
 
-	private long	totalTime;
+	private long	time;
+
+	private boolean	isOneIteration;
 
 	// Interface methods
 
 	@Override
-	public long start()
+	public void start()
 	{
 		this.setStart(System.nanoTime());
-
-		return this.getStart();
 	}
 
 	/**
 	 * @return currentTime
 	 */
 	@Override
-	public long stop()
+	public void stop()
 	{
 		this.setEnd(System.nanoTime());
 
-		final var currentTime = this.getEnd() - this.getStart();
+		this.setTime(this.getEnd() - this.getStart());
 
-		this.setTotalTime(this.getTotalTime() + currentTime);
+		this.setTotal(this.getTotal() + this.getTime());
 
-		this.setTime((this.getTime() + currentTime) / 2.0D);
+		if (this.isOneIteration())
+		{
+			this.setAverage((this.getAverage() + this.getTime()) / 2.0D);
+		}
+		else
+		{
+			this.setAverage(this.getTime());
+			this.setOneIteration(true);
+		}
 
-		return currentTime;
 	}
 
-	@Override
 	public void reset()
 	{
 		this.setStart(System.nanoTime());
 		this.setEnd(System.nanoTime());
 
-		this.setTime(0.0D);
-		this.setTotalTime(0L);
+		this.setTime(0L);
+		this.setTotal(0L);
+		this.setAverage(0.0D);
 	}
 
-	@Override
 	public String getMeasureName()
 	{
 		return "time";
 	}
 
-	@Override
 	public String shortReport()
 	{
 		return "Time : " + this.getTime();
 	}
 
-	@Override
 	public String shortReport(final String startIn)
 	{
 		return startIn + "Time : " + this.getTime();
 	}
 
-	@Override
 	public String report()
 	{
 		return this.getEnd() + " - " + this.getStart() + ", Time : " + this.getTime();
 	}
 
-	@Override
 	public String report(final String startIn)
 	{
 		return startIn + this.getEnd() + " - " + this.getStart() + ", Time : " + this.getTime();
@@ -96,6 +99,16 @@ public class MeasurerTime implements IMeasurer
 		this.start = startIn;
 	}
 
+	public long getTime()
+	{
+		return this.time;
+	}
+
+	public void setTime(final long timeIn)
+	{
+		this.time = timeIn;
+	}
+
 	public long getEnd()
 	{
 		return this.end;
@@ -106,23 +119,33 @@ public class MeasurerTime implements IMeasurer
 		this.end = endIn;
 	}
 
-	public double getTime()
+	public double getAverage()
 	{
-		return this.time;
+		return this.average;
 	}
 
-	public void setTime(final double timeIn)
+	public void setAverage(final double averageIn)
 	{
-		this.time = timeIn;
+		this.average = averageIn;
 	}
 
-	public long getTotalTime()
+	public long getTotal()
 	{
-		return this.totalTime;
+		return this.total;
 	}
 
-	public void setTotalTime(final long totalTimeIn)
+	public void setTotal(final long totalIn)
 	{
-		this.totalTime = totalTimeIn;
+		this.total = totalIn;
+	}
+
+	public boolean isOneIteration()
+	{
+		return this.isOneIteration;
+	}
+
+	public void setOneIteration(final boolean isOneIterationIn)
+	{
+		this.isOneIteration = isOneIterationIn;
 	}
 }

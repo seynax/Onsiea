@@ -68,18 +68,18 @@ public class Profiler implements IProfiler
 	{
 		for (final IMeasurer measurer : this.getMeasurers())
 		{
-			measurer.reset();
+			// measurer.reset();
 		}
 	}
 
 	@Override
 	public String shortReport()
 	{
-		var output = "Iterations : " + this.getIterations();
+		final var output = "Iterations : " + this.getIterations();
 
 		for (final IMeasurer measurer : this.getMeasurers())
 		{
-			output += "\n" + measurer.shortReport("	");
+			// output += "\n" + measurer.shortReport(" ");
 		}
 
 		return output;
@@ -88,11 +88,11 @@ public class Profiler implements IProfiler
 	@Override
 	public String shortReport(final String startIn)
 	{
-		var output = startIn + "Iterations : " + this.getIterations();
+		final var output = startIn + "Iterations : " + this.getIterations();
 
 		for (final IMeasurer measurer : this.getMeasurers())
 		{
-			output += "\n" + startIn + measurer.shortReport("	");
+			// output += "\n" + startIn + measurer.shortReport(" ");
 		}
 
 		return output;
@@ -101,11 +101,11 @@ public class Profiler implements IProfiler
 	@Override
 	public String report()
 	{
-		var output = "Iterations : " + this.getIterations();
+		final var output = "Iterations : " + this.getIterations();
 
 		for (final IMeasurer measurer : this.getMeasurers())
 		{
-			output += "\n" + measurer.report("	");
+			// output += "\n" + measurer.report(" ");
 		}
 
 		return output;
@@ -114,11 +114,11 @@ public class Profiler implements IProfiler
 	@Override
 	public String report(final String startIn)
 	{
-		var output = startIn + "Iterations : " + this.getIterations();
+		final var output = startIn + "Iterations : " + this.getIterations();
 
 		for (final IMeasurer measurer : this.getMeasurers())
 		{
-			output += "\n" + startIn + measurer.report("	");
+			// output += "\n" + startIn + measurer.report(" ");
 		}
 
 		return output;

@@ -64,11 +64,11 @@ public class NamedProfiler extends Profiler implements IProfiler
 	@Override
 	public String shortReport()
 	{
-		var output = "";
+		final var output = "";
 
 		for (final IMeasurer measurer : this.getMeasurers())
 		{
-			output += "\n" + measurer.shortReport();
+			// output += "\n" + measurer.shortReport();
 		}
 
 		return output;
@@ -77,11 +77,11 @@ public class NamedProfiler extends Profiler implements IProfiler
 	@Override
 	public String shortReport(final String startIn)
 	{
-		var output = "";
+		final var output = "";
 
 		for (final IMeasurer measurer : this.getMeasurers())
 		{
-			output += "\n" + startIn + "[" + measurer.shortReport();
+			// output += "\n" + startIn + "[" + measurer.shortReport();
 		}
 
 		return output;
