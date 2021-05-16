@@ -1,6 +1,6 @@
 package fr.seynax.onsiea;
 
-import fr.seynax.onsiea.gamelogic.VulkanEngine;
+import fr.seynax.onsiea.game.VulkanEngine;
 
 public class VulkanTest
 {

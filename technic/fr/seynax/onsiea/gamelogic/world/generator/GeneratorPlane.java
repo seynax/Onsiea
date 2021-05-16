@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.joml.Vector3f;
 
-import fr.seynax.onsiea.gamelogic.LogicConstants;
-import fr.seynax.onsiea.gamelogic.world.Element;
-import fr.seynax.onsiea.gamelogic.world.ElementGroup;
+import fr.seynax.onsiea.gamelogic.logic.LogicConstants;
+import fr.seynax.onsiea.gamelogic.world.elements.Element;
+import fr.seynax.onsiea.gamelogic.world.elements.ElementGroup;
 import fr.seynax.onsiea.graphics.Texture;
 
 public class GeneratorPlane implements IGenerator
@@ -24,11 +24,11 @@ public class GeneratorPlane implements IGenerator
 		final var	elementGroup	= new ElementGroup();
 		final var	dirt			= new Element("dirt", Texture.loadTexture("dirt").getTextureId());
 
-		for (var x = LogicConstants.getChunkMinX(); x < LogicConstants.getChunkMaxX(); x++)
+		for (var x = LogicConstants.Chunk.getMinX(); x < LogicConstants.Chunk.getMaxX(); x++)
 		{
-			for (var y = LogicConstants.getChunkMinY(); y < LogicConstants.getChunkMaxY(); y++)
+			for (var y = LogicConstants.Chunk.getMinY(); y < LogicConstants.Chunk.getMaxY(); y++)
 			{
-				for (var z = LogicConstants.getChunkMinZ(); z < LogicConstants.getChunkMaxZ(); z++)
+				for (var z = LogicConstants.Chunk.getMinZ(); z < LogicConstants.Chunk.getMaxZ(); z++)
 				{
 					elementGroup.add(new Vector3f(x + xIn, y + yIn, z + zIn), dirt);
 				}

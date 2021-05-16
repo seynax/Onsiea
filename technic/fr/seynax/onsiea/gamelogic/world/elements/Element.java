@@ -1,4 +1,4 @@
-package fr.seynax.onsiea.gamelogic.world;
+package fr.seynax.onsiea.gamelogic.world.elements;
 
 import fr.seynax.onsiea.graphics.Texture;
 

@@ -4,13 +4,13 @@ import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
 import fr.seynax.onsiea.gamelogic.item.Item;
-import fr.seynax.onsiea.gamelogic.item.Rectangle;
 import fr.seynax.onsiea.graphics.IRenderable;
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.graphics.Texture;
 import fr.seynax.onsiea.graphics.input.CursorExtensionMenu;
 import fr.seynax.onsiea.opengl.renderer.RendererGuiSlot;
 import fr.seynax.onsiea.opengl.shader.ShaderGui;
+import fr.seynax.onsiea.utils.maths.Rectangle;
 
 public class GuiSlot implements IRenderable<ShaderGui, GuiSlot, RendererGuiSlot>
 {

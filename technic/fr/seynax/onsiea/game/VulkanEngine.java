@@ -1,4 +1,4 @@
-package fr.seynax.onsiea.gamelogic;
+package fr.seynax.onsiea.game;
 
 import org.lwjgl.glfw.GLFW;
 

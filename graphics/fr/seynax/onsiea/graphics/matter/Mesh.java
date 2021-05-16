@@ -1,6 +1,7 @@
 package fr.seynax.onsiea.graphics.matter;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
@@ -31,13 +32,12 @@ public class Mesh
 		FloatBuffer verticesBuffer = null;
 		try
 		{
-			verticesBuffer = MemoryUtil.memAllocFloat(positionsIn.length);
-			this.setVertexCount(positionsIn.length / 3);
-			verticesBuffer.put(positionsIn).flip();
-
 			this.setVaoId(GL30.glGenVertexArrays());
 			GL30.glBindVertexArray(this.getVaoId());
 
+			verticesBuffer = MemoryUtil.memAllocFloat(positionsIn.length);
+			this.setVertexCount(positionsIn.length / 3);
+			verticesBuffer.put(positionsIn).flip();
 			this.setVboId(GL15.glGenBuffers());
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.getVboId());
 			GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBuffer, GL15.GL_STATIC_DRAW);
@@ -62,22 +62,21 @@ public class Mesh
 		FloatBuffer verticesBuffer = null;
 		try
 		{
-			verticesBuffer = MemoryUtil.memAllocFloat(positionsIn.length);
-			this.setVertexCount(positionsIn.length / 3);
-			verticesBuffer.put(positionsIn).flip();
-
 			this.setVaoId(GL30.glGenVertexArrays());
 			GL30.glBindVertexArray(this.getVaoId());
 
+			verticesBuffer = MemoryUtil.memAllocFloat(positionsIn.length);
+			this.setVertexCount(positionsIn.length / 3);
+			verticesBuffer.put(positionsIn).flip();
 			this.setVboId(GL15.glGenBuffers());
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.getVboId());
 			GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBuffer, GL15.GL_STATIC_DRAW);
 			GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 
-			this.setIndicesId(GL15.glGenBuffers());
 			final var indicesBuffer = MemoryUtil.memAllocInt(indicesIn.length);
 			indicesBuffer.put(indicesIn).flip();
+			this.setIndicesId(GL15.glGenBuffers());
 			GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, this.getIndicesId());
 			GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL15.GL_STATIC_DRAW);
 			MemoryUtil.memFree(indicesBuffer);
@@ -101,12 +100,11 @@ public class Mesh
 
 		try
 		{
-			verticesBuffer = MemoryUtil.memAllocFloat(positionsIn.length);
-			verticesBuffer.put(positionsIn).flip();
-
 			this.setVaoId(GL30.glGenVertexArrays());
 			GL30.glBindVertexArray(this.getVaoId());
 
+			verticesBuffer = MemoryUtil.memAllocFloat(positionsIn.length);
+			verticesBuffer.put(positionsIn).flip();
 			this.setVboId(GL15.glGenBuffers());
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.getVboId());
 			GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBuffer, GL15.GL_STATIC_DRAW);
@@ -114,17 +112,17 @@ public class Mesh
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 
 			// Colour VBO
-			this.setColourVboId(GL15.glGenBuffers());
 			final var colourBuffer = MemoryUtil.memAllocFloat(coloursIn.length);
 			colourBuffer.put(coloursIn).flip();
+			this.setColourVboId(GL15.glGenBuffers());
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.getColourVboId());
 			GL15.glBufferData(GL15.GL_ARRAY_BUFFER, colourBuffer, GL15.GL_STATIC_DRAW);
 			MemoryUtil.memFree(colourBuffer);
 			GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0);
 
-			this.setIndicesId(GL15.glGenBuffers());
 			final var indicesBuffer = MemoryUtil.memAllocInt(indicesIn.length);
 			indicesBuffer.put(indicesIn).flip();
+			this.setIndicesId(GL15.glGenBuffers());
 			GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, this.getIndicesId());
 			GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL15.GL_STATIC_DRAW);
 			MemoryUtil.memFree(indicesBuffer);
@@ -148,17 +146,14 @@ public class Mesh
 		FloatBuffer verticesBuffer = null;
 		try
 		{
-			verticesBuffer = MemoryUtil.memAllocFloat(positionsIn.length);
-			verticesBuffer.put(positionsIn).flip();
-
 			this.setVaoId(GL30.glGenVertexArrays());
-
 			GL30.glBindVertexArray(this.getVaoId());
 
 			// Vertices
 
+			verticesBuffer = MemoryUtil.memAllocFloat(positionsIn.length);
+			verticesBuffer.put(positionsIn).flip();
 			this.setVboId(GL15.glGenBuffers());
-
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.getVboId());
 			GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBuffer, GL15.GL_STATIC_DRAW);
 			GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
@@ -166,10 +161,9 @@ public class Mesh
 
 			// Texture Coordinates VBO
 
-			this.setTextureCoordinatesId(GL15.glGenBuffers());
-
 			final var textureCoordinatesBuffer = MemoryUtil.memAllocFloat(textureCoordinatessIn.length);
 			textureCoordinatesBuffer.put(textureCoordinatessIn).flip();
+			this.setTextureCoordinatesId(GL15.glGenBuffers());
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.getTextureCoordinatesId());
 			GL15.glBufferData(GL15.GL_ARRAY_BUFFER, textureCoordinatesBuffer, GL15.GL_STATIC_DRAW);
 			MemoryUtil.memFree(textureCoordinatesBuffer);
@@ -177,10 +171,9 @@ public class Mesh
 
 			// Colour VBO
 
-			this.setColourVboId(GL15.glGenBuffers());
-
 			final var colourBuffer = MemoryUtil.memAllocFloat(coloursIn.length);
 			colourBuffer.put(coloursIn).flip();
+			this.setColourVboId(GL15.glGenBuffers());
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.getColourVboId());
 			GL15.glBufferData(GL15.GL_ARRAY_BUFFER, colourBuffer, GL15.GL_STATIC_DRAW);
 			MemoryUtil.memFree(colourBuffer);
@@ -188,10 +181,9 @@ public class Mesh
 
 			// Indices
 
-			this.setIndicesId(GL15.glGenBuffers());
-
 			final var indicesBuffer = MemoryUtil.memAllocInt(indicesIn.length);
 			indicesBuffer.put(indicesIn).flip();
+			this.setIndicesId(GL15.glGenBuffers());
 			GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, this.getIndicesId());
 			GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL15.GL_STATIC_DRAW);
 			MemoryUtil.memFree(indicesBuffer);
@@ -210,6 +202,48 @@ public class Mesh
 	}
 
 	// Methods
+
+	public Mesh(final FloatBuffer verticesBufferIn, final FloatBuffer texCoordsBufferIn,
+			final IntBuffer indicesBufferIn)
+	{
+		final FloatBuffer verticesBuffer = null;
+		try
+		{
+			this.setVaoId(GL30.glGenVertexArrays());
+			GL30.glBindVertexArray(this.getVaoId());
+
+			// Vertices
+
+			this.setVboId(GL15.glGenBuffers());
+			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.getVboId());
+			GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBufferIn, GL15.GL_STATIC_DRAW);
+			GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
+			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+
+			// Texture Coordinates VBO
+
+			this.setTextureCoordinatesId(GL15.glGenBuffers());
+			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.getTextureCoordinatesId());
+			GL15.glBufferData(GL15.GL_ARRAY_BUFFER, texCoordsBufferIn, GL15.GL_STATIC_DRAW);
+			GL20.glVertexAttribPointer(1, 2, GL11.GL_FLOAT, false, 0, 0);
+
+			// Indices
+
+			this.setIndicesId(GL15.glGenBuffers());
+			GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, this.getIndicesId());
+			GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesBufferIn, GL15.GL_STATIC_DRAW);
+			this.setVertexCount(indicesBufferIn.remaining());
+
+			GL30.glBindVertexArray(0);
+		}
+		finally
+		{
+			if (verticesBuffer != null)
+			{
+				MemoryUtil.memFree(verticesBuffer);
+			}
+		}
+	}
 
 	public void render()
 	{

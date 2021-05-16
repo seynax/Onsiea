@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.joml.Vector2f;
 
-import fr.seynax.onsiea.gamelogic.item.TexturedRectangle;
 import fr.seynax.onsiea.graphics.IRenderable;
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.graphics.Texture;

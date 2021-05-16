@@ -7,10 +7,11 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import fr.seynax.onsiea.entity.Camera;
-import fr.seynax.onsiea.gamelogic.IGameLogic;
-import fr.seynax.onsiea.gamelogic.TechnicEngine;
+import fr.seynax.onsiea.game.threads.Technic;
 import fr.seynax.onsiea.gamelogic.item.AnimatedItem;
 import fr.seynax.onsiea.gamelogic.item.GameItem;
+import fr.seynax.onsiea.gamelogic.logic.IGameLogic;
+import fr.seynax.onsiea.gamelogic.world.World;
 import fr.seynax.onsiea.graphics.GraphicsConstants;
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.graphics.LWJGL;
@@ -28,12 +29,13 @@ import fr.seynax.onsiea.opengl.renderer.RendererGuiElement;
 import fr.seynax.onsiea.opengl.renderer.RendererGuiInventory;
 import fr.seynax.onsiea.opengl.renderer.RendererGuiScreenshots;
 import fr.seynax.onsiea.opengl.renderer.RendererGuiSlot;
+import fr.seynax.onsiea.opengl.shader.BaseColourShader;
 import fr.seynax.onsiea.opengl.shader.ShaderGui;
 import fr.seynax.onsiea.opengl.shader.ShaderProgram;
 import fr.seynax.onsiea.opengl.shader.ShaderScreenshot;
 import fr.seynax.onsiea.utils.Timer;
 import fr.seynax.onsiea.utils.maths.Maths;
-import fr.seynax.onsiea.utils.performances.measurer.MeasurerFPS;
+import fr.seynax.onsiea.utils.performances.FPSCalculator;
 
 public class DummyGame implements IGameLogic
 {
@@ -63,14 +65,19 @@ public class DummyGame implements IGameLogic
 
 	private ShaderGui				shaderGui;
 	private ShaderScreenshot		shaderScreenshot;
+	private BaseColourShader		baseColourShader;
 
-	private TechnicEngine			technicEngine;
+	private Technic					technicEngine;
 	private Matrix4f				viewMatrix;
 
 	private Timer					timer0;
 	private Timer					timer1;
 
-	private MeasurerFPS				fpsUtils;
+	private FPSCalculator			fpsUtils;
+
+	private World					world;
+
+	// private final ProfilingSystem profilingSystem;
 
 	/**
 	 * private Mesh meshBoat; private GameItem boat; private Texture boatTexture;
@@ -80,6 +87,24 @@ public class DummyGame implements IGameLogic
 
 	public DummyGame()
 	{
+		/**
+		 * this.profilingSystem = new ProfilingSystem() .add("initialization", new
+		 * Profiler().add(new MeasurerBase(),
+		 * MeasurerFactories.getUsedMemory().create(1_000_000L),
+		 * MeasurerFactories.getCpuUsage().create(1_000_000L))) .add("input", new
+		 * Profiler().add(new MeasurerBase(),
+		 * MeasurerFactories.getUsedMemory().create(1_000_000_000_000L),
+		 * MeasurerFactories.getCpuUsage().create(1_000_000_000_000L))) .add("update",
+		 * new Profiler().add(new MeasurerBase(),
+		 * MeasurerFactories.getUsedMemory().create(1_000_000_000_000L),
+		 * MeasurerFactories.getCpuUsage().create(1_000_000_000_000L))) .add("render",
+		 * new Profiler().add(new MeasurerBase(),
+		 * MeasurerFactories.getUsedMemory().create(1_000_000_000_000L),
+		 * MeasurerFactories.getCpuUsage().create(1_000_000_000_000L))) .add("cleanup",
+		 * new Profiler().add(new MeasurerBase(),
+		 * MeasurerFactories.getUsedMemory().create(1_000_000L),
+		 * MeasurerFactories.getCpuUsage().create(1_000_000L)));
+		 **/
 	}
 
 	// Methods
@@ -87,6 +112,8 @@ public class DummyGame implements IGameLogic
 	@Override
 	public void initialization(final IWindow windowIn) throws Exception
 	{
+		// this.profilingSystem.start("initialization");
+
 		if (GraphicsConstants.isDebug())
 		{
 			LWJGL.enableDebugging();
@@ -249,6 +276,32 @@ public class DummyGame implements IGameLogic
 		 * new OpenGLFramebuffer(1920, 1080); }
 		 **/
 
+		final var	surfacePositions	= new float[] {
+
+				-1, 0, -1, 1, 0, -1, 1, 0, 1, -1, 0, 1 };
+		final var	surfaceTexCoords	= new float[] {
+
+				0, 0, 1, 0, 1, 1, 0, 1 };
+		final var	surfaceIndices		= new int[] {
+
+				0, 1, 3, 3, 2, 1 };
+
+		final var	surface				= new Mesh(surfacePositions, new float[] {}, surfaceTexCoords, surfaceIndices);
+
+		this.world = new World(surface);
+		this.world.initialization(this.camera);
+
+		// Shader
+		{
+			this.baseColourShader = new BaseColourShader();
+
+			this.baseColourShader.start();
+
+			this.baseColourShader.sendProjectionMatrix(Maths.getProjectionMatrix());
+
+			ShaderProgram.stop();
+		}
+
 		// Gui Shader
 		{
 			this.shaderGui = new ShaderGui();
@@ -311,19 +364,23 @@ public class DummyGame implements IGameLogic
 		GLFW.glfwSetCursorPos(windowIn.getWindowHandle(), windowIn.getWidth() / 2.0D, windowIn.getHeight() / 2.0D);
 
 		{
-			this.technicEngine = new TechnicEngine(this.camera, windowIn);
+			this.technicEngine = new Technic(this.camera, windowIn);
 			this.technicEngine.start();
 		}
 
 		{
-			this.fpsUtils = new MeasurerFPS();
+			this.fpsUtils = new FPSCalculator();
 			this.fpsUtils.start();
 		}
+
+		// this.profilingSystem.stop("initialization");
 	}
 
 	@Override
 	public void input(final IWindow windowIn)
 	{
+		// this.profilingSystem.start("input");
+
 		if (this.timer0.getElapsedTime() >= 1_000_000L)
 		{
 			this.timer0.start();
@@ -377,11 +434,15 @@ public class DummyGame implements IGameLogic
 				windowIn.getGlfwEventManager().getCallbacksManager().FPSView();
 			}
 		}
+
+		// this.profilingSystem.stop("input");
 	}
 
 	@Override
 	public void update(final double intervalIn, final IWindow windowIn)
 	{
+		// this.profilingSystem.start("update");
+
 		this.setColor(this.getColor() + this.getDirection() * 0.01f);
 
 		if (this.getColor() > 1)
@@ -440,6 +501,12 @@ public class DummyGame implements IGameLogic
 			}
 		}
 		this.camera.update(windowIn, 1.0D / 30.0D);
+
+		this.world.update(this.camera);
+
+		this.camera.reset();
+
+		// this.profilingSystem.stop("update");
 	}
 
 	public boolean isIn(final Vector3f fromPositionIn, final float xMinIn, final float yMinIn, final float zMinIn,
@@ -452,6 +519,8 @@ public class DummyGame implements IGameLogic
 	@Override
 	public void render(final IWindow windowIn)
 	{
+		// this.profilingSystem.start("render");
+
 		final var lastState = this.camera.isCanUpdate();
 
 		this.camera.setCanUpdate(false);
@@ -612,9 +681,14 @@ public class DummyGame implements IGameLogic
 				this.getRenderer().getShaderProgram().start();
 				this.getRenderer().getShaderProgram().sendColor(new Vector3f(1.0f, 1.0f, 1.0f));
 
-				Texture.bind(this.getGrassBlockTexture().getTextureId());
+				{
+					// Texture.bind(this.getGrassBlockTexture().getTextureId());
 
-				this.getRenderer().render(windowIn, this.getGameItems());
+					// this.getRenderer().render(windowIn, this.getGameItems());
+				}
+				{
+					this.world.draw(this.baseColourShader);
+				}
 			}
 		}
 
@@ -634,11 +708,15 @@ public class DummyGame implements IGameLogic
 		{
 			OpenGL.showAllError();
 		}
+
+		// this.profilingSystem.stop("render");
 	}
 
 	@Override
 	public void cleanup()
 	{
+		// this.profilingSystem.start("cleanup");
+
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 
 		Texture.cleanUp();
@@ -652,6 +730,12 @@ public class DummyGame implements IGameLogic
 		OpenGL.cleanup();
 
 		this.technicEngine.stop();
+
+		this.world.cleanup();
+
+		// this.profilingSystem.stop("cleanup");
+
+		// System.out.println(this.profilingSystem.report());
 	}
 
 	// Getter | Setter

@@ -1,6 +1,8 @@
-package fr.seynax.onsiea.gamelogic.item;
+package fr.seynax.onsiea.graphics.gui;
 
 import org.joml.Vector2f;
+
+import fr.seynax.onsiea.utils.maths.Rectangle;
 
 public class TexturedRectangle
 {
@@ -25,32 +27,32 @@ public class TexturedRectangle
 
 	public boolean isIn(final double mouseXIn, final double mouseYIn)
 	{
-		return this.rectangle.isIn(mouseXIn, mouseYIn);
+		return this.getRectangle().isIn(mouseXIn, mouseYIn);
 	}
 
 	public boolean isIn(final Vector2f mousePositionIn)
 	{
-		return this.rectangle.isIn(mousePositionIn);
+		return this.getRectangle().isIn(mousePositionIn);
 	}
 
 	public Vector2f getPosition()
 	{
-		return this.rectangle.getPosition();
+		return this.getRectangle().getPosition();
 	}
 
 	public Vector2f getSize()
 	{
-		return this.rectangle.getSize();
+		return this.getRectangle().getSize();
 	}
 
 	public Vector2f getStart()
 	{
-		return this.rectangle.getStart();
+		return this.getRectangle().getStart();
 	}
 
 	public Vector2f getEnd()
 	{
-		return this.rectangle.getEnd();
+		return this.getRectangle().getEnd();
 	}
 
 	// Getter | Setter

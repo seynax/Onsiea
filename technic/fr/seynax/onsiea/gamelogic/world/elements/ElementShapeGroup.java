@@ -1,28 +1,30 @@
-package fr.seynax.onsiea.gamelogic.world;
+package fr.seynax.onsiea.gamelogic.world.elements;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.joml.Vector3f;
 
-public class ElementGroup
+import fr.seynax.onsiea.graphics.matter.Shape;
+
+public class ElementShapeGroup
 {
 	// Variables
 
-	private int						vaoId;
+	private Shape					shape;
 
 	private Map<Vector3f, Element>	elements;
 
 	// Constructor
 
-	public ElementGroup()
+	public ElementShapeGroup()
 	{
 		this.setElements(new HashMap<>());
 	}
 
-	public ElementGroup(final int vaoIdIn)
+	public ElementShapeGroup(final Shape shapeIn)
 	{
-		this.setVaoId(vaoIdIn);
+		this.setShape(shapeIn);
 		this.setElements(new HashMap<>());
 	}
 
@@ -70,14 +72,14 @@ public class ElementGroup
 
 	// Getter | Setter
 
-	public int getVaoId()
+	public Shape getShape()
 	{
-		return this.vaoId;
+		return this.shape;
 	}
 
-	public void setVaoId(final int vaoIdIn)
+	private void setShape(final Shape shapeIn)
 	{
-		this.vaoId = vaoIdIn;
+		this.shape = shapeIn;
 	}
 
 	public Map<Vector3f, Element> getElements()

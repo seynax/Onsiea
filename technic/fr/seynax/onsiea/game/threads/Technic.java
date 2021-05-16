@@ -1,11 +1,12 @@
-package fr.seynax.onsiea.gamelogic;
+package fr.seynax.onsiea.game.threads;
 
 import fr.seynax.onsiea.entity.Camera;
+import fr.seynax.onsiea.game.GameEngine;
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.utils.Timer;
 import fr.seynax.onsiea.utils.thread.StoppableThread;
 
-public class TechnicEngine extends StoppableThread
+public class Technic extends StoppableThread
 {
 	// Variables
 
@@ -21,7 +22,7 @@ public class TechnicEngine extends StoppableThread
 
 	// Constructor
 
-	public TechnicEngine(final Camera cameraIn, final IWindow windowIn)
+	public Technic(final Camera cameraIn, final IWindow windowIn)
 	{
 		super("Technic-Engine");
 

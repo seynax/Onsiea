@@ -1,4 +1,4 @@
-package fr.seynax.onsiea.gamelogic;
+package fr.seynax.onsiea.gamelogic.logic;
 
 import fr.seynax.onsiea.graphics.IWindow;
 

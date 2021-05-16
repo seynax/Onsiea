@@ -4,6 +4,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
+import fr.seynax.onsiea.gamelogic.logic.LogicConstants;
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.maths.MathsInstances;
 import fr.seynax.onsiea.utils.maths.Maths;
@@ -17,12 +18,17 @@ public class Camera
 	private Vector3f	position;
 	private Vector3f	orientation;
 
+	private Vector3f	chunkPosition;
+
 	private boolean		canUpdate;
+	private boolean		hasMoveChunk;
 
 	// Constructor
 
 	public Camera()
 	{
+		this.setChunkPosition(new Vector3f());
+
 		this.setViewMatrix(new Matrix4f());
 		this.setPosition(new Vector3f());
 		this.setOrientation(new Vector3f());
@@ -31,6 +37,8 @@ public class Camera
 
 	public Camera(final float xIn, final float yIn, final float zIn)
 	{
+		this.setChunkPosition(new Vector3f((int) xIn, (int) yIn, (int) zIn));
+
 		this.setViewMatrix(new Matrix4f());
 		this.setPosition(new Vector3f(xIn, yIn, zIn));
 		this.setOrientation(new Vector3f());
@@ -169,6 +177,28 @@ public class Camera
 		 * this.getUp().y(this.getViewMatrix().m11);
 		 * this.getUp().z(this.getViewMatrix().m21);
 		 **/
+
+		if ((int) (this.getPosition().x() / LogicConstants.Chunk.getMaxX()) != this.getChunkPosition().x()
+				/**
+				 * || (int) (this.getPosition().y() / LogicConstants.Chunk.getMaxY()) !=
+				 * this.getChunkPosition().y()
+				 **/
+				|| (int) (this.getPosition().z() / LogicConstants.Chunk.getMaxZ()) != this.getChunkPosition().z())
+		{
+			this.setHasMoveChunk(true);
+
+			this.getChunkPosition().x	= (int) (this.getPosition().x() / LogicConstants.Chunk.getMaxX());
+			/**
+			 * this.getChunkPosition().y = (int) (this.getPosition().y() /
+			 * LogicConstants.Chunk.getMaxY());
+			 **/
+			this.getChunkPosition().z	= (int) (this.getPosition().z() / LogicConstants.Chunk.getMaxZ());
+		}
+	}
+
+	public void reset()
+	{
+		this.setHasMoveChunk(false);
 	}
 
 	public void move(final float deltaXIn, final float deltaYIn, final float deltaZIn)
@@ -225,5 +255,25 @@ public class Camera
 	public void setCanUpdate(final boolean canUpdateIn)
 	{
 		this.canUpdate = canUpdateIn;
+	}
+
+	public Vector3f getChunkPosition()
+	{
+		return this.chunkPosition;
+	}
+
+	private void setChunkPosition(final Vector3f chunkPositionIn)
+	{
+		this.chunkPosition = chunkPositionIn;
+	}
+
+	public boolean isHasMoveChunk()
+	{
+		return this.hasMoveChunk;
+	}
+
+	private void setHasMoveChunk(final boolean hasMoveChunkIn)
+	{
+		this.hasMoveChunk = hasMoveChunkIn;
 	}
 }

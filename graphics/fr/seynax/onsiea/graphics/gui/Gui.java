@@ -3,7 +3,6 @@ package fr.seynax.onsiea.graphics.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.seynax.onsiea.gamelogic.item.TexturedRectangle;
 import fr.seynax.onsiea.graphics.IRenderable;
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.opengl.renderer.RendererGui;

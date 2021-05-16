@@ -1,5 +1,6 @@
-package fr.seynax.onsiea.gamelogic;
+package fr.seynax.onsiea.game;
 
+import fr.seynax.onsiea.gamelogic.logic.IGameLogic;
 import fr.seynax.onsiea.graphics.GraphicsConstants;
 import fr.seynax.onsiea.graphics.IWindow;
 import fr.seynax.onsiea.graphics.matter.Shapes;
