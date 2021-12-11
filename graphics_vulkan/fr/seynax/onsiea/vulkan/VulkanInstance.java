@@ -52,6 +52,7 @@ public class VulkanInstance
 		{
 			if (count > 0)
 			{
+				@SuppressWarnings("deprecation")
 				final var instanceLayers = VkLayerProperties.mallocStack(count, stack);
 				VK10.vkEnumerateInstanceLayerProperties(availableLayersCount, instanceLayers);
 				for (var i = 0; i < count; i++)
@@ -62,10 +63,10 @@ public class VulkanInstance
 			}
 		}
 
-		final var	layers				= new String[] { "VK_LAYER_LUNARG_standard_validation",
-				"VK_LAYER_KHRONOS_validation" };
+		final String[]	layers				=
+		{ "VK_LAYER_LUNARG_standard_validation", "VK_LAYER_KHRONOS_validation" };
 
-		final var	ppEnabledLayerNames	= MemoryUtil.memAllocPointer(layers.length);
+		final var		ppEnabledLayerNames	= MemoryUtil.memAllocPointer(layers.length);
 
 		for (final String layer : layers)
 		{
@@ -78,18 +79,18 @@ public class VulkanInstance
 
 		// Enabled extensions
 
-		final var	requiredExtension		= GLFWVulkan.glfwGetRequiredInstanceExtensions();
+		final var			requiredExtension		= GLFWVulkan.glfwGetRequiredInstanceExtensions();
 
-		final var	extensionsAddition		= new ByteBuffer[] {
-				MemoryUtil.memUTF8(EXTDebugReport.VK_EXT_DEBUG_REPORT_EXTENSION_NAME) };
+		final ByteBuffer[]	extensionsAddition		=
+		{ MemoryUtil.memUTF8(EXTDebugReport.VK_EXT_DEBUG_REPORT_EXTENSION_NAME) };
 
-		final var	ppEnabledExtensionNames	= BufferHelper.createPointerBuffer(requiredExtension,
+		final var			ppEnabledExtensionNames	= BufferHelper.createPointerBuffer(requiredExtension,
 				requiredExtension.remaining() + extensionsAddition.length, extensionsAddition);
 
 		// ApplicationInfo
 
-		final var	applicationInfo			= VkApplicationInfo.calloc().sType(VK10.VK_STRUCTURE_TYPE_APPLICATION_INFO)
-				.apiVersion(VK10.VK_API_VERSION_1_0);
+		final var			applicationInfo			= VkApplicationInfo.calloc()
+				.sType(VK10.VK_STRUCTURE_TYPE_APPLICATION_INFO).apiVersion(VK10.VK_API_VERSION_1_0);
 
 		applicationInfo.pApplicationName(MemoryUtil.memUTF8(applicationNameIn));
 		applicationInfo.pEngineName(MemoryUtil.memUTF8(engineNameIn));

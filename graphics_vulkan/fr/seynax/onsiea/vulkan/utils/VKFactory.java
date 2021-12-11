@@ -109,6 +109,7 @@ import org.lwjgl.vulkan.VkWriteDescriptorSetAccelerationStructureNV;
  *
  * @author Kai Burjack
  */
+@SuppressWarnings("deprecation")
 public class VKFactory
 {
 	static VmaVulkanFunctions VmaVulkanFunctions(final MemoryStack stack)
@@ -386,7 +387,7 @@ public class VKFactory
 
 	static VkSemaphoreTypeCreateInfoKHR VkSemaphoreTypeCreateInfo(final MemoryStack stack)
 	{
-		return VkSemaphoreTypeCreateInfoKHR.callocStack(stack)
+		return VkSemaphoreTypeCreateInfoKHR.calloc(stack)
 				.sType(KHRTimelineSemaphore.VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO_KHR);
 	}
 

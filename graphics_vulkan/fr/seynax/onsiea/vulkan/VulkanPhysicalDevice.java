@@ -32,6 +32,7 @@ public class VulkanPhysicalDevice
 
 	// Constructor
 
+	@SuppressWarnings("deprecation")
 	VulkanPhysicalDevice(final VulkanInstance vulkanInstanceIn, final String[] requiredExtensionsNameIn)
 	{
 		this.setInstance(vulkanInstanceIn);
@@ -183,6 +184,7 @@ public class VulkanPhysicalDevice
 		return true;
 	}
 
+	@SuppressWarnings("deprecation")
 	private int getQueueFamilly(final VkPhysicalDevice physicalDeviceIn, final int flagsIn)
 	{
 		final var passQueueFamilyCount = MemoryUtil.memAllocInt(1);
@@ -207,12 +209,9 @@ public class VulkanPhysicalDevice
 
 				final var queueFamilyProperties = buffer.get();
 
-				if (queueFamilyProperties.queueCount() > 0)
+				if (queueFamilyProperties.queueCount() > 0 && (queueFamilyProperties.queueFlags() & flagsIn) == flagsIn)
 				{
-					if ((queueFamilyProperties.queueFlags() & flagsIn) == flagsIn)
-					{
-						return i;
-					}
+					return i;
 				}
 			}
 		}
