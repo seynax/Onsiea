@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="utils"/>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="src" path="server"/>
+	<classpathentry kind="src" path="client"/>
+	<classpathentry kind="src" path="game"/>
+	<classpathentry kind="src" path="core"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="librairies\lwjgl-glfw.jar" sourcepath="librairies\sources\lwjgl-glfw-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/librairies\javadocs\lwjgl-glfw-javadoc.jar!/"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="librairies\natives"/>			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="librairies\natives\lwjgl-vma-natives-windows.jar"/>
+	<classpathentry kind="lib" path="librairies\lwjgl-shaderc.jar" sourcepath="librairies\sources\lwjgl-shaderc-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/librairies\javadocs\lwjgl-shaderc-javadoc.jar!/"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="librairies\natives"/>			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="librairies\natives\lwjgl-openal-natives-windows.jar"/>
+	<classpathentry kind="lib" path="librairies\lwjgl-nanovg.jar" sourcepath="librairies\sources\lwjgl-nanovg-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/librairies\javadocs\lwjgl-nanovg-javadoc.jar!/"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="librairies\natives"/>			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="librairies\joml-1.10.2.jar" sourcepath="librairies\sources\joml-1.10.2-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/librairies\javadocs\joml-1.10.2-javadoc.jar!/"/>			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="librairies\natives\lwjgl-natives-windows.jar"/>
+	<classpathentry kind="lib" path="librairies\lwjgl-vma.jar" sourcepath="librairies\sources\lwjgl-vma-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/librairies\javadocs\lwjgl-vma-javadoc.jar!/"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="librairies\natives"/>			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="librairies\lwjgl.jar" sourcepath="librairies\sources\lwjgl-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/librairies\javadocs\lwjgl-javadoc.jar!/"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="librairies\natives"/>			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="librairies\natives\lwjgl-opengl-natives-windows.jar"/>
+	<classpathentry kind="lib" path="librairies\lwjgl-stb.jar" sourcepath="librairies\sources\lwjgl-stb-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/librairies\javadocs\lwjgl-stb-javadoc.jar!/"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="librairies\natives"/>			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="librairies\natives\lwjgl-glfw-natives-windows.jar"/>
+	<classpathentry kind="lib" path="librairies\lwjgl-openal.jar" sourcepath="librairies\sources\lwjgl-openal-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/librairies\javadocs\lwjgl-openal-javadoc.jar!/"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="librairies\natives"/>			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="librairies\natives\lwjgl-stb-natives-windows.jar"/>
+	<classpathentry kind="lib" path="librairies\lwjgl-opengl.jar" sourcepath="librairies\sources\lwjgl-opengl-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/librairies\javadocs\lwjgl-opengl-javadoc.jar!/"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="librairies\natives"/>			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="librairies\natives\lwjgl-shaderc-natives-windows.jar"/>
+	<classpathentry kind="lib" path="librairies\lwjgl-vulkan.jar" sourcepath="librairies\sources\lwjgl-vulkan-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/librairies\javadocs\lwjgl-vulkan-javadoc.jar!/"/>			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="librairies\natives\lwjgl-nanovg-natives-windows.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
