@@ -10,6 +10,10 @@ Onsiea is the name I gave to my **2D** and **3D game engine** created from scrat
 - using the LWJGL
 - mainly supports GLFW, OpenGL, OpenAL (and Vulkan [in progress]).
 
+## Details
+
+- The Vulkan management part of this engine is under development (and since everything takes longer with Vulkan ...), so without adding additional source code it would be impossible to make vulkan work in depth. (more or less further than a simple rectangle), do not hesitate to collaborate, it would be with great pleasure!
+
 ## Architecture
 
 The architecture might seem very busy at first glance but it makes sense and is done with the aim of separating the elements correctly, in order to better understand the code.
