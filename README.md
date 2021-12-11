@@ -22,11 +22,11 @@ Onsiea is the name I gave to my **2D** and **3D game engine** created from scrat
 
 - The "core" is the heart of everything. The nerve center of the engine. This is made up of the “centralizing” part of the engine, ie the link between the “server / client” part and the more technical “physical, colisions, entities, movements” part, the "centralizer" will be very useful when you want to set up multithreading by separating these parts.
 
-- It is also the entry point of the engine, where we can launch the game, for that it is necessary to transmit to the engine a game logic (game / fr.seynax.onsiea.game.DummyGame.java in the source code) , here is typically the launch code that can be used in the main method of the main class
+- It is also the entry point of the engine, where we can launch the game, for that it is necessary to transmit to the engine a game logic (game / fr.seynax.onsiea.game.DummyGame.java in the source code), Here is typically the launch code below which can be used in the main method of the main class with the following parameters in order: window width, height, framerate, vertical synchronization, sync number, instance of game logic
+
 
 		try
 		{
-			//																	game name, window width, height, framerate, vertical synchronization, sync number, instance of game logic
 			final var gameEng = new GameEngine("Onsiea", 1280, 720, 60, true, 1, new DummyGame());
 
 			gameEng.start();
