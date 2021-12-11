@@ -16,40 +16,44 @@ Onsiea is the name I gave to my **2D** and **3D game engine** created from scrat
 
 ## Architecture
 
-The architecture might seem very busy at first glance but it makes sense and is done with the aim of separating the elements correctly, in order to better understand the code.
+- The architecture might seem very busy at first glance but it makes sense and is done with the aim of separating the elements correctly, in order to better understand the code.
 
-### Technic
+### Core
 
-The "technical" part manages, for example;
-- physics,
-- collisions,
-- movements,
-- data structures
-- ...
+- The "core" is the heart of everything. The nerve center of the engine. This is made up of the “centralizing” part of the engine, ie the link between the “server / client” part and the more technical “physical, colisions, entities, movements” part, the "centralizer" will be very useful when you want to set up multithreading by separating these parts.
 
-In short, everything that is not graphic.
+- It is also the entry point of the engine, where we can launch the game, for that it is necessary to transmit to the engine a game logic (game / fr.seynax.onsiea.game.DummyGame.java in the source code) , here is typically the launch code that can be used in the main method of the main class
+
+		try
+		{
+			//																	game name, window width, height, framerate, vertical synchronization, sync number, instance of game logic
+			final var gameEng = new GameEngine("Onsiea", 1280, 720, 60, true, 1, new DummyGame());
+
+			gameEng.start();
+		}
+		catch (final Exception exception)
+		{
+			exception.printStackTrace();
+
+			System.exit(-1);
+		}
 
 ### Graphics
 
 ##### Common graphics
-The graphics part focuses on the display of data on the screen, the management of optimizations and graphics parameters.
+- The graphics part focuses on the display of data on the screen, the management of optimizations and graphics parameters.
 
-However, the engine must be able to handle OpenGL and Vulkan without repeating the code twice.
+- However, the engine must be able to handle OpenGL and Vulkan without repeating the code twice.
 
 ##### Specialied graphics
 
-Thus graphics_opengl and graphics_vulkan contain all source code using in order OpenGL and Vulkan.
-
-### Common
-
-The common part is there to bring everything together, to allow communication between the technical part and the graphics part, this part will be very useful in the long term when multi-threading is implemented
+- Thus opengl and vulkan sub package contain all source code to use them.
 
 ### Utils
 
+- the utils part, contains all the tools not being dependent on the elements of the other parts of the engine.
 
-the utils part, contains all the tools not being dependent on the elements of the other parts of the engine.
-
-That is to say that this part is completely independent and could be moved from one project to another without difficulty (by adding the LWJGL, if the desired tool needs it).
+- That is to say that this part is completely independent and could be moved from one project to another without difficulty (by adding the LWJGL, if the desired tool needs it).
 
 Here are some examples of tools:
 - BufferHelper
@@ -59,4 +63,4 @@ Here are some examples of tools:
 
 ### Game
 
-the "game" part is there to test the engine, this part is not part of the engine. It presents some examples of engine use. There can be multiple games.
+- the "game" part is there to test the engine, this part is not part of the engine. It presents some examples of engine use. There can be multiple games.
