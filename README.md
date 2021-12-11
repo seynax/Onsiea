@@ -8,7 +8,7 @@ Onsiea is the name I gave to my **2D** and **3D game engine** created from scrat
 
 - under the "Java" language.
 - using the LWJGL
-- mainly supports GLFW, OpenGL, OpenAL and Vulkan.
+- mainly supports GLFW, OpenGL, OpenAL (and Vulkan [in progress]).
 
 ## Architecture
 
