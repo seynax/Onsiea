@@ -38,14 +38,16 @@ Onsiea is the name I gave to my **2D** and **3D game engine** created from scrat
 			System.exit(-1);
 		}
 
-### Graphics
+### Client
 
-##### Common graphics
+- Client part contains all sources about "resources, graphics, sounds ..."
+
+##### Common graphics (client/ fr.seynax.onsiea.graphics)
 - The graphics part focuses on the display of data on the screen, the management of optimizations and graphics parameters.
 
 - However, the engine must be able to handle OpenGL and Vulkan without repeating the code twice.
 
-##### Specialied graphics
+##### Specialied graphics (client/ fr.seynax.onsiea.graphics.opengl or fr.seynax.onsiea.graphics.vulkan)
 
 - Thus opengl and vulkan sub package contain all source code to use them.
 
