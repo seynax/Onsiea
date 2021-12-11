@@ -1,6 +1,6 @@
 package fr.seynax.onsiea.opengl;
 
-import fr.seynax.onsiea.gamelogic.item.Rectangle;
+import fr.seynax.onsiea.utils.maths.Rectangle;
 
 public interface IGuiElementData
 {
