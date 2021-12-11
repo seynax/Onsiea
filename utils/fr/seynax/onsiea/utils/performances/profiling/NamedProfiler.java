@@ -16,8 +16,6 @@ public class NamedProfiler extends Profiler implements IProfiler
 
 	public NamedProfiler()
 	{
-		super();
-
 		this.setName("PROFILER-" + NamedProfiler.getNamedProfilerNumber());
 
 		NamedProfiler.addNamedProfiler();
@@ -25,8 +23,6 @@ public class NamedProfiler extends Profiler implements IProfiler
 
 	public NamedProfiler(final String nameIn)
 	{
-		super();
-
 		this.setName(nameIn);
 
 		NamedProfiler.addNamedProfiler();
@@ -64,27 +60,25 @@ public class NamedProfiler extends Profiler implements IProfiler
 	@Override
 	public String shortReport()
 	{
-		final var output = "";
 
-		for (final IMeasurer measurer : this.getMeasurers())
-		{
-			// output += "\n" + measurer.shortReport();
-		}
+		//for (final IMeasurer measurer : this.getMeasurers())
+		//{
+		// output += "\n" + measurer.shortReport();
+		//}
 
-		return output;
+		return "";
 	}
 
 	@Override
 	public String shortReport(final String startIn)
 	{
-		final var output = "";
 
-		for (final IMeasurer measurer : this.getMeasurers())
-		{
-			// output += "\n" + startIn + "[" + measurer.shortReport();
-		}
+		//for (final IMeasurer measurer : this.getMeasurers())
+		//{
+		// output += "\n" + startIn + "[" + measurer.shortReport();
+		//}
 
-		return output;
+		return "";
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package fr.seynax.onsiea.utils.performances.profiling;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import fr.seynax.onsiea.utils.performances.measurer.IMeasurer;
@@ -24,10 +25,7 @@ public class Profiler implements IProfiler
 	{
 		this.setMeasurers(new ArrayList<>());
 
-		for (final IMeasurer measurer : measurersIn)
-		{
-			this.getMeasurers().add(measurer);
-		}
+		Collections.addAll(this.getMeasurers(), measurersIn);
 	}
 
 	// Methods
@@ -35,10 +33,7 @@ public class Profiler implements IProfiler
 	@Override
 	public IProfiler add(final IMeasurer... measurersIn)
 	{
-		for (final IMeasurer measurer : measurersIn)
-		{
-			this.getMeasurers().add(measurer);
-		}
+		Collections.addAll(this.getMeasurers(), measurersIn);
 
 		return this;
 	}
@@ -66,62 +61,58 @@ public class Profiler implements IProfiler
 	@Override
 	public void reset()
 	{
-		for (final IMeasurer measurer : this.getMeasurers())
-		{
-			// measurer.reset();
-		}
+		//for (final IMeasurer measurer : this.getMeasurers())
+		//{
+		// measurer.reset();
+		//}
 	}
 
 	@Override
 	public String shortReport()
 	{
-		final var output = "Iterations : " + this.getIterations();
 
-		for (final IMeasurer measurer : this.getMeasurers())
-		{
-			// output += "\n" + measurer.shortReport(" ");
-		}
+		//for (final IMeasurer measurer : this.getMeasurers())
+		//{
+		// output += "\n" + measurer.shortReport(" ");
+		//}
 
-		return output;
+		return "Iterations : " + this.getIterations();
 	}
 
 	@Override
 	public String shortReport(final String startIn)
 	{
-		final var output = startIn + "Iterations : " + this.getIterations();
 
-		for (final IMeasurer measurer : this.getMeasurers())
-		{
-			// output += "\n" + startIn + measurer.shortReport(" ");
-		}
+		//for (final IMeasurer measurer : this.getMeasurers())
+		//{
+		// output += "\n" + startIn + measurer.shortReport(" ");
+		//}
 
-		return output;
+		return startIn + "Iterations : " + this.getIterations();
 	}
 
 	@Override
 	public String report()
 	{
-		final var output = "Iterations : " + this.getIterations();
 
-		for (final IMeasurer measurer : this.getMeasurers())
-		{
-			// output += "\n" + measurer.report(" ");
-		}
+		//for (final IMeasurer measurer : this.getMeasurers())
+		//{
+		// output += "\n" + measurer.report(" ");
+		//}
 
-		return output;
+		return "Iterations : " + this.getIterations();
 	}
 
 	@Override
 	public String report(final String startIn)
 	{
-		final var output = startIn + "Iterations : " + this.getIterations();
 
-		for (final IMeasurer measurer : this.getMeasurers())
-		{
-			// output += "\n" + startIn + measurer.report(" ");
-		}
+		//for (final IMeasurer measurer : this.getMeasurers())
+		//{
+		// output += "\n" + startIn + measurer.report(" ");
+		//}
 
-		return output;
+		return startIn + "Iterations : " + this.getIterations();
 	}
 
 	// Variables
